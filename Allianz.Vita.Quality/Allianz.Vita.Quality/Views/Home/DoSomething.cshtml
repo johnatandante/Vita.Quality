@@ -1,0 +1,46 @@
+﻿@model Allianz.Vita.Quality.Models.ManageFolderViewModel
+@{
+    ViewBag.Title = "Done Something";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<h3>Connecting to exchange server... @Model.ConnectionMessage</h3>
+
+<h4>Inbox Messages</h4>
+<table class="table">
+    <tbody>
+        @foreach (var message in Model.InboxMessages) {
+            <tr>
+                <td>@message.From</td>
+                <td>
+                    @message.Subject
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h4>Public Folders</h4>
+<table class="table">
+    <tbody>
+        @foreach (var item in Model.PublicFolder.Messages) {
+            <tr>
+                @using (Html.BeginForm("Convert", "ManageFolder", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("UniqueId", item.UniqueId)
+                    <td>
+                        @item.From
+                    </td>
+                    <td>
+                        @item.Subject
+                    </td>
+                    <td>
+                        <div>
+                            <input type="submit" class="btn btn-default" value="Convert" title="Convert to Defect" />
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
