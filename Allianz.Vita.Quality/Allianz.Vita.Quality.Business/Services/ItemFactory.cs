@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Allianz.Vita.Quality.Business.Enums;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
@@ -76,7 +77,7 @@ namespace Allianz.Vita.Quality.Business.Services
 			IDefect defect = new Defect() {
 				Title = data.Title
 
-				, AreaPath = "Vita\\SUV"
+				, AreaPath = HttpUtility.UrlDecode("Vita\\SUV")
 
 				, SurveySystem = "SRM"
 
@@ -88,7 +89,7 @@ namespace Allianz.Vita.Quality.Business.Services
 
 				, Environment = "Prod"
 
-				, Iteration = "Vita\\Dev\\SUV\\"
+				, Iteration = HttpUtility.UrlDecode("Vita\\Dev\\SUV\\")
 
 				, DefectType = "Altro"
 
@@ -96,7 +97,7 @@ namespace Allianz.Vita.Quality.Business.Services
 				
 				, State = "New"
 
-				, Description = itemRead.Content
+				, Description = HttpUtility.UrlDecode(itemRead.Content)
 				
 				, Attachment = new IAttachment[] { }
 

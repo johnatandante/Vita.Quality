@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Allianz.Vita.Quality.Models.DefectModel>
+﻿@model Allianz.Vita.Quality.Models.DefectModel
 
 @{
     ViewBag.Title = "Defect Inseriti";
@@ -10,18 +10,28 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
+    <tr>        
+        <th>
+            @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label" })
+        </th>
+        <th>
+            @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-2 control-label" })
+        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
     <tr>
+        <td>
+            @Model.Title
+        </td>
+        <td>
+            @Model.AreaPath
+        </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
             @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
         </td>
     </tr>
-}
 
 </table>

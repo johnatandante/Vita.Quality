@@ -1,4 +1,4 @@
-﻿@model Allianz.Vita.Quality.Models.ManageFolderViewModel
+﻿@model Allianz.Vita.Quality.Models.DefectViewModel
 @{
     ViewBag.Title = "Done Something";
 }
@@ -25,7 +25,7 @@
     <tbody>
         @foreach (var item in Model.PublicFolder.Messages) {
             <tr>
-                @using (Html.BeginForm("Convert", "ManageFolder", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+                @using (Html.BeginForm("Create", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
                     @Html.AntiForgeryToken()
                     @Html.Hidden("UniqueId", item.UniqueId)
                     <td>

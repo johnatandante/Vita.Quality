@@ -34,7 +34,7 @@ namespace Allianz.Vita.Quality.Controllers
 		public ActionResult DoSomething() {
 			ViewBag.Message = "Do Something.";
 			
-			ManageFolderViewModel model = new ManageFolderViewModel();
+			DefectViewModel model = new DefectViewModel();
 
 			try {
 				
