@@ -45,10 +45,7 @@ namespace Allianz.Vita.Quality.Controllers
 				model.ConnectionMessage = "Connected to " + Mail.Version.ToString();
 
 			} catch(Exception e) {
-
-				model.InboxMessages = ItemFactory.Instance.GetNewMailItemList();
-				model.PublicFolder = ItemFactory.Instance.GetNewFolderItem();
-
+                
 				model.ConnectionMessage = "Failed to retrieve messages: " + e.Message;
 			}
 

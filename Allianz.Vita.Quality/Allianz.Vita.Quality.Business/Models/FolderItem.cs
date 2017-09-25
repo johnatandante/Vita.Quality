@@ -12,5 +12,10 @@ namespace Allianz.Vita.Quality.Business.Models
 		public string DisplayName { get; set; }
 		public IList<IMailItem> Messages { get; set; }
 		
+        public FolderItem()
+        {
+            Messages = new List<IMailItem>();
+        }
+
 	}
 }
