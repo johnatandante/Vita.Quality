@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces;
+using Microsoft.Exchange.WebServices.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Models;
-using Allianz.Vita.Quality.Business.Services;
-using Microsoft.Exchange.WebServices.Data;
 
 namespace Allianz.Vita.Quality.Business.Services
 {
-	public class MailService : IMailService
+    public class MailService : IMailService
 	{
 
 		public string Version { get; private set; }
@@ -21,23 +19,18 @@ namespace Allianz.Vita.Quality.Business.Services
 		string defaultUrl = "https://cas01.servizi.allianzit/EWS/Exchange.asmx";
 		// "https://cas01.servizi.allianzit/ews/Services.wsdl";
 
-
-		static MailService _Instance = null;
-
-		public static IMailService Instance {
-			get {
-				if (_Instance == null)
-					_Instance = new MailService(ExchangeVersion.Exchange2007_SP1);
-
-				return _Instance;
-			}
-		}
-
 		IItemFactory Factory = null;
 
-		public MailService(ExchangeVersion version = ExchangeVersion.Exchange2013, IItemFactory factory = null) {
+        public MailService()
+            : this(version: ExchangeVersion.Exchange2010_SP2, factory: null)
+        {
 
-			Factory = factory ?? ItemFactory.Instance;
+        }
+
+
+        public MailService(ExchangeVersion version, IItemFactory factory) {
+
+			Factory = factory ?? ServiceFactory.Get<IItemFactory>();
 
 			Version = version.ToString();
 

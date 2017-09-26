@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Business.Services;
 using Allianz.Vita.Quality.Models;
+using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -14,7 +11,10 @@ namespace Allianz.Vita.Quality.Controllers
     {
         // GET: Defect
 		public ActionResult Index() {
-			return View();
+
+            var model = new DefectModel[] { };
+            
+            return View(model);
 		}
 
 		[HttpPost]
@@ -27,9 +27,7 @@ namespace Allianz.Vita.Quality.Controllers
 			}
 
 			return Redirect("Index");
-
-			// return View(model);
-
+            
 		}
 
 		[HttpPost]
@@ -40,8 +38,8 @@ namespace Allianz.Vita.Quality.Controllers
 				return View(model);
 			}
 
-			IMailItem itemRead = MailService.Instance.Get(model);
-			IDefect defect = ItemFactory.Instance.GetNewDefect(itemRead);
+			IMailItem itemRead = ServiceFactory.Get<IMailService>().Get(model);
+			IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
 			
 			return View(new DefectModel(defect));
 		}

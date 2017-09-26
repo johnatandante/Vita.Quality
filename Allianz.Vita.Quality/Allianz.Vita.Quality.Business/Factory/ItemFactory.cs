@@ -1,32 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using Allianz.Vita.Quality.Business.Enums;
+﻿using Allianz.Vita.Quality.Business.Enums;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
+using Allianz.Vita.Quality.Business.Utilities;
 using Microsoft.Exchange.WebServices.Data;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace Allianz.Vita.Quality.Business.Services
+namespace Allianz.Vita.Quality.Business.Factory
 {
-	public class ItemFactory : IItemFactory
+    public class ItemFactory : IItemFactory
 	{
-		static ItemFactory _Instance = null;
-
-		public static IItemFactory Instance {
-			get {
-				if (_Instance == null)
-					_Instance = new ItemFactory();
-
-				return _Instance;
-			}
-		}
-
-		public ItemFactory() {
-
-		}
 
 		#region IItemFactory Members
 
@@ -83,9 +68,9 @@ namespace Allianz.Vita.Quality.Business.Services
 
 				, DefectID = data.Id
 
-				, FoundIn = "SUV W2003 2.2.72 PR (SUV_20170629.121900)"
+				, FoundIn = "SUV 2.2.78 PR (SUV_20170925.014104)"
 
-				, Agency = data.Company + " " + data.Agency.ToString()
+                , Agency = data.DecodeCodCompany + " " + data.Agency.ToString()
 
 				, Environment = "Prod"
 
@@ -109,6 +94,48 @@ namespace Allianz.Vita.Quality.Business.Services
 
 		}
 
-		#endregion
-	}
+        public IDefect ToDefectItem(WorkItem workItem)
+        {
+
+            Defect defect = new Defect()
+            {
+                Id = workItem.Id,
+
+                Title = workItem.TryToGetField("System.Title"),
+
+                AreaPath = workItem.TryToGetField("System.AreaPath"),
+
+                Iteration = workItem.TryToGetField("System.Iteration"),
+
+                SurveySystem = workItem.TryToGetField("System.SurveySystem"),
+
+                DefectID = workItem.TryToGetField("System.DefectID"),
+
+                FoundIn = workItem.TryToGetField("System.FoundIn"),
+
+                Agency = workItem.TryToGetField("System.Agency"),
+
+                Environment = workItem.TryToGetField("System.Environment"),
+
+                DefectType = workItem.TryToGetField("System.DefectType"),
+
+                State = workItem.TryToGetField("System.State"),
+
+                Description = workItem.TryToGetField("System.Description"),
+
+                Severity = workItem.TryToGetEnumField<SeverityLevel>("System.Severity"),
+
+                Comments = new string[] { },
+
+                Attachment = new IAttachment[] { },
+
+            };
+
+            return defect;
+            
+        }
+
+        #endregion
+    }
+
 }

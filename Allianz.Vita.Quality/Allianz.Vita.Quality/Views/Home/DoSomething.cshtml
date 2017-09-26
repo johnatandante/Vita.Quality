@@ -23,6 +23,7 @@
 <h4>Public Folders</h4>
 <table class="table">
     <tbody>
+        if(Model.PublicFolder != null) {
         @foreach (var item in Model.PublicFolder.Messages) {
             <tr>
                 @using (Html.BeginForm("Create", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
@@ -41,6 +42,7 @@
                     </td>
                 }
             </tr>
+        }
         }
     </tbody>
 </table>

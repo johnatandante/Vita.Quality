@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
-	public interface IItemFactory
+	public interface IItemFactory : IService
 	{
 		IFolderItem GetNewFolderItem();
 
@@ -18,5 +19,8 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 		IFolderItem ToFolderItem(Folder folder, FindItemsResults<Item> resultItems = null);
 
 		IDefect GetNewDefect(IMailItem itemRead);
-	}
+
+        IDefect ToDefectItem(WorkItem w);
+
+    }
 }

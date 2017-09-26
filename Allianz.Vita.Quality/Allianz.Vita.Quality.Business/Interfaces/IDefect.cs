@@ -4,6 +4,8 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 {
 	public interface IDefect
 	{
+
+        int? Id { get; }
 		string Title { get; }
 
 		string AreaPath { get; }

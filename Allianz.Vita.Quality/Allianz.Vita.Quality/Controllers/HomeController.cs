@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Services;
 using Allianz.Vita.Quality.Models;
+using Allianz.Vita.Quality.Business.Factory;
+using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -11,7 +12,7 @@ namespace Allianz.Vita.Quality.Controllers
 
 		IMailService Mail {
 			get {
-				return MailService.Instance;
+				return ServiceFactory.Get<IMailService>();
 			}
 		}
 
@@ -47,6 +48,10 @@ namespace Allianz.Vita.Quality.Controllers
 			} catch(Exception e) {
                 
 				model.ConnectionMessage = "Failed to retrieve messages: " + e.Message;
+
+                model.InboxMessages = ServiceFactory.Get<IItemFactory>().GetNewMailItemList();
+
+                model.PublicFolder = ServiceFactory.Get<IItemFactory>().GetNewFolderItem();
 			}
 
 			return View(model);

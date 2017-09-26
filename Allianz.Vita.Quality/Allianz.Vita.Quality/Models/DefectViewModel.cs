@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Services;
+using Allianz.Vita.Quality.Business.Factory;
 
 namespace Allianz.Vita.Quality.Models
 {
@@ -9,13 +9,7 @@ namespace Allianz.Vita.Quality.Models
 		public string ConnectionMessage { get; set; }
 		public IList<IMailItem> InboxMessages { get; set; }
 		public IFolderItem PublicFolder { get; set; }
-
-		public DefectViewModel() {
-            InboxMessages = ItemFactory.Instance.GetNewMailItemList();
-            PublicFolder = ItemFactory.Instance.GetNewFolderItem();
-
-        }
-
+        
     }
 	
 }

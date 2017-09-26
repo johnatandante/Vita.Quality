@@ -2,7 +2,7 @@
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
-	public interface IMailService
+	public interface IMailService : IService
 	{
 
 		string Version { get; }

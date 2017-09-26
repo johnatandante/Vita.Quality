@@ -8,6 +8,8 @@ namespace Allianz.Vita.Quality.Business.Models
 
 		#region IDefect Members
 
+        public int? Id { get; set; }
+
 		public string Title { get; set;}
 
 		public string AreaPath { get; set; }
