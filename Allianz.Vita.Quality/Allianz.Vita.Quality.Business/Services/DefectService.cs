@@ -1,8 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using Microsoft.VisualStudio.Services.Common;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Allianz.Vita.Quality.Business.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +14,13 @@ namespace Allianz.Vita.Quality.Business.Services
     {
 
         readonly string _uri;
-        readonly string _personalAccessToken;
-        //readonly string _project;
-        readonly ICredentials userCredentials;
 
-        static string userName = "le00035";
-        static string password = "Filipa52";
+        static string defaultTfsUri = "http://bretfsas2s01.azgroup.itad.corpnet/tfs";
+        //static string defaultDefectWorkItemType = "Defect";
+        static string teamProjectName = "Vita";
 
-        const string defaultDefectWorkItemType = "Defect";
-        
+        static string myTaskQueryName = "Assigned to me";
+
         static string[] WorkItemOutputFields = new string[] {
             "[System.Title]",
             "[System.AreaPath]" ,
@@ -40,71 +38,80 @@ namespace Allianz.Vita.Quality.Business.Services
 
         IItemFactory _ItemFactory;
 
-        public DefectService() 
-            : this(null) {
-        }
+        public DefectService() : this(null) { }
 
-            /// <summary>
-            /// Constructor. Manually set values to match your account.
-            /// </summary>
+        /// <summary>
+        /// Constructor. Manually set values to match your account.
+        /// </summary>
         public DefectService(IItemFactory itemFactory)
         {
-            _uri = "http://bretfsas2s01.azgroup.itad.corpnet/tfs";
-            _personalAccessToken = "personal access token";
-            //_project = "project name";
-
-            userCredentials = new NetworkCredential(userName, password);
-
+            _uri = defaultTfsUri;
+            
             _ItemFactory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
 
         }
-
+        
         /// <summary>
         /// Execute a WIQL query to return a list of bugs using the .NET client library
         /// </summary>
         /// <returns>List of Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem</returns>
-        public List<IDefect> GetAllDefects()
+        public List<IDefect> GetMyTasks()
         {
             List<IDefect> result = new List<IDefect>();
-            List<WorkItem> workItems = new List<WorkItem>();
 
-            Uri uri = new Uri(_uri);
-            string personalAccessToken = _personalAccessToken;
-            // string project = _project;
-
-            VssBasicCredential credentials = new VssBasicCredential(userCredentials);
-            //create a wiql object and build our query
-            Wiql wiql = new Wiql()
+            // create TfsTeamProjectCollection instance using default credentials
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
             {
-                Query = "Select [Title], [State]" +
-                        "From WorkItems " +
-                        "Where [Work Item Type] = '" + defaultDefectWorkItemType + "' " +
-                        // "And [System.TeamProject] = '" + project + "' " +
-                        "And [System.State] <> 'Closed' " +
-                        "Order By [System.Title] Asc, [Changed Date] Desc"
-            };
-            //create instance of work item tracking http client
-            using (WorkItemTrackingHttpClient workItemTrackingHttpClient =
-                new WorkItemTrackingHttpClient(uri, credentials))
-            {
+                WorkItemCollection workItems;
 
-                //execute the query to get the list of work items in the results
-                WorkItemQueryResult queryResult =
-                    workItemTrackingHttpClient.QueryByWiqlAsync(wiql).Result;
+                // get the WorkItemStore service
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                // get the project context for the work item store
+                Project workItemProject = workItemStore.Projects[teamProjectName];
                 
-                int[] arr = queryResult.WorkItems.Select(w => w.Id).ToArray();
-                
-                //get work items for the ids found in query
-                workItems.AddRange(workItemTrackingHttpClient
-                                        .GetWorkItemsAsync(arr, WorkItemOutputFields, queryResult.AsOf)
-                                        .Result);
+                // search for the 'My Queries' folder
+                QueryFolder myQueriesFolder = workItemProject
+                    .QueryHierarchy
+                    .FirstOrDefault(qh => qh is QueryFolder && qh.IsPersonal)
+                    as QueryFolder;
+
+                if (myQueriesFolder != null)
+                {
+                    // search for the 'SOAP Sample' query
+                    QueryDefinition newBugsQuery = myQueriesFolder
+                        .FirstOrDefault(qi => qi is QueryDefinition && qi.Name.Equals(myTaskQueryName))
+                        as QueryDefinition;
+                    
+                    if (newBugsQuery == null)
+                        return result;
+
+                    // run the 'SOAP Sample' query                    
+                    workItems = workItemStore.Query(newBugsQuery.GetQuery(project: teamProjectName, user: workItemStore.UserIdentityName));
+                    foreach (WorkItem workItem in workItems)
+                    {
+                        result.Add(_ItemFactory.ToDefectItem(workItem));
+                    }
+
+                }
+
+                return result;
+
             }
-
-            workItems.ForEach(w => result.Add(_ItemFactory.ToDefectItem(w)));
-
-            return result;
-
+            
         }
 
+        [Obsolete("Non utilizzato, anche se valido")]
+        private static QueryDefinition CreateNewQuery(Project workItemProject, QueryFolder myQueriesFolder, string queryName)
+        {            
+            QueryDefinition newBugsQuery = new QueryDefinition(queryName,
+                @"SELECT [System.Id],[System.WorkItemType],
+                                [System.Title],[System.AssignedTo],[System.State],[System.Tags] 
+                              FROM WorkItems WHERE[System.WorkItemType] = '{0}' 
+                                    AND[System.State] = 'New'");
+            myQueriesFolder.Add(newBugsQuery);
+            workItemProject.QueryHierarchy.Save();
+
+            return newBugsQuery;
+        }
     }
 }

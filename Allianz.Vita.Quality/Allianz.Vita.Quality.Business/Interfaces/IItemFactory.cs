@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {

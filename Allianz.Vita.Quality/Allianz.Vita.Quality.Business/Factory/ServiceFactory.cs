@@ -23,7 +23,7 @@ namespace Allianz.Vita.Quality.Business.Factory
             return (TService)service;
         }
 
-        public static void Register<TService,TInstance>(params object[] parameters) 
+        public static TService Register<TService,TInstance>(params object[] parameters) 
             where TService : IService
             where TInstance : TService
         {            
@@ -35,7 +35,21 @@ namespace Allianz.Vita.Quality.Business.Factory
                         
             _Services[typeof(TService)] = (TInstance)Activator.CreateInstance(typeof(TInstance), parameters);
 
+            return Get<TService>();
         }
 
+        public static void Register<TService>(TService instance)
+           where TService : IService
+        {
+
+            if (!_Services.ContainsKey(typeof(TService)))
+            {
+                _Services.Add(typeof(TService), null);
+            }
+
+            _Services[typeof(TService)] = instance;
+            
+        }
+        
     }
 }

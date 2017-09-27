@@ -3,7 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Business.Utilities;
 using Microsoft.Exchange.WebServices.Data;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;

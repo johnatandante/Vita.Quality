@@ -1,9 +1,5 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Utilities
 {
@@ -11,11 +7,17 @@ namespace Allianz.Vita.Quality.Business.Utilities
     {
         public static string TryToGetField(this WorkItem workItem, string field)
         {
-
-            if (!workItem.Fields.TryGetValue(field, out object value))
+            object value;
+            try
+            {
+                value = workItem.Fields[field].Value;
+            }
+            catch
+            {
                 value = string.Empty;
+            }
 
-            return value.ToString();
+            return value != null ? value.ToString() : string.Empty;
 
         }
 
