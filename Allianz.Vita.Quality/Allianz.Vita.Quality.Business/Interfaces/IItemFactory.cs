@@ -22,5 +22,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         IDefect ToDefectItem(WorkItem w);
 
+        IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems);
     }
 }

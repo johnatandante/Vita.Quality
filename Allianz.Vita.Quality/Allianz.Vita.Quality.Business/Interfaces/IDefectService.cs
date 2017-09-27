@@ -9,6 +9,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces
     public interface IDefectService : IService
     {
         List<IDefect> GetMyTasks();
-
+        List<IDefect> GetAllDefects();
     }
 }

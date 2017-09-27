@@ -214,6 +214,7 @@
     <Compile Include="Services\MailService.cs" />
     <Compile Include="Services\DefectService.cs" />
     <Compile Include="Utilities\QueryDefinitionExtensionMethods.cs" />
+    <Compile Include="Utilities\Statement\Statement.cs" />
     <Compile Include="Utilities\StringExtensionMethods.cs" />
     <Compile Include="Utilities\WorkItemsExtensionMethods.cs" />
   </ItemGroup>

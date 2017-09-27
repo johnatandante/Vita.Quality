@@ -1,12 +1,12 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Utilities;
+using Allianz.Vita.Quality.Business.Utilities.Statement;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using Allianz.Vita.Quality.Business.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace Allianz.Vita.Quality.Business.Services
 {
@@ -16,27 +16,30 @@ namespace Allianz.Vita.Quality.Business.Services
         readonly string _uri;
 
         static string defaultTfsUri = "http://bretfsas2s01.azgroup.itad.corpnet/tfs";
-        //static string defaultDefectWorkItemType = "Defect";
+        static string defaultDefectWorkItemType = "Defect";
         static string teamProjectName = "Vita";
+        static string workItemQuery = "SELECT {0} FROM WorkItems WHERE {1}";
 
         static string myTaskQueryName = "Assigned to me";
 
         static string[] WorkItemOutputFields = new string[] {
             "[System.Title]",
             "[System.AreaPath]" ,
-            "[System.Iteration]" ,
-            "[System.SurveySystem]" ,
-            "[System.DefectID]" ,
-            "[System.FoundIn]" ,
-            "[System.Agency]",
-            "[System.Environment]" ,
-            "[System.DefectType]",
+            "[System.IterationPath]" ,
+            "[Allianz.Alm.DefectSystem]" ,
+            "[Allianz.Alm.DefectID]" ,
+            "[Microsoft.VSTS.Build.FoundIn]" ,
+            "[Allianz.Alm.Agenzia]",
+            "[Allianz.Alm.environment]" ,
+            "[Allianz.Alm.DefectType]",
             "[System.State]" ,
             "[System.Description]" ,
-            "[System.Severity]"
+            "[Microsoft.VSTS.Common.Severity]",
+            "[System.CreatedDate]",
+            "[System.CreatedBy]",
         };
 
-        IItemFactory _ItemFactory;
+        IItemFactory Factory;
 
         public DefectService() : this(null) { }
 
@@ -47,7 +50,7 @@ namespace Allianz.Vita.Quality.Business.Services
         {
             _uri = defaultTfsUri;
             
-            _ItemFactory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
+            Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
 
         }
         
@@ -62,7 +65,6 @@ namespace Allianz.Vita.Quality.Business.Services
             // create TfsTeamProjectCollection instance using default credentials
             using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
             {
-                WorkItemCollection workItems;
 
                 // get the WorkItemStore service
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
@@ -86,10 +88,10 @@ namespace Allianz.Vita.Quality.Business.Services
                         return result;
 
                     // run the 'SOAP Sample' query                    
-                    workItems = workItemStore.Query(newBugsQuery.GetQuery(project: teamProjectName, user: workItemStore.UserIdentityName));
+                    WorkItemCollection workItems = workItemStore.Query(newBugsQuery.GetQuery(project: teamProjectName, user: workItemStore.UserIdentityName));
                     foreach (WorkItem workItem in workItems)
                     {
-                        result.Add(_ItemFactory.ToDefectItem(workItem));
+                        result.Add(Factory.ToDefectItem(workItem));
                     }
 
                 }
@@ -112,6 +114,50 @@ namespace Allianz.Vita.Quality.Business.Services
             workItemProject.QueryHierarchy.Save();
 
             return newBugsQuery;
+        }
+
+        public List<IDefect> GetAllDefects()
+        {
+            List<IDefect> result = new List<IDefect>();
+
+            // create TfsTeamProjectCollection instance using default credentials
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
+            {
+
+                // get the WorkItemStore service
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                // get the project context for the work item store
+                Project workItemProject = workItemStore.Projects[teamProjectName];
+
+                QueryDefinition query = GetNewQueryDefinition("GetAllDefects", 
+                    WorkItemOutputFields, 
+                    Statement.New()
+                        .Where("[System.TeamProject]", "@Project")
+                        // .Where("[System.AssignedTo]", "@Me")
+                        .Where("[System.WorkItemType]", string.Format("'{0}'", defaultDefectWorkItemType))
+                        .WhereNot("[System.State]", "'Resolved'")
+                        .WhereNot("[System.State]", "'Closed'")
+                        .WhereNot("[System.State]", "'Retired'")
+                        .WhereNot("[System.State]", "'Completed'")
+                        .WhereNot("[Allianz.Alm.StateGroup]", "'Complete'")
+                        .Where("[System.AreaPath]", "'Vita'", Statement.Op.Under)
+                        );
+
+                WorkItemCollection workItems = workItemStore.Query(query.GetQuery(project: teamProjectName, user: workItemStore.UserIdentityName));
+                
+                result.AddRange(Factory.ToDefectItemCollection(workItems));
+                
+            }
+            
+            return result;
+        }
+
+        private QueryDefinition GetNewQueryDefinition(string name, string[] outputFields, Statement whereClauseFields)
+        {
+            string outputFieldsClause = outputFields.FromClause();
+            string whereClause = whereClauseFields.ToString();
+
+            return new QueryDefinition(name,  string.Format(workItemQuery, outputFieldsClause, whereClause));
         }
     }
 }

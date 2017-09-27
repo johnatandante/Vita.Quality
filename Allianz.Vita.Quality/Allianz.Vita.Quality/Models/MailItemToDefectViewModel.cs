@@ -11,7 +11,7 @@ namespace Allianz.Vita.Quality.Models
 
 	}
 
-	public class DefectModel : Defect {
+	public class DefectViewModel : Defect {
 
 		[AllowHtml]
 		public string HtmlDescription { get { return Description; } set { Description = value;  } }
@@ -22,9 +22,9 @@ namespace Allianz.Vita.Quality.Models
 		[AllowHtml]
 		public string HtmlIteration { get { return Iteration; } set { Iteration = value; } }
 
-		public DefectModel() { }
+		public DefectViewModel() { }
 
-		public DefectModel(IDefect defect) {
+		public DefectViewModel(IDefect defect) {
 			
 			Title = defect.Title;
 

@@ -3,7 +3,9 @@ using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Business.Services;
 using Allianz.Vita.Quality.Models;
+using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -12,14 +14,15 @@ namespace Allianz.Vita.Quality.Controllers
         // GET: Defect
 		public ActionResult Index() {
 
-            var model = new DefectModel[] { };
-            
-            return View(model);
+            List<IDefect> defects = ServiceFactory.Get<IDefectService>().GetAllDefects();            
+            DefectViewModel[] collection = defects.Select(idefect => new DefectViewModel(idefect)).ToArray();
+
+            return View(collection);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Save(DefectModel model) {
+		public ActionResult Save(DefectViewModel model) {
 
 			if (!ModelState.IsValid) 
 			{
@@ -41,7 +44,7 @@ namespace Allianz.Vita.Quality.Controllers
 			IMailItem itemRead = ServiceFactory.Get<IMailService>().Get(model);
 			IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
 			
-			return View(new DefectModel(defect));
+			return View(new DefectViewModel(defect));
 		}
 
     }

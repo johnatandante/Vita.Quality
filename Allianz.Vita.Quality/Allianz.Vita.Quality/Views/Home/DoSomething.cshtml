@@ -1,7 +1,8 @@
-﻿@model Allianz.Vita.Quality.Models.DefectViewModel
+﻿@model Allianz.Vita.Quality.Models.WorkspaceViewModel
 @{
-    ViewBag.Title = "Done Something";
+    ViewBag.Title = "Workspace IssueVita";
 }
+
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
@@ -12,7 +13,9 @@
     <tbody>
         @foreach (var message in Model.InboxMessages) {
             <tr>
-                <td>@message.From</td>
+                <td>
+                    @message.From
+                </td>
                 <td>
                     @message.Subject
                 </td>
@@ -20,11 +23,10 @@
         }
     </tbody>
 </table>
-<h4>Public Folders</h4>
+<h4>Public Folder @Model.PublicFolderDisplayName</h4>
 <table class="table">
     <tbody>
-        if(Model.PublicFolder != null) {
-        @foreach (var item in Model.PublicFolder.Messages) {
+        @foreach (var item in Model.PublicFolderMessages) {
             <tr>
                 @using (Html.BeginForm("Create", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
                     @Html.AntiForgeryToken()
@@ -42,7 +44,6 @@
                     </td>
                 }
             </tr>
-        }
         }
     </tbody>
 </table>

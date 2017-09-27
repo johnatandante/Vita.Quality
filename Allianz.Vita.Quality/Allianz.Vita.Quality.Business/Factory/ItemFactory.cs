@@ -105,25 +105,25 @@ namespace Allianz.Vita.Quality.Business.Factory
 
                 AreaPath = workItem.TryToGetField("System.AreaPath"),
 
-                Iteration = workItem.TryToGetField("System.Iteration"),
+                Iteration = workItem.TryToGetField("System.IterationPath"),
 
-                SurveySystem = workItem.TryToGetField("System.SurveySystem"),
+                SurveySystem = workItem.TryToGetField("Allianz.Alm.DefectSystem"),
 
-                DefectID = workItem.TryToGetField("System.DefectID"),
+                DefectID = workItem.TryToGetField("Allianz.Alm.DefectID"),
 
-                FoundIn = workItem.TryToGetField("System.FoundIn"),
+                FoundIn = workItem.TryToGetField("Microsoft.VSTS.Build.FoundIn"),
 
-                Agency = workItem.TryToGetField("System.Agency"),
+                Agency = workItem.TryToGetField("Allianz.Alm.Agenzia"),
 
-                Environment = workItem.TryToGetField("System.Environment"),
+                Environment = workItem.TryToGetField("Allianz.Alm.environment"),
 
-                DefectType = workItem.TryToGetField("System.DefectType"),
+                DefectType = workItem.TryToGetField("Allianz.Alm.DefectType"),
 
                 State = workItem.TryToGetField("System.State"),
 
                 Description = workItem.TryToGetField("System.Description"),
 
-                Severity = workItem.TryToGetEnumField<SeverityLevel>("System.Severity"),
+                Severity = workItem.TryToGetEnumField<SeverityLevel>("Microsoft.VSTS.Common.Severity"),
 
                 Comments = new string[] { },
 
@@ -133,6 +133,18 @@ namespace Allianz.Vita.Quality.Business.Factory
 
             return defect;
             
+        }
+
+        public IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems)
+        {
+            List<IDefect> result = new List<IDefect>();
+            foreach (WorkItem workItem in workItems)
+            {
+                result.Add(ToDefectItem(workItem));
+            }
+
+            return result;
+
         }
 
         #endregion

@@ -37,5 +37,20 @@ namespace Allianz.Vita.Quality.Test.Services
             Assert.IsTrue(collection.Any());
 
         }
+
+        [TestMethod]
+        public void GetAllDefects()
+        {
+            Assert.IsInstanceOfType(service, typeof(IDefectService));
+            Assert.IsInstanceOfType(service, typeof(DefectService));
+
+            List<IDefect> collection = service.GetAllDefects();
+
+            Assert.IsNotNull(collection);
+            Assert.IsTrue(collection.Any());
+
+        }
+
+
     }
 }

@@ -35,24 +35,28 @@ namespace Allianz.Vita.Quality.Controllers
 		public ActionResult DoSomething() {
 			ViewBag.Message = "Do Something.";
 			
-			DefectViewModel model = new DefectViewModel();
+			WorkspaceViewModel model = new WorkspaceViewModel();
 
 			try {
-				
-				model.InboxMessages = Mail.OpenInbox(pageSize: 20);
-				
-				model.PublicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 100);
-				
-				model.ConnectionMessage = "Connected to " + Mail.Version.ToString();
 
+                model.ConnectionMessage = "Connected to " + Mail.Version.ToString();
+
+                model.InboxMessages = Mail.OpenInbox(pageSize: 10);
+
+                IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 100);
+
+                model.PublicFolderDisplayName = publicFolder.DisplayName;
+
+                model.PublicFolderMessages = publicFolder.Messages;
+				
 			} catch(Exception e) {
                 
 				model.ConnectionMessage = "Failed to retrieve messages: " + e.Message;
 
                 model.InboxMessages = ServiceFactory.Get<IItemFactory>().GetNewMailItemList();
 
-                model.PublicFolder = ServiceFactory.Get<IItemFactory>().GetNewFolderItem();
-			}
+                model.PublicFolderMessages = ServiceFactory.Get<IItemFactory>().GetNewMailItemList();
+            }
 
 			return View(model);
 			 
