@@ -18,19 +18,17 @@ namespace Allianz.Vita.Quality.Test.Services
         {
 
             IItemFactory itemFactory = ServiceFactory.Register<IItemFactory, ItemFactory>();
-
             service = ServiceFactory.Register<IDefectService, DefectService>(itemFactory);
-
-        }
-
-
-        [TestMethod]
-        public void GetMyTasks()
-        {
-
+            
             Assert.IsInstanceOfType(service, typeof(IDefectService));
             Assert.IsInstanceOfType(service, typeof(DefectService));
 
+        }
+        
+        [TestMethod]
+        public void GetMyTasks()
+        {
+            
             List<IDefect> collection = service.GetMyTasks();
             
             Assert.IsNotNull(collection);
@@ -41,8 +39,6 @@ namespace Allianz.Vita.Quality.Test.Services
         [TestMethod]
         public void GetAllDefects()
         {
-            Assert.IsInstanceOfType(service, typeof(IDefectService));
-            Assert.IsInstanceOfType(service, typeof(DefectService));
 
             List<IDefect> collection = service.GetAllDefects();
 
