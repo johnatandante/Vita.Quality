@@ -191,15 +191,15 @@ namespace Allianz.Vita.Quality.Business.Services
                 // Comments
                 defect.History = "Created on " + DateTime.Now.Date.ToShortDateString() + " by " + workItemStore.UserIdentityName;
                 
-                if(model.Attachment != null)
-                    model.Attachment.ToList().ForEach(att => defect.Attachments.Add(Factory.ToAttachment(att)));
-                else
-                    throw new ArgumentNullException("model.Attachment in Defect " + defect.Title);
+                //if(model.Attachment != null)
+                //    model.Attachment.ToList().ForEach(att => defect.Attachments.Add(Factory.ToAttachment(att)));
+                //else
+                //    throw new ArgumentNullException("model.Attachment in Defect " + defect.Title);
 
                 // Links is read only
 
                 // Save the new
-                if (defect.IsDirty)
+                if (!defect.IsValid())
                     throw new ApplicationException("Errore in inserimento Defect " + defect.Title);
 
                 defect.Save();
