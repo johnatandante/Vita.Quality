@@ -4,6 +4,8 @@ using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Business.Utilities;
 using Microsoft.Exchange.WebServices.Data;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Microsoft.TeamFoundation.WorkItemTracking.Internals;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -145,6 +147,42 @@ namespace Allianz.Vita.Quality.Business.Factory
 
             return result;
 
+        }
+
+        public IMailItem GetNewMailItem()
+        {
+            return new MailItem() {
+                UniqueId = Guid.NewGuid().ToString()
+                , From = "srm@allianz.it" 
+                , Subject = "R: Request 2017/827273 - 27/09/2017 [4a8abb0b-9111-48ff-9c0b-d9f3ab956a13] ALLIANZ RAS 010336000000 BRESSANONE"
+                , Content = @"Buongiorno,
+L'utente questa mattina ha censito un nuovo cliente cognome e nome Di Meo Umberto ma aveva inserito la data di nascita errata. successivamente alla modifica, riscontra blocco in emissione nuova proposta vita.
+Cliente DI MEO UMBERTO
+data di nascita 06/02/1978 
+CF DMIMRT78B06F839J
+l'anagrafica è stata correttamente modificata ed in SCU i dati sono corretti ma in emissione polizza vita compare sempre errore CONTATTARE DIREZIONE VITA: Persona NVI chiave 171368433 e persona AGORA chiave 913411372 hanno data di nascita differente: verificare anagrafiche centralizzate
+non è possibile cancellare l'anagrafica perché risulta avere almeno un legame con altra polizza
+all img 
+Dalle verifiche svolte dal III LIV sviluppo applicativo Anagrafe, Derni risponde: Vi confermo che il nostro modulo di cancellazione si blocca perché trova legami su ptf vita.
+Potete cortesemente verificare l'errore che si presenta in emissione nuova proposta vita?
+"
+                //, Flagged = propFull ? mail.Flag.FlagStatus != ItemFlagStatus.NotFlagged : false
+                , Attachments = new object[] { }
+                , Categories = new string[] { }
+                , Importance = Importance.Normal.ToString()
+                //, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
+            };
+            
+        }
+
+        public AttachmentInfo ToAttachmentInfo(IAttachment att)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Exchange.WebServices.Data;
+﻿using Microsoft.Exchange.WebServices.Data;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
-	public interface IItemFactory : IService
+    public interface IItemFactory : IService
 	{
 		IFolderItem GetNewFolderItem();
 
@@ -23,5 +19,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         IDefect ToDefectItem(WorkItem w);
 
         IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems);
+
+        IMailItem GetNewMailItem();
+
+        Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att);
+
     }
 }

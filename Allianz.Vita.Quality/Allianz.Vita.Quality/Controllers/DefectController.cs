@@ -11,10 +11,11 @@ namespace Allianz.Vita.Quality.Controllers
 {
     public class DefectController : Controller
     {
+        
         // GET: Defect
-		public ActionResult Index() {
+        public ActionResult Index() {
 
-            List<IDefect> defects = ServiceFactory.Get<IDefectService>().GetAllDefects();            
+            List<IDefect> defects = ServiceFactory.Get<IDefectService>().GetAllDefects();
             DefectViewModel[] collection = defects.Select(idefect => new DefectViewModel(idefect)).ToArray();
 
             return View(collection);
@@ -29,7 +30,9 @@ namespace Allianz.Vita.Quality.Controllers
 				return View(model);
 			}
 
-			return Redirect("Index");
+            ServiceFactory.Get<IDefectService>().Save(model);
+
+            return Redirect("Index");
             
 		}
 

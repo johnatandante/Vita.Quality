@@ -32,7 +32,8 @@ namespace Allianz.Vita.Quality.Test.Services
             List<IDefect> collection = service.GetMyTasks();
             
             Assert.IsNotNull(collection);
-            Assert.IsTrue(collection.Any());
+
+            CollectionAssert.AllItemsAreInstancesOfType(collection, typeof(IDefect));
 
         }
 
@@ -40,13 +41,28 @@ namespace Allianz.Vita.Quality.Test.Services
         public void GetAllDefects()
         {
 
-            List<IDefect> collection = service.GetAllDefects();
+            var collection = service.GetAllDefects();
 
             Assert.IsNotNull(collection);
-            Assert.IsTrue(collection.Any());
+
+            CollectionAssert.AllItemsAreInstancesOfType(collection, typeof(IDefect));
 
         }
 
+        [TestMethod]
+        public void InsertDefect()
+        {
+            IMailItem mailItem = ServiceFactory.Get<IItemFactory>().GetNewMailItem();
+            IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(mailItem);
+            service.Save(defect);
+
+            var collection = service.GetAllDefects();
+
+            Assert.IsNotNull(collection);
+            CollectionAssert.AllItemsAreInstancesOfType(collection, typeof(IDefect));
+            Assert.IsTrue(collection.Any( item => item.DefectID.Equals(defect.DefectID)));
+
+        }
 
     }
 }
