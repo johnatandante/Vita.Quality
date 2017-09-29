@@ -1,5 +1,5 @@
-﻿using Allianz.Vita.Quality.Business.Enums;
-using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
 
 namespace Allianz.Vita.Quality.Business.Models
 {

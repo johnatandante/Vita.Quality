@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Busine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Test", "Allianz.Vita.Quality.Business.Test\Allianz.Vita.Quality.Business.Test.csproj", "{81C64700-1387-46A8-92E1-1336A68B59D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Interfaces", "Allianz.Vita.Quality.Business.Interfaces\Allianz.Vita.Quality.Business.Interfaces.csproj", "{82145157-2858-48D8-A905-F68A8774689A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Fake", "Allianz.Vita.Quality.Business.Fake\Allianz.Vita.Quality.Business.Fake.csproj", "{A2DA316F-3B1D-456F-BD66-A859170B9400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Services", "Allianz.Vita.Quality.Business.Services\Allianz.Vita.Quality.Business.Services.csproj", "{173B667A-FFBB-47CE-AE21-5A56D89477CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,18 @@ Global
 		{81C64700-1387-46A8-92E1-1336A68B59D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81C64700-1387-46A8-92E1-1336A68B59D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81C64700-1387-46A8-92E1-1336A68B59D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82145157-2858-48D8-A905-F68A8774689A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82145157-2858-48D8-A905-F68A8774689A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82145157-2858-48D8-A905-F68A8774689A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82145157-2858-48D8-A905-F68A8774689A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DA316F-3B1D-456F-BD66-A859170B9400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DA316F-3B1D-456F-BD66-A859170B9400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DA316F-3B1D-456F-BD66-A859170B9400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DA316F-3B1D-456F-BD66-A859170B9400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

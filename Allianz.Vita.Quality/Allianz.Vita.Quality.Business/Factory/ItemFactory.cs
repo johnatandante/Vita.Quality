@@ -1,10 +1,9 @@
-﻿using Allianz.Vita.Quality.Business.Enums;
-using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Business.Utilities;
 using Microsoft.Exchange.WebServices.Data;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Internals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -173,11 +172,6 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
                 //, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
             };
             
-        }
-
-        public AttachmentInfo ToAttachmentInfo(IAttachment att)
-        {
-            throw new NotImplementedException();
         }
 
         public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att)

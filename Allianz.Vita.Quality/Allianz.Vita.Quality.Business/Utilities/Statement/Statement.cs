@@ -82,7 +82,7 @@ namespace Allianz.Vita.Quality.Business.Utilities.Statement
             return result;
         }
 
-        internal Statement Where(string name, string value, Op op = null)
+        public Statement Where(string name, string value, Op op = null)
         {            
 
             Clauses.Add(new StatementItem(name, value, op ?? Op.Uguale));
@@ -90,7 +90,7 @@ namespace Allianz.Vita.Quality.Business.Utilities.Statement
             return this;
         }
 
-        internal Statement WhereNot(string name, string value)
+        public Statement WhereNot(string name, string value)
         {
             Clauses.Add(new StatementItem(name, value, Op.Diverso));
 

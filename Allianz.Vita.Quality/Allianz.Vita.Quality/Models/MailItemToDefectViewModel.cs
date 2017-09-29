@@ -1,36 +1,62 @@
-﻿using System.Web.Mvc;
-using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Models;
+﻿using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Models
 {
-	public class MailItemToDefectViewModel
+    public class MailItemToDefectViewModel
 	{
 
 		public IDefect Defect { get; set; }
 
 	}
 
-	public class DefectViewModel : Defect {
+	public class DefectViewModel : IDefect {
 
-		[AllowHtml]
-		public string HtmlDescription { get { return Description; } set { Description = value;  } }
+        public int? Id { get; set; }
 
-		[AllowHtml]
-		public string HtmlAreaPath { get { return AreaPath; } set { AreaPath = value; } }
+        public string Title { get; set; }
 
-		[AllowHtml]
-		public string HtmlIteration { get { return Iteration; } set { Iteration = value; } }
+        [AllowHtml]
+        public string AreaPath { get; set; }
 
-		public DefectViewModel() { }
+        [AllowHtml]
+        public string Iteration { get; set; }
+
+        public string SurveySystem { get; set; }
+
+        public string DefectID { get; set; }
+
+        public string FoundIn { get; set; }
+
+        public string Agency { get; set; }
+
+        public string Environment { get; set; }
+
+        public string DefectType { get; set; }
+
+        public SeverityLevel Severity { get; set; }
+
+        public string State { get; set; }
+
+        [UIHint("tinymce_jquery_full"), AllowHtml]
+        public string Description { get; set; }
+
+        [AllowHtml]
+        public string[] Comments { get; set; }
+
+        public IAttachment[] Attachment { get; set; }
+
+        public DefectViewModel() { }
 
 		public DefectViewModel(IDefect defect) {
 			
 			Title = defect.Title;
 
-			HtmlAreaPath = defect.AreaPath;
+            AreaPath = defect.AreaPath;
 
-			HtmlIteration = defect.Iteration;
+            Iteration = defect.Iteration;
 			
 			SurveySystem = defect.SurveySystem;
 			
@@ -48,11 +74,12 @@ namespace Allianz.Vita.Quality.Models
 			
 			State = defect.State;
 
-			HtmlDescription = defect.Description;
+            Description = defect.Description;
 			
 			Comments = defect.Comments;
 
 			Attachment = defect.Attachment;
+
 		}
 	}
 

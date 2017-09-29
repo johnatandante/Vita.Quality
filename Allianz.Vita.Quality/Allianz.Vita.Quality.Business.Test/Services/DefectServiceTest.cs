@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Fake.Services;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Allianz.Vita.Quality.Test.Services
 {
@@ -54,6 +53,7 @@ namespace Allianz.Vita.Quality.Test.Services
         {
             IMailItem mailItem = ServiceFactory.Get<IItemFactory>().GetNewMailItem();
             IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(mailItem);
+
             service.Save(defect);
 
             var collection = service.GetAllDefects();
@@ -61,7 +61,7 @@ namespace Allianz.Vita.Quality.Test.Services
             Assert.IsNotNull(collection);
             CollectionAssert.AllItemsAreInstancesOfType(collection, typeof(IDefect));
             Assert.IsTrue(collection.Any( item => item.DefectID.Equals(defect.DefectID)));
-
+            
         }
 
     }

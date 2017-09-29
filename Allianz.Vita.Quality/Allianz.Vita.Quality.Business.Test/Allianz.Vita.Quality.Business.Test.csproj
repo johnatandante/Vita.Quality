@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Allianz.Vita.Quality.Test</RootNamespace>
     <AssemblyName>Allianz.Vita.Quality.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -19,6 +19,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,6 +62,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Allianz.Vita.Quality.Business.Fake\Allianz.Vita.Quality.Business.Fake.csproj">
+      <Project>{a2da316f-3b1d-456f-bd66-a859170b9400}</Project>
+      <Name>Allianz.Vita.Quality.Business.Fake</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Allianz.Vita.Quality.Business.Interfaces\Allianz.Vita.Quality.Business.Interfaces.csproj">
+      <Project>{82145157-2858-48d8-a905-f68a8774689a}</Project>
+      <Name>Allianz.Vita.Quality.Business.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Allianz.Vita.Quality.Business\Allianz.Vita.Quality.Business.csproj">
       <Project>{7a4f732f-d97b-47ef-b521-75a066e6de57}</Project>
       <Name>Allianz.Vita.Quality.Business</Name>

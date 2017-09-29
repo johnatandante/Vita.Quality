@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Factory;
-using Allianz.Vita.Quality.Business.Services;
+using Allianz.Vita.Quality.Business.Fake.Services;
 using System.Linq;
 using System.Collections.Generic;
 

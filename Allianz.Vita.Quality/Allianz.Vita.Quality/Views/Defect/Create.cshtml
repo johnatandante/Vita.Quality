@@ -3,45 +3,46 @@
     ViewBag.Title = "Convert Mail to Defect";
 }
 
-@using (Html.BeginForm("Save", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+@using (Html.BeginForm("Save", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
 
     @Html.AntiForgeryToken()
-    
+
     <h2>New Defect: @Model.Title</h2>
     @Html.Hidden("Title", Model.Title);
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="col-md-offset-2 col-md-2">
             <input type="submit" class="btn btn-default" value="Insert Defect" />
         </div>
     </div>
-    
+
     <div class="form-group">
-        @Html.LabelFor(m => m.HtmlAreaPath, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.HtmlAreaPath, new { @class = "form-control" })
+        @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-2 control-label" })
+        <div class="col-md-2">
+            @Html.TextBoxFor(m => m.AreaPath, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.HtmlIteration, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.HtmlIteration, new { @class = "form-control" })
+        @Html.LabelFor(m => m.Iteration, new { @class = "col-md-2 control-label" })
+        <div class="col-md-2">
+            @Html.TextBoxFor(m => m.Iteration, new { @class = "form-control" })
         </div>
     </div>
 
     @Html.Hidden("SurveySystem", Model.SurveySystem);
-    
+
     <div class="form-group">
         @Html.LabelFor(m => m.DefectID, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
+        <div class="col-md-2">
             @Html.TextBoxFor(m => m.DefectID, new { @class = "form-control" })
         </div>
     </div>
 
     @Html.Hidden("FoundIn", Model.FoundIn);
-   
+
     <div class="form-group">
         @Html.LabelFor(m => m.Agency, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
+        <div class="col-md-2">
             @Html.TextBoxFor(m => m.Agency, new { @class = "form-control" })
         </div>
     </div>
@@ -50,13 +51,13 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.DefectType, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
+        <div class="col-md-2">
             @Html.TextBoxFor(m => m.DefectType, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Severity, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
+        <div class="col-md-2">
             @Html.TextBoxFor(m => m.Severity, new { @class = "form-control" })
         </div>
     </div>
@@ -64,56 +65,75 @@
     @Html.Hidden("State", Model.State);
 
     <div class="form-group">
-        @Html.LabelFor(m => m.HtmlDescription, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextAreaFor(m => m.HtmlDescription, new { @class = "form-control" })
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+        <div class="col-md-2">
+            @Html.EditorFor(m => m.Description, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Description)
+
         </div>
     </div>
-    if (Model.Comments.Any()) { 
-        <div class="form-group">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th>
-                            @Html.LabelFor(m => m.Comments)
-                        </th>
+    <div class="form-group">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>
+                        @Html.LabelFor(m => m.Comments)
+                    </th>
 
-                    </tr>
-                    @foreach (var comment in Model.Comments) {
+                </tr>
+                @if (Model.Attachment.Any())
+                {
+
+                    foreach (var comment in Model.Comments)
+                    {
                         <tr>
                             <td>
                                 @Html.TextAreaFor(modelItem => comment)
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
-    }
-
-    if(Model.Attachment.Any()) {
-        <div class="form-group">
-            <table class="table">
-                <tbody>
+                }
+                else
+                {
                     <tr>
-                        <th>
-                            @Html.LabelFor(m => m.Attachment)
-                        </th>
-
+                        <td>...</td>
                     </tr>
-                    @foreach (var attachment in Model.Attachment) {
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>
+                        @Html.LabelFor(m => m.Attachment)
+                    </th>
+
+                </tr>
+                @if (Model.Attachment.Any())
+                {
+
+                    foreach (var attachment in Model.Attachment)
+                    {
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => attachment.Title)
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-            </div>
-    }
-
+                }
+                else
+                {
+                    <tr>
+                        <td>...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
+ 
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
