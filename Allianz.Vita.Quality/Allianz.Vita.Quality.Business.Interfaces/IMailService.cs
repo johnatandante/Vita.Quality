@@ -9,9 +9,12 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 		
 		List<IMailItem> OpenInbox(int? pageSize = null);
 
-		IFolderItem OpenFolder(string path, int? pageSize = null);
+		IFolderItem OpenFolder(string path, int? pageSize = null, string from = "");
 
 		IMailItem Get(IMailItem model);
 
-	}
+        IAttachment GetAsAttachment(IMailItem model);
+
+
+    }
 }

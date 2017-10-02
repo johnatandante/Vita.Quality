@@ -8,6 +8,7 @@
 
     @Html.AntiForgeryToken()
 
+    @Html.Hidden("IMailItemUniqueId", Model.IMailItemUniqueId);
     <h2>New Defect: @Model.Title</h2>
     @Html.Hidden("Title", Model.Title);
     <div class="form-group">
@@ -134,7 +135,6 @@
     </div>
 }
  
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

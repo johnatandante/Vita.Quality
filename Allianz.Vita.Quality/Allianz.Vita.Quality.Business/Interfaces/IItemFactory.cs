@@ -20,9 +20,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems);
 
-        IMailItem GetNewMailItem();
+        IMailItem GetNewMailItem(string uniqueId = "");
 
-        Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att);
+        Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "");
 
+        IAttachment ToAttachment(string subject, byte[] content);
     }
 }

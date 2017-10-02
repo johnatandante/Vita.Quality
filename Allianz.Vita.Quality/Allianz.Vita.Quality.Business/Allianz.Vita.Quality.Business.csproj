@@ -198,8 +198,9 @@
     <Compile Include="Factory\ServiceFactory.cs" />
     <Compile Include="Interfaces\IItemFactory.cs" />
     <Compile Include="Models\FolderItem.cs" />
+    <Compile Include="Models\MailAsAttachment.cs" />
     <Compile Include="Models\MailItem.cs" />
-    <Compile Include="Models\MailItemToDefect.cs" />
+    <Compile Include="Models\Defect.cs" />
     <Compile Include="Models\SubjectMetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factory\ItemFactory.cs" />

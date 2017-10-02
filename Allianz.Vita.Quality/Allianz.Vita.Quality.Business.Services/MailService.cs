@@ -3,6 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces;
 using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Allianz.Vita.Quality.Business.Services
@@ -57,8 +58,8 @@ namespace Allianz.Vita.Quality.Business.Services
 					));
 
 		}
-		
-		public IFolderItem OpenFolder(string path, int? pageSize = null) {
+
+        public IFolderItem OpenFolder(string path, int? pageSize = null, string from = "") {
 			
 			Queue<string> folderNames = new Queue<string>(path.Split('.'));
 
@@ -74,10 +75,15 @@ namespace Allianz.Vita.Quality.Business.Services
 			
 			ItemView issueVitaItemView = new ItemView(pageSize ?? int.MaxValue);
 			issueVitaItemView.PropertySet = new PropertySet(BasePropertySet.FirstClassProperties);
-			// issueVitaItemView.PropertySet.RequestedBodyType = BodyType.HTML;
+            // issueVitaItemView.PropertySet.RequestedBodyType = BodyType.HTML;
 
-			SearchFilter searchFilter = new SearchFilter.ContainsSubstring(EmailMessageSchema.Subject, "Request");
-			FindItemsResults<Item> issueVitaItems = service.FindItems(folder.Id, searchFilter, issueVitaItemView);
+            SearchFilter.SearchFilterCollection collection = 
+                new SearchFilter.SearchFilterCollection(LogicalOperator.And);
+
+            collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.Subject, "Request"));
+            collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.From, "srm@allianz.it", ContainmentMode.Prefixed, ComparisonMode.IgnoreCase));
+
+			FindItemsResults<Item> issueVitaItems = service.FindItems(folder.Id, collection, issueVitaItemView);
 			
 			return Factory.ToFolderItem(folder, issueVitaItems);
 
@@ -110,22 +116,42 @@ namespace Allianz.Vita.Quality.Business.Services
 
 		}
 
-		public IMailItem Get(IMailItem model) {
+        EmailMessage GetEmailMessage(IMailItem model)
+        {
+            PropertySet prop = new PropertySet(BasePropertySet.FirstClassProperties,
+                                                ItemSchema.Attachments,
+                                                ItemSchema.Body,
+                                                ItemSchema.Categories,
+                                                ItemSchema.Flag,
+                                                ItemSchema.Importance,
+                                                ItemSchema.ConversationId);
+            return EmailMessage.Bind(service, new ItemId(model.UniqueId));
 
-			PropertySet prop = new PropertySet(	BasePropertySet.FirstClassProperties,
-												ItemSchema.Attachments,
-												ItemSchema.Body,
-												ItemSchema.Categories,
-												ItemSchema.Flag, 
-												ItemSchema.Importance,
-												ItemSchema.ConversationId,
-												ItemSchema.MimeContent);
+        }
 
-			EmailMessage email = EmailMessage.Bind(service, new ItemId(model.UniqueId));
+        public IMailItem Get(IMailItem model) {
+			EmailMessage email = GetEmailMessage(model);
 			return Factory.ToMailItem(email, propFull: true);
 
 		}
 
-		#endregion
-	}
+        public IAttachment GetAsAttachment(IMailItem model)
+        {
+            EmailMessage message = GetEmailMessage(model);
+            string title = message.Subject;
+            message.Load(new PropertySet(ItemSchema.MimeContent));
+            
+            using (MemoryStream ms = new MemoryStream())
+            {
+                MimeContent mc = message.MimeContent;
+                ms.Write(mc.Content, 0, mc.Content.Length);
+                
+                return Factory.ToAttachment(title, ms.ToArray());
+            }
+
+            
+        }
+
+        #endregion
+    }
 }

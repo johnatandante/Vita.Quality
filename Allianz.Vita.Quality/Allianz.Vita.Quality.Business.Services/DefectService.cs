@@ -40,17 +40,20 @@ namespace Allianz.Vita.Quality.Business.Services
         };
 
         IItemFactory Factory;
+        IMailService Mail;
 
-        public DefectService() : this(null) { }
+        public DefectService() : this(null, null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public DefectService(IItemFactory itemFactory)
+        public DefectService(IItemFactory itemFactory, IMailService mail)
         {
             _uri = defaultTfsUri;
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
+
+            Mail = mail ?? ServiceFactory.Get<IMailService>();
 
         }
 
@@ -170,7 +173,7 @@ namespace Allianz.Vita.Quality.Business.Services
 
                 // Create the work item. 
                 WorkItem defect = project.WorkItemTypes["Defect"].NewWorkItem();
-                
+
                 // int ? Id { get; }
                 defect.Title = model.Title;
                 defect.AreaPath = model.AreaPath;
@@ -190,12 +193,14 @@ namespace Allianz.Vita.Quality.Business.Services
 
                 // Comments
                 defect.History = "Created on " + DateTime.Now.Date.ToShortDateString() + " by " + workItemStore.UserIdentityName;
-                
-                //if(model.Attachment != null)
-                //    model.Attachment.ToList().ForEach(att => defect.Attachments.Add(Factory.ToAttachment(att)));
-                //else
-                //    throw new ArgumentNullException("model.Attachment in Defect " + defect.Title);
 
+                if (!string.IsNullOrEmpty(model.IMailItemUniqueId)) {
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    defect.Attachments.Add(Factory.ToAttachment(att, 
+                        comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
+                        fileName: model.Title.Replace('/', '-') + ".eml"));
+                } 
+                
                 // Links is read only
 
                 // Save the new

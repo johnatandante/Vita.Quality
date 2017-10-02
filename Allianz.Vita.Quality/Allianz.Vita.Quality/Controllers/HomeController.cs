@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Models;
 using Allianz.Vita.Quality.Business.Factory;
-using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -43,7 +42,7 @@ namespace Allianz.Vita.Quality.Controllers
 
                 model.InboxMessages = Mail.OpenInbox(pageSize: 10);
 
-                IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 100);
+                IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 100, from: "SRM");
 
                 model.PublicFolderDisplayName = publicFolder.DisplayName;
 

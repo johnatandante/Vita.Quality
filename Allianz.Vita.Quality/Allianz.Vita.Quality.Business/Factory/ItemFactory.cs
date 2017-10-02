@@ -12,88 +12,118 @@ using System.Web;
 namespace Allianz.Vita.Quality.Business.Factory
 {
     public class ItemFactory : IItemFactory
-	{
+    {
 
-		#region IItemFactory Members
+        IStorageService Storage;
 
-		public IFolderItem GetNewFolderItem() {
-			return new FolderItem();
-		}
+        IConfigurationService Config;
 
-		public IList<IMailItem> GetNewMailItemList() {
-			return new List<IMailItem>();
-		}
+        public ItemFactory() : this(null, null) { }
 
-		public IMailItem ToMailItem(EmailMessage mail, bool propFull = false) {
-			return new MailItem() {
-				UniqueId = mail.Id.UniqueId
-				, From = mail.From.Name
-				, Subject = mail.Subject
-				, Content = propFull ? mail.Body.Text : string.Empty
-				//, Flagged = propFull ? mail.Flag.FlagStatus != ItemFlagStatus.NotFlagged : false
-				, Attachments = propFull ? mail.Attachments.ToArray() : new object[] { }
-				, Categories = propFull ? mail.Categories.ToArray() : new string[] { }
-				, Importance = propFull ? mail.Importance.ToString() : Importance.Normal.ToString()
-				//, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
-			};
+        public ItemFactory(IStorageService storage, IConfigurationService config)
+        {
+            Storage = storage ?? ServiceFactory.Get<IStorageService>();
 
-		}
+            Config = config ?? ServiceFactory.Get<IConfigurationService>();
+        }
 
-		public IFolderItem ToFolderItem(Folder folder, FindItemsResults<Item> resultItems = null) {
-			
-			IFolderItem folderItem = new FolderItem() {
-				DisplayName = folder.DisplayName
-				, Messages = new List<IMailItem>()
-			};
+        #region IItemFactory Members
 
-			if(resultItems != null)
-				resultItems
-					.Select(i => ToMailItem(i as EmailMessage))
-					.ToList()
-					.ForEach(item => folderItem.Messages.Add(item));
+        public IFolderItem GetNewFolderItem()
+        {
+            return new FolderItem();
+        }
 
-			return folderItem;
+        public IList<IMailItem> GetNewMailItemList()
+        {
+            return new List<IMailItem>();
+        }
 
-		}
+        public IMailItem ToMailItem(EmailMessage mail, bool propFull = false)
+        {
+            return new MailItem()
+            {
+                UniqueId = mail.Id.UniqueId
+                ,
+                From = mail.From.Name
+                ,
+                Subject = mail.Subject
+                ,
+                Content = propFull ? mail.Body.Text : string.Empty
+                //, Flagged = propFull ? mail.Flag.FlagStatus != ItemFlagStatus.NotFlagged : false
+                ,
+                Attachments = propFull ? mail.Attachments.ToArray() : new object[] { }
+                ,
+                Categories = propFull ? mail.Categories.ToArray() : new string[] { }
+                ,
+                Importance = propFull ? mail.Importance.ToString() : Importance.Normal.ToString()
+                //, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
+            };
 
-		public IDefect GetNewDefect(IMailItem itemRead) {
+        }
 
-			SubjectMetaData data = new SubjectMetaData(itemRead.Subject);
+        public IFolderItem ToFolderItem(Folder folder, FindItemsResults<Item> resultItems = null)
+        {
 
-			IDefect defect = new Defect() {
-				Title = data.Title
+            IFolderItem folderItem = new FolderItem()
+            {
+                DisplayName = folder.DisplayName
+                ,
+                Messages = new List<IMailItem>()
+            };
 
-				, AreaPath = HttpUtility.UrlDecode("Vita\\SUV")
+            if (resultItems != null)
+                resultItems
+                    .Select(i => ToMailItem(i as EmailMessage))
+                    .ToList()
+                    .ForEach(item => folderItem.Messages.Add(item));
 
-				, SurveySystem = "SRM"
+            return folderItem;
 
-				, DefectID = data.Id
+        }
 
-				, FoundIn = "SUV 2.2.78 PR (SUV_20170925.014104)"
+        public IDefect GetNewDefect(IMailItem itemRead)
+        {
 
-                , Agency = data.DecodeCodCompany + " " + data.Agency.ToString()
+            SubjectMetaData data = new SubjectMetaData(itemRead.Subject);
 
-				, Environment = "Prod"
+            IDefect defect = new Defect()
+            {
+                Title = data.Title
+                ,
+                AreaPath = HttpUtility.UrlDecode(Config.DefaultAreaPath)
+                ,
+                SurveySystem = Config.DefaultSurveySystem
+                ,
+                DefectID = data.Id
+                ,
+                FoundIn = Config.CurrentWebAppId
+                ,
+                Agency = data.DecodeCodCompany + " " + data.Agency.ToString()
+                ,
+                Environment = Config.DefaultEnvironment
+                ,
+                Iteration = HttpUtility.UrlDecode(Config.DefaultIteration)
+                ,
+                DefectType = Config.DefaultDefectType
+                ,
+                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), Config.DefaultSeverity, true)
+                ,
+                State = Config.DefaultDefectState
+                ,
+                Description = HttpUtility.UrlDecode(itemRead.Content)
+                ,
+                Attachment = new IAttachment[] { }
+                ,
+                Comments = new string[] { }
+                ,
+                IMailItemUniqueId = itemRead.UniqueId
 
-				, Iteration = HttpUtility.UrlDecode("Vita\\Dev\\SUV\\")
+            };
 
-				, DefectType = "Altro"
+            return defect;
 
-				, Severity = SeverityLevel.Medium
-				
-				, State = "New"
-
-				, Description = HttpUtility.UrlDecode(itemRead.Content)
-				
-				, Attachment = new IAttachment[] { }
-
-				, Comments = new string[] { }
-		
-			};
-
-			return defect;
-
-		}
+        }
 
         public IDefect ToDefectItem(WorkItem workItem)
         {
@@ -133,7 +163,7 @@ namespace Allianz.Vita.Quality.Business.Factory
             };
 
             return defect;
-            
+
         }
 
         public IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems)
@@ -148,35 +178,24 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         }
 
-        public IMailItem GetNewMailItem()
+        public IMailItem GetNewMailItem(string uniqueId = "")
         {
-            return new MailItem() {
-                UniqueId = Guid.NewGuid().ToString()
-                , From = "srm@allianz.it" 
-                , Subject = "R: Request 2017/827273 - 27/09/2017 [4a8abb0b-9111-48ff-9c0b-d9f3ab956a13] ALLIANZ RAS 010336000000 BRESSANONE"
-                , Content = @"Buongiorno,
-L'utente questa mattina ha censito un nuovo cliente cognome e nome Di Meo Umberto ma aveva inserito la data di nascita errata. successivamente alla modifica, riscontra blocco in emissione nuova proposta vita.
-Cliente DI MEO UMBERTO
-data di nascita 06/02/1978 
-CF DMIMRT78B06F839J
-l'anagrafica è stata correttamente modificata ed in SCU i dati sono corretti ma in emissione polizza vita compare sempre errore CONTATTARE DIREZIONE VITA: Persona NVI chiave 171368433 e persona AGORA chiave 913411372 hanno data di nascita differente: verificare anagrafiche centralizzate
-non è possibile cancellare l'anagrafica perché risulta avere almeno un legame con altra polizza
-all img 
-Dalle verifiche svolte dal III LIV sviluppo applicativo Anagrafe, Derni risponde: Vi confermo che il nostro modulo di cancellazione si blocca perché trova legami su ptf vita.
-Potete cortesemente verificare l'errore che si presenta in emissione nuova proposta vita?
-"
-                //, Flagged = propFull ? mail.Flag.FlagStatus != ItemFlagStatus.NotFlagged : false
-                , Attachments = new object[] { }
-                , Categories = new string[] { }
-                , Importance = Importance.Normal.ToString()
-                //, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
-            };
-            
+            return new MailItem() { UniqueId = uniqueId };
+
         }
 
-        public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att)
+        public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(fileName))
+                fileName = "Mail.eml";
+
+            return new Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment(Storage.Store(att, fileName), comment);
+
+        }
+
+        public IAttachment ToAttachment(string subject, byte[] buffer)
+        {
+            return new MailAsAttachment() { Title = subject, Content = buffer };
         }
 
         #endregion

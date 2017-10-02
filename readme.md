@@ -26,3 +26,6 @@ http://bretfsas2s01.azgroup.itad.corpnet/tfs
     Microsoft.TeamFoundationServer.Client
     Microsoft.VisualStudio.Services.Client
     Microsoft.VisualStudio.Services.InteractiveClient
+	
+### Pdf	
+	https://opbuildstorageprod.blob.core.windows.net/output-pdf-files/en-us/MSDN.team-services/live/integrate.pdf

@@ -5,13 +5,7 @@ using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Models
 {
-    public class MailItemToDefectViewModel
-	{
-
-		public IDefect Defect { get; set; }
-
-	}
-
+    
 	public class DefectViewModel : IDefect {
 
         public int? Id { get; set; }
@@ -48,6 +42,8 @@ namespace Allianz.Vita.Quality.Models
 
         public IAttachment[] Attachment { get; set; }
 
+        public string IMailItemUniqueId { get; set; }
+
         public DefectViewModel() { }
 
 		public DefectViewModel(IDefect defect) {
@@ -79,6 +75,8 @@ namespace Allianz.Vita.Quality.Models
 			Comments = defect.Comments;
 
 			Attachment = defect.Attachment;
+
+            IMailItemUniqueId = defect.IMailItemUniqueId;
 
 		}
 	}

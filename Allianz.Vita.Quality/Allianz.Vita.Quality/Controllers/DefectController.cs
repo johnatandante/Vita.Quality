@@ -1,11 +1,10 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Models;
-using Allianz.Vita.Quality.Business.Services;
 using Allianz.Vita.Quality.Models;
 using System.Collections.Generic;
-using System.Web.Mvc;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Controllers
 {
