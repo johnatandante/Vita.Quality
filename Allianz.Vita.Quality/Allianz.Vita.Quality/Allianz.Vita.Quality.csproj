@@ -193,8 +193,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="libs\Microsoft.WITDataStore32.dll" />
+    <Content Include="libs\Microsoft.WITDataStore64.dll" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\HelloWorld.jsx" />
     <Content Include="Scripts\jquery-1.10.2.js" />

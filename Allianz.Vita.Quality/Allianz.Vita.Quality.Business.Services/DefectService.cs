@@ -7,6 +7,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace Allianz.Vita.Quality.Business.Services
 {
@@ -21,7 +22,7 @@ namespace Allianz.Vita.Quality.Business.Services
         static string workItemQuery = "SELECT {0} FROM WorkItems WHERE {1}";
 
         static string myTaskQueryName = "Assigned to me";
-
+        
         static string[] WorkItemOutputFields = new string[] {
             "System.Title",
             "System.AreaPath" ,
@@ -38,6 +39,20 @@ namespace Allianz.Vita.Quality.Business.Services
             "System.CreatedDate",
             "System.CreatedBy",
         };
+
+        static NetworkCredential credentials;
+        
+        public static NetworkCredential Credentials {
+            get
+            {
+                if (credentials == null)
+                {
+                    credentials = new NetworkCredential("le00035", "Filipa52", "AZGROUP");
+                }
+
+                return credentials;
+            }
+        }
 
         IItemFactory Factory;
         IMailService Mail;
@@ -69,6 +84,8 @@ namespace Allianz.Vita.Quality.Business.Services
             using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
             {
 
+                tpc.Credentials = Credentials;
+                    
                 // get the WorkItemStore service
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
                 // get the project context for the work item store
@@ -127,6 +144,8 @@ namespace Allianz.Vita.Quality.Business.Services
             using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
             {
 
+                tpc.Credentials = Credentials;
+
                 // get the WorkItemStore service
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
                 // get the project context for the work item store
@@ -168,6 +187,8 @@ namespace Allianz.Vita.Quality.Business.Services
 
             using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(_uri)))
             {
+                tpc.Credentials = Credentials;
+
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[teamProjectName];
 
