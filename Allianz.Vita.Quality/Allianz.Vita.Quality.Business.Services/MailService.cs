@@ -12,13 +12,8 @@ namespace Allianz.Vita.Quality.Business.Services
 	{
 
 		public string Version { get; private set; }
-		ExchangeService service;
 
-		// Config
-		string email = "AZGROUP\\le00035";
-		string password = "Filipa52";
-		string defaultUrl = "https://cas01.servizi.allianzit/EWS/Exchange.asmx";
-		// "https://cas01.servizi.allianzit/ews/Services.wsdl";
+        ExchangeService service;
 
 		IItemFactory Factory = null;
 
@@ -28,15 +23,21 @@ namespace Allianz.Vita.Quality.Business.Services
 
         }
 
-
         public MailService(ExchangeVersion version, IItemFactory factory) {
 
-			Factory = factory ?? ServiceFactory.Get<IItemFactory>();
+            IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
+
+            string email = config.AccountName;
+            string password = config.Password;
+            string defaultUrl = config.MailServiceUrl;
+
+            Factory = factory ?? ServiceFactory.Get<IItemFactory>();
 
 			Version = version.ToString();
 
 			// Create the binding.
 			service = new ExchangeService(version);
+
 			// Set the credentials for the on-premises server.
 			service.Credentials = new WebCredentials(email, password);
 

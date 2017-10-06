@@ -7,5 +7,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         List<IDefect> GetMyTasks();
         List<IDefect> GetAllDefects();
         void Save(IDefect model);
+        IDefect Get(string id);
     }
 }

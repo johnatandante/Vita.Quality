@@ -1,4 +1,5 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
@@ -7,6 +8,19 @@ namespace Allianz.Vita.Quality.Models
 {
     
 	public class DefectViewModel : IDefect {
+
+        public string Url
+        {
+            get
+            {
+                IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
+                return string.Join("/", 
+                    config.TrackingSystemUrl,
+                    config.TrackingSystemCompany,
+                    config.DefaultProjectPath, 
+                    "_workItems?id=" + Id.Value.ToString());
+            }
+        }
 
         public int? Id { get; set; }
 
@@ -47,7 +61,9 @@ namespace Allianz.Vita.Quality.Models
         public DefectViewModel() { }
 
 		public DefectViewModel(IDefect defect) {
-			
+
+            Id = defect.Id;
+
 			Title = defect.Title;
 
             AreaPath = defect.AreaPath;

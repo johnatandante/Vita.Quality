@@ -20,6 +20,14 @@ namespace Allianz.Vita.Quality.Controllers
             return View(collection);
 		}
 
+        public ActionResult Detail(string id)
+        {
+            
+            IDefect defect = ServiceFactory.Get<IDefectService>().Get(id);
+
+            return View(new DefectViewModel(defect));
+        }
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Save(DefectViewModel model) {

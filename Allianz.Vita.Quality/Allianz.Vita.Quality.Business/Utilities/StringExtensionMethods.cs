@@ -4,7 +4,7 @@ namespace System
 {
     public static class StringExtensionMethods
     {
-        internal static string Quoted(this string text)
+        public static string Quoted(this string text)
         {
             return string.Format("'{0}'", text);
         }
@@ -20,7 +20,7 @@ namespace System
             return string.Join(" ", text, "And", value).Trim();
         }
 
-        internal static string Bracketed(this string text)
+        public static string Bracketed(this string text)
         {
             return string.Format("[{0}]", text);
         }

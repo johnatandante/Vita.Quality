@@ -1,28 +1,11 @@
-﻿@model Allianz.Vita.Quality.Models.WorkspaceViewModel
+﻿@model Allianz.Vita.Quality.Models.ConvertViewModel
 @{
-    ViewBag.Title = "Workspace IssueVita";
+    ViewBag.Title = "Convert Request to Defects";
 }
 
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-<h3>Connecting to exchange server... @Model.ConnectionMessage</h3>
-
-<h4>Inbox Messages</h4>
-<table class="table">
-    <tbody>
-        @foreach (var message in Model.InboxMessages) {
-            <tr>
-                <td>
-                    @message.From
-                </td>
-                <td>
-                    @message.Subject
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 <h4>Public Folder @Model.PublicFolderDisplayName</h4>
 <table class="table">
     <tbody>

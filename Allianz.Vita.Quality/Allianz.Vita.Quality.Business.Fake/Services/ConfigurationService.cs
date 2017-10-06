@@ -4,68 +4,41 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        public string DefaultIteration
-        {
-            get
-            {
-                return "Vita\\Dev\\SUV\\";
-            }
-        }
+        public string DefaultIteration => string.Empty;
 
-        public string DefaultAreaPath
-        {
-            get
-            {
-                return "Vita\\SUV";
-            }
-        }
+        public string DefaultAreaPath => string.Empty;
 
-        public string DefaultSurveySystem
-        {
-            get
-            {
-                return "SRM";
-            }
-        }
+        public string DefaultSurveySystem => string.Empty;
 
-        public string CurrentWebAppId
-        {
-            get
-            {
-                return "SUV XXX";
-            }
-        }
+        public string CurrentWebAppId => string.Empty;
 
-        public string DefaultEnvironment
-        {
-            get
-            {
-                return "Test";
-            }
-        }
+        public string DefaultEnvironment => string.Empty;
 
-        public string DefaultSeverity
-        {
-            get
-            {
-                return "Low";
-            }
-        }
+        public string DefaultSeverity => string.Empty;
 
-        public string DefaultDefectState
-        {
-            get
-            {
-                return "New";
-            }
-        }
+        public string DefaultDefectState => string.Empty;
 
-        public string DefaultDefectType
-        {
-            get
-            {
-                return "Altro";
-            }
-        }
+        public string DefaultDefectType => string.Empty;
+
+        public string TrackingSystemUrl => string.Empty;
+
+        public string DefaultProjectPath => string.Empty;
+
+        public string MailServiceUrl => string.Empty;
+
+        public string Password => string.Empty;
+
+        public string AccountName => string.Empty;
+
+        public string TrackingSystemCompany => string.Empty;
+
+        public string TrackingSystemAccountName => string.Empty;
+
+        public string TrackingSystemDomainName => string.Empty;
+
+        public string TrackingSystemHashedPassword => string.Empty;
+
+        public string DefaultDefectWorkItemType => string.Empty;
+
     }
 }

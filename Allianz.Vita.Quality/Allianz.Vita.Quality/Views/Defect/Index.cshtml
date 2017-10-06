@@ -2,49 +2,28 @@
 
 @{
     ViewBag.Title = "Defect Inseriti";
+    ViewBag.RowsPerPage = 50;
 }
 
-<h2>View</h2>
+<h2>@ViewBag.Title</h2>
+<div>
+    <hr />
+    <p class="disabled">
+        @*@Html.ActionLink("Create New", "Create")*@
+        Create New
+    </p>
+    <hr />
+    @{
+        var grid = new WebGrid(Model, rowsPerPage: ViewBag.RowsPerPage, defaultSort: "Id desc");
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>Defects</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>
-            ...
-        </th>
-    </tr>
-
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @item.Id
-        </td>
-        <td>
-            @item.DefectID
-        </td>
-        <td>
-            @item.Title
-        </td>
-        <td>
-            @item.AreaPath
-        </td>
-        <td>
-            @item.State
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
+    <div>Showing @ViewBag.RowsPerPage Rows per page on @Model.Count() elements...</div>
+    @grid.GetHtml(columns: grid.Columns(
+        grid.Column("", format:@<a href="./Defect/Detail?Id=@item.Id">Details</a>),
+        grid.Column("Title", header: "Defect"),
+        grid.Column("AreaPath", header: "Area"),
+        grid.Column("State", header: "State"),
+        grid.Column("", format:@<a href="@item.Url&_a=edit" target="_blank">View in Tracking Tool</a>)
+        ))
+    <hr />
+</div>

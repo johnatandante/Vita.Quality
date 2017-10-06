@@ -6,7 +6,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
 {
     public class DefectService : IDefectService
     {
-        
+        public IDefect Get(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<IDefect> GetAllDefects()
         {
             throw new NotImplementedException();
