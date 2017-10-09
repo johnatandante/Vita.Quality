@@ -16,7 +16,17 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
+        public string[] GetAllowedValues(Enum field)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<IDefect> GetMyTasks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetTrackingUrlDetail(int? id)
         {
             throw new NotImplementedException();
         }

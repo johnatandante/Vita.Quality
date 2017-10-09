@@ -1,6 +1,9 @@
-﻿using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Business.Enums;
+using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -9,16 +12,20 @@ namespace Allianz.Vita.Quality.Models
     
 	public class DefectViewModel : IDefect {
 
+        IDefectService Service {
+            get
+            {
+                return ServiceFactory.Get<IDefectService>();
+            }
+        }
+
+        static Dictionary<string, string[]> _AllowedValues = new Dictionary<string,string[]>();
+
         public string Url
         {
             get
             {
-                IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
-                return string.Join("/", 
-                    config.TrackingSystemUrl,
-                    config.TrackingSystemCompany,
-                    config.DefaultProjectPath, 
-                    "_workItems?id=" + Id.Value.ToString());
+                return Service.GetTrackingUrlDetail(Id);                
             }
         }
 
@@ -26,26 +33,63 @@ namespace Allianz.Vita.Quality.Models
 
         public string Title { get; set; }
 
+        public string[] AreaPathAllowedValues
+        {
+            get
+            {
+                return Service.GetAllowedValues(DefectField.AreaPath);
+            }
+        }
+
         [AllowHtml]
+        [DisplayName("Area Path")]
         public string AreaPath { get; set; }
+
+        public string[] IterationAllowedValues
+        {
+            get
+            {
+                return Service.GetAllowedValues(DefectField.IterationPath);
+            }
+        }
 
         [AllowHtml]
         public string Iteration { get; set; }
 
+        [DisplayName("Survey System")]
         public string SurveySystem { get; set; }
-
+        
+        [DisplayName("Defect ID")]
         public string DefectID { get; set; }
 
+        public string[] FoundInAllowedValues
+        {
+            get
+            {
+                return Service.GetAllowedValues(DefectField.FoundIn);
+            }
+        }
+
+        [DisplayName("Found In")]
         public string FoundIn { get; set; }
 
         public string Agency { get; set; }
 
         public string Environment { get; set; }
 
+        public string[] DefectTypeAllowedValues
+        {
+            get
+            {
+                return Service.GetAllowedValues(DefectField.DefectType);
+            }
+        }
+
+        [DisplayName("Defect Type")]
         public string DefectType { get; set; }
 
         public SeverityLevel Severity { get; set; }
-
+        
         public string State { get; set; }
 
         [UIHint("tinymce_jquery_full"), AllowHtml]
@@ -65,7 +109,7 @@ namespace Allianz.Vita.Quality.Models
             Id = defect.Id;
 
 			Title = defect.Title;
-
+            
             AreaPath = defect.AreaPath;
 
             Iteration = defect.Iteration;

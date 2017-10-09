@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
@@ -8,5 +10,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         List<IDefect> GetAllDefects();
         void Save(IDefect model);
         IDefect Get(string id);
+        string[] GetAllowedValues(Enum field);
+        string GetTrackingUrlDetail(int? id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Business.Enums;
+using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Utilities;
 using Allianz.Vita.Quality.Business.Utilities.Statement;
@@ -45,21 +46,21 @@ namespace Allianz.Vita.Quality.Business.Services
         static string myTaskQueryName = "Assigned to me";
 
         static string[] WorkItemOutputFields = new string[] {
-            "System.Id",
-            "System.Title",
-            "System.AreaPath" ,
-            "System.IterationPath" ,
-            "Allianz.Alm.DefectSystem" ,
-            "Allianz.Alm.DefectID" ,
-            "Microsoft.VSTS.Build.FoundIn" ,
-            "Allianz.Alm.Agenzia",
-            "Allianz.Alm.environment" ,
-            "Allianz.Alm.DefectType",
-            "System.State" ,
-            "System.Description" ,
-            "Microsoft.VSTS.Common.Severity",
-            "System.CreatedDate",
-            "System.CreatedBy",
+            DefectField.Id.GetFieldName(),
+            DefectField.Title.GetFieldName(),
+            DefectField.AreaPath.GetFieldName(),
+            DefectField.IterationPath.GetFieldName(),
+            DefectField.DefectSystem.GetFieldName(),
+            DefectField.DefectID.GetFieldName(),
+            DefectField.FoundIn.GetFieldName(),
+            DefectField.Agenzia.GetFieldName(),
+            DefectField.environment.GetFieldName(),
+            DefectField.DefectType.GetFieldName(),
+            DefectField.State.GetFieldName(),
+            DefectField.Description.GetFieldName(),
+            DefectField.Severity.GetFieldName(),
+            DefectField.CreatedDate.GetFieldName(),
+            DefectField.CreatedBy.GetFieldName(),
         };
 
         NetworkCredential credentials;
@@ -176,19 +177,22 @@ namespace Allianz.Vita.Quality.Business.Services
 
                 // get the WorkItemStore service
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+
+                string state = DefectField.State.GetFieldName();
+
                 QueryDefinition query = GetNewQueryDefinition("GetAllDefects",
                     WorkItemOutputFields,
                     Statement.New()
                         .Where("System.TeamProject", "@Project")
                         // .Where("System.AssignedTo", "@Me")
                         .Where("System.WorkItemType", WorkItemType)
-                        .WhereNot("System.State", "Resolved")
-                        .WhereNot("System.State", "Closed")
-                        .WhereNot("System.State", "Retired")
-                        .WhereNot("System.State", "Completed")
-                        .WhereNot("System.State", "Verified")
-                        .WhereNot("Allianz.Alm.DefectID", "")
-                        .WhereNot("Allianz.Alm.DefectID", "TBD")
+                        .WhereNot(state, "Resolved")
+                        .WhereNot(state, "Closed")
+                        .WhereNot(state, "Retired")
+                        .WhereNot(state, "Completed")
+                        .WhereNot(state, "Verified")
+                        .WhereNot(DefectField.DefectID.GetFieldName(), "")
+                        .WhereNot(DefectField.DefectID.GetFieldName(), "TBD")
                         .WhereNot("Allianz.Alm.StateGroup", "Complete")
                         .Where("System.Title", "Request", Statement.Op.Contains)
                         .Where("System.AreaPath", "Vita", Statement.Op.Under)
@@ -290,6 +294,71 @@ namespace Allianz.Vita.Quality.Business.Services
 
             return result;
 
+        }
+
+
+        static Dictionary<Enum, string[]> _FieldValueCache = new Dictionary<Enum, string[]>();
+
+        public string[] GetAllowedValues(Enum field)
+        {
+            if (!_FieldValueCache.ContainsKey(field))
+                _FieldValueCache.Add(field, GetAllowedValues(field.GetFieldName()));
+            
+            return _FieldValueCache[field];
+
+        }
+
+        string[] GetAllowedValues(string key)
+        {
+            List<string> allowedValues = new List<string>();
+
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            {
+                tpc.Credentials = Credentials;
+
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+
+                if (key == "System.AreaPath")
+                {
+                    allowedValues.AddRange(Explore(workItemStore.Projects[TeamProjectName].AreaRootNodes));
+                    
+                } else if (key == "System.IterationPath") {
+                    allowedValues.AddRange(Explore(workItemStore.Projects[TeamProjectName].IterationRootNodes));
+
+                } else if (workItemStore.FieldDefinitions.Contains(key)) {
+
+                    foreach (var field in workItemStore.FieldDefinitions[key].AllowedValues)
+                        allowedValues.Add(field.ToString());
+                }
+
+            }
+
+            return allowedValues.ToArray();
+
+        }
+
+        private IEnumerable<string> Explore(NodeCollection nodeCollection)
+        {
+            List<string> nodeList = new List<string>();
+            foreach(Node node in nodeCollection)
+            {
+                nodeList.Add(node.Path);
+                if(node.HasChildNodes)
+                    nodeList.AddRange(Explore(node.ChildNodes));
+            }
+            
+            return nodeList;
+        }
+
+        public string GetTrackingUrlDetail(int? id)
+        {
+            IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
+
+            return string.Join("/",
+                config.TrackingSystemUrl,
+                config.TrackingSystemCompany,
+                config.DefaultProjectPath,
+                id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
     }
 }

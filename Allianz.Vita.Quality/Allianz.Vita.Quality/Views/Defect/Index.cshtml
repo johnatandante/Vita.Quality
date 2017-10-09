@@ -19,7 +19,8 @@
 
     <div>Showing @ViewBag.RowsPerPage Rows per page on @Model.Count() elements...</div>
     @grid.GetHtml(columns: grid.Columns(
-        grid.Column("", format:@<a href="./Defect/Detail?Id=@item.Id">Details</a>),
+        //grid.Column("", format:@<a href="./Detail?Id=@item.Id">Details</a>),
+        grid.Column("", format: (item => Html.ActionLink("Detail", "Detail", "Defect", new { Id = item.Id }, new { @class = "navbar" })) ),
         grid.Column("Title", header: "Defect"),
         grid.Column("AreaPath", header: "Area"),
         grid.Column("State", header: "State"),
