@@ -28,7 +28,15 @@ namespace Allianz.Vita.Quality.Controllers
             return View(new DefectViewModel(defect));
         }
 
-		[HttpPost]
+        [HttpGet]
+        public ActionResult Autoassign(string id)
+        {
+            ServiceFactory.Get<IDefectService>().Autoassign(id);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Save(DefectViewModel model) {
 

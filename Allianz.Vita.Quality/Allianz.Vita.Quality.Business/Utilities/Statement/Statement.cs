@@ -110,6 +110,11 @@ namespace Allianz.Vita.Quality.Business.Utilities.Statement
 
         }
 
+        public Statement Where(Enum item, string value, Op op = null)
+        {
+            return Where(item.FieldName(), value, op);
+        }
+
         public Statement Where(string name, string value, Op op = null)
         {            
 
@@ -118,11 +123,21 @@ namespace Allianz.Vita.Quality.Business.Utilities.Statement
             return this;
         }
 
+        public Statement WhereNot(Enum item, string value)
+        {
+            return WhereNot(item.FieldName(), value);
+        }
+
         public Statement WhereNot(string name, string value)
         {
             Clauses.Add(new WhereStatementItem(name.Bracketed(), value.Quoted(), Op.Diverso));
 
             return this;
+        }
+
+        public Statement OrderBy(Enum item, Order direction = null)
+        {
+            return OrderBy(item.FieldName(), direction);
         }
 
         public Statement OrderBy(string name, Order direction = null)

@@ -12,5 +12,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         IDefect Get(string id);
         string[] GetAllowedValues(Enum field);
         string GetTrackingUrlDetail(int? id);
+        void Autoassign(string id);
     }
 }

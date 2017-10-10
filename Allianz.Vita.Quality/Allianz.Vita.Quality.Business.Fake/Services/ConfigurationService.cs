@@ -40,5 +40,12 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
 
         public string DefaultDefectWorkItemType => string.Empty;
 
+        public string IssueFolderPath => string.Empty;
+
+        public string DefaultSender => string.Empty;
+
+        public string TrackingSystemUserAreaPath => string.Empty;
+
+        public string TrackingSystemWorkingFeature => string.Empty;
     }
 }

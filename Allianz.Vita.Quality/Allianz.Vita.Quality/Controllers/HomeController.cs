@@ -29,7 +29,7 @@ namespace Allianz.Vita.Quality.Controllers
                     .Select(mail => string.Join(" ", mail.Subject, "from", mail.From)).ToArray();
                 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ConnectionMessages.Add("Failed to retrieve Inbox messages: " + e.Message);
                 model.InboxMessages = new string[] { };
@@ -42,7 +42,7 @@ namespace Allianz.Vita.Quality.Controllers
                 model.PublicFolderDisplayName = publicFolder.DisplayName;
                 model.PublicFolderMessages = publicFolder.Messages.Select( item => item.Subject).ToArray();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ConnectionMessages.Add("Failed to retrieve Inbox messages: " + e.Message);
                 model.PublicFolderMessages = new string[] { };

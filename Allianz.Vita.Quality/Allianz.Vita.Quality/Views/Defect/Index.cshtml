@@ -24,6 +24,7 @@
         grid.Column("Title", header: "Defect"),
         grid.Column("AreaPath", header: "Area"),
         grid.Column("State", header: "State"),
+        grid.Column("", format: (item => Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = item.Id }, new { @class = "navbar" }))),
         grid.Column("", format:@<a href="@item.Url&_a=edit" target="_blank">View in Tracking Tool</a>)
         ))
     <hr />

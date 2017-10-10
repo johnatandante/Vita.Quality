@@ -1,6 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Services;
+using Allianz.Vita.Quality.Services;
 using Microsoft.Owin;
 using Owin;
 
@@ -16,8 +17,8 @@ namespace Allianz.Vita.Quality
             ServiceFactory.Register<IConfigurationService, ConfigurationService>();
             ServiceFactory.Register<IStorageService, StorageService>();
             ServiceFactory.Register<IItemFactory, ItemFactory>();
-            ServiceFactory.Register<IMailService, MailService>();
-            ServiceFactory.Register<IDefectService, DefectService>();
+            ServiceFactory.Register<IMailService, ExchangeMailService>();
+            ServiceFactory.Register<IDefectService, TfsDefectService>();
 
         }
     }

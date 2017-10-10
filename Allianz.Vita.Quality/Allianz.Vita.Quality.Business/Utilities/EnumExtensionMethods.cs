@@ -7,7 +7,7 @@ namespace Allianz.Vita.Quality.Business.Utilities
     public static class EnumExtensionMethods
     {
 
-        public static string GetFieldName(this Enum enumValue)
+        public static string FieldName(this Enum enumValue)
         {
             string enumValueAsString = enumValue.ToString();
 

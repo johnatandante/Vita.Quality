@@ -15,6 +15,5 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         IAttachment GetAsAttachment(IMailItem model);
 
-
     }
 }

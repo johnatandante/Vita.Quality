@@ -15,15 +15,14 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Index()
         {
             IMailService Mail = ServiceFactory.Get<IMailService>();
-
-            // ViewBag.Message = "Convert Request to Defects";
-
+            
             ConvertViewModel model = new ConvertViewModel();
 
             try
             {
+                IConfigurationService conf = ServiceFactory.Get<IConfigurationService>();
                 
-                IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 100, from: "SRM");
+                IFolderItem publicFolder = Mail.OpenFolder(conf.IssueFolderPath , pageSize: 100, from: conf.DefaultSender);
 
                 model.PublicFolderDisplayName = publicFolder.DisplayName;
 
