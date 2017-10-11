@@ -6,7 +6,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces
     {
 
         int? Id { get; }
+
         string Title { get; }
+
+        bool AutoAssign { get; }
 
         string AreaPath { get; }
 

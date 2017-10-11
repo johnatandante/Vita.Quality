@@ -10,7 +10,9 @@ namespace Allianz.Vita.Quality.Business.Models
 
         public int? Id { get; set; }
 
-		public string Title { get; set;}
+        public bool AutoAssign { get; set; }
+
+        public string Title { get; set;}
 
 		public string AreaPath { get; set; }
 		

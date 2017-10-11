@@ -4,9 +4,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 {
 	public interface IMailService : IService
 	{
-
-		string Version { get; }
-		
+        		
 		List<IMailItem> OpenInbox(int? pageSize = null);
 
 		IFolderItem OpenFolder(string path, int? pageSize = null, string from = "");
@@ -14,6 +12,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 		IMailItem Get(IMailItem model);
 
         IAttachment GetAsAttachment(IMailItem model);
+
+        void Flag(IMailItem model);
+
+        void Complete(IMailItem model);
 
     }
 }

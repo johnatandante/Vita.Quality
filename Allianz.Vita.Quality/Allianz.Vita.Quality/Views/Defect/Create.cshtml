@@ -19,19 +19,26 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.AutoAssign, new { @class = "col-md-2 control-label" })
         <div class="col-md-3">
-            @Html.DropDownListFor(m => m.AreaPath, new SelectList(Model.AreaPathAllowedValues),"", new { @class = "form-control" })
+            @Html.CheckBoxFor(m => m.AutoAssign, new { @class = "form-control" })
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Iteration, new { @class = "col-md-2 control-label" })
-        <div class="col-md-3">
-            @Html.DropDownListFor(m => m.Iteration, new SelectList(Model.IterationAllowedValues), "", new { @class = "form-control" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-2 control-label" })
+            <div class="col-md-3">
+                @Html.DropDownListFor(m => m.AreaPath, new SelectList(Model.AreaPathAllowedValues), "", new { @class = "form-control" })
+            </div>
         </div>
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Iteration, new { @class = "col-md-2 control-label" })
+            <div class="col-md-3">
+                @Html.DropDownListFor(m => m.Iteration, new SelectList(Model.IterationAllowedValues), "", new { @class = "form-control" })
+            </div>
+        </div>
 
-    @Html.Hidden("SurveySystem", Model.SurveySystem);
+
+        @Html.Hidden("SurveySystem", Model.SurveySystem);
 
     <div class="form-group">
         @Html.LabelFor(m => m.DefectID, new { @class = "col-md-2 control-label" })
@@ -60,11 +67,11 @@
 
     @Html.Hidden("Severity", Model.Severity);
     @*<div class="form-group">
-        @Html.LabelFor(m => m.Severity, new { @class = "col-md-2 control-label" })
-        <div class="col-md-2">
-            @Html.TextBoxFor(m => m.Severity, new { @class = "form-control" })
-        </div>
-    </div>*@
+            @Html.LabelFor(m => m.Severity, new { @class = "col-md-2 control-label" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Severity, new { @class = "form-control" })
+            </div>
+        </div>*@
 
     @Html.Hidden("State", Model.State);
 
@@ -77,67 +84,67 @@
         </div>
     </div>
     @*<div class="form-group">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th>
-                        @Html.LabelFor(m => m.Comments)
-                    </th>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(m => m.Comments)
+                        </th>
 
-                </tr>
-                @if (Model.Attachment.Any())
-                {
+                    </tr>
+                    @if (Model.Attachment.Any())
+                    {
 
-                    foreach (var comment in Model.Comments)
+                        foreach (var comment in Model.Comments)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.TextAreaFor(modelItem => comment)
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>
-                                @Html.TextAreaFor(modelItem => comment)
-                            </td>
+                            <td>...</td>
                         </tr>
                     }
-                }
-                else
-                {
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <table class="table">
+                <tbody>
                     <tr>
-                        <td>...</td>
+                        <th>
+                            @Html.LabelFor(m => m.Attachment)
+                        </th>
+
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="form-group">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th>
-                        @Html.LabelFor(m => m.Attachment)
-                    </th>
+                    @if (Model.Attachment.Any())
+                    {
 
-                </tr>
-                @if (Model.Attachment.Any())
-                {
-
-                    foreach (var attachment in Model.Attachment)
+                        foreach (var attachment in Model.Attachment)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => attachment.Title)
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => attachment.Title)
-                            </td>
+                            <td>...</td>
                         </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td>...</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>*@
+                </tbody>
+            </table>
+        </div>*@
 }
- 
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -9,7 +9,15 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
 {
     public class MailService : IMailService
     {
-        public string Version => throw new NotImplementedException();
+        public void Complete(IMailItem model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Flag(IMailItem itemRead)
+        {
+            throw new NotImplementedException();
+        }
 
         public IMailItem Get(IMailItem model)
         {

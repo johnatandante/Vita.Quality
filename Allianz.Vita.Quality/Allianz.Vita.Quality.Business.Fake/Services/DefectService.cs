@@ -36,7 +36,7 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
-        public void Save(IDefect model)
+        public string Save(IDefect model)
         {
             throw new NotImplementedException();
         }

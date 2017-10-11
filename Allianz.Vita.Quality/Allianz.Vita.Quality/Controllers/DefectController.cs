@@ -11,10 +11,20 @@ namespace Allianz.Vita.Quality.Controllers
     public class DefectController : Controller
     {
         
+        IDefectService Service
+        {
+            get { return ServiceFactory.Get<IDefectService>(); }
+        }
+
+        IMailService Mail
+        {
+            get { return ServiceFactory.Get<IMailService>(); }
+        }
+
         // GET: Defect
         public ActionResult Index() {
 
-            List<IDefect> defects = ServiceFactory.Get<IDefectService>().GetAllDefects();
+            List<IDefect> defects = Service.GetAllDefects();
             DefectViewModel[] collection = defects.Select(idefect => new DefectViewModel(idefect)).ToArray();
 
             return View(collection);
@@ -23,7 +33,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Detail(string id)
         {
             
-            IDefect defect = ServiceFactory.Get<IDefectService>().Get(id);
+            IDefect defect = Service.Get(id);
 
             return View(new DefectViewModel(defect));
         }
@@ -31,9 +41,10 @@ namespace Allianz.Vita.Quality.Controllers
         [HttpGet]
         public ActionResult Autoassign(string id)
         {
-            ServiceFactory.Get<IDefectService>().Autoassign(id);
+            
+            Service.Autoassign(id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Detail", id );
         }
 
         [HttpPost]
@@ -44,10 +55,8 @@ namespace Allianz.Vita.Quality.Controllers
 			{
 				return View(model);
 			}
-
-            ServiceFactory.Get<IDefectService>().Save(model);
-
-            return Redirect("Index");
+            
+            return RedirectToAction("Detail", Service.Save(model));
             
 		}
 
@@ -59,8 +68,10 @@ namespace Allianz.Vita.Quality.Controllers
 				return View(model);
 			}
 
-			IMailItem itemRead = ServiceFactory.Get<IMailService>().Get(model);
+			IMailItem itemRead = Mail.Get(model);
 			IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
+
+            Mail.Flag(itemRead);
 			
 			return View(new DefectViewModel(defect));
 		}

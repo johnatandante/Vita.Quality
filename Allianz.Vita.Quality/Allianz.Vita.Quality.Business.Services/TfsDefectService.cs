@@ -215,8 +215,9 @@ namespace Allianz.Vita.Quality.Business.Services
             return new QueryDefinition(name, string.Format(workItemQuery, outputFieldsClause, statement));
         }
 
-        public void Save(IDefect model)
+        public string Save(IDefect model)
         {
+            WorkItem defect;
 
             using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
             {
@@ -226,14 +227,21 @@ namespace Allianz.Vita.Quality.Business.Services
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item. 
-                WorkItem defect = project
+                defect = project
                     .WorkItemTypes[ServiceFactory.Get<IConfigurationService>().DefaultDefectWorkItemType]
                     .NewWorkItem();
 
                 // int ? Id { get; }
                 defect.Title = model.Title;
-                defect.AreaPath = model.AreaPath;
-                defect.IterationPath = model.Iteration;
+
+                if (model.AutoAssign)
+                {
+                    Autoassign(workItemStore, defect);
+                } else
+                {
+                    defect.AreaPath = model.AreaPath;
+                    defect.IterationPath = model.Iteration;
+                }
 
                 defect.State = model.State;
                 defect.Description = model.Description;
@@ -264,10 +272,13 @@ namespace Allianz.Vita.Quality.Business.Services
                 if (!defect.IsValid())
                     throw new ApplicationException("Errore in inserimento Defect " + defect.Title);
 
-                defect.Save();
+                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
 
+                defect.Save();
+                
             }
 
+            return defect != null ? defect.Id.ToString() : string.Empty;
         }
 
         public IDefect Get(string id)
@@ -382,8 +393,8 @@ namespace Allianz.Vita.Quality.Business.Services
                 {
                     WorkItem workItem = collection[0];
                     workItem.Open();
-                    workItem.Fields[DefectField.AreaPath.FieldName()].Value = config.TrackingSystemUserAreaPath;
-                    workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
+
+                    Autoassign(workItemStore, workItem);
 
                     string path = GetCurrentIterationPath(workItemStore);
                     workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
@@ -392,14 +403,20 @@ namespace Allianz.Vita.Quality.Business.Services
                     // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
                     WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
                     workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
-                    
+
                     if (!workItem.IsValid())
                         throw new ApplicationException("Errore salvataggio " + workItem.Title);
-
+                    
                     workItem.Save();
                 }
-                
+
             }
+        }
+
+        private void Autoassign(WorkItemStore workItemStore, WorkItem workItem)
+        {
+            workItem.Fields[DefectField.AreaPath.FieldName()].Value = config.TrackingSystemUserAreaPath;
+            workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
         }
 
         private string GetCurrentIterationPath(WorkItemStore workItemStore)

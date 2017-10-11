@@ -2,15 +2,14 @@
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Models
 {
-    
-	public class DefectViewModel : IDefect {
+
+    public class DefectViewModel : IDefect {
 
         IDefectService Service {
             get
@@ -18,6 +17,8 @@ namespace Allianz.Vita.Quality.Models
                 return ServiceFactory.Get<IDefectService>();
             }
         }
+
+        public bool AutoAssign { get; set; }        
 
         public string Url
         {
@@ -107,6 +108,8 @@ namespace Allianz.Vita.Quality.Models
             Id = defect.Id;
 
 			Title = defect.Title;
+
+            AutoAssign = defect.AutoAssign;
             
             AreaPath = defect.AreaPath;
 

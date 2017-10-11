@@ -46,10 +46,13 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         string IssueFolderPath { get; }
 
+        string IssueCompletedFolderPath { get; }
+
         string DefaultSender { get; }
 
         string TrackingSystemUserAreaPath { get; }
 
         string TrackingSystemWorkingFeature { get; }
+
     }
 }

@@ -9,6 +9,11 @@
 <div>
     <h4>DefectViewModel</h4>
     <hr />
+    <div class="panel">
+        <p>
+            <a href="@Model.Url&_a=edit" target="_blank">View in Tracking Tool</a>
+        </p>
+    </div>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Title)
@@ -99,20 +104,21 @@
         </dd>
 
         @*<dt>
-            @Html.DisplayNameFor(model => model.IMailItemUniqueId)
-        </dt>
+                @Html.DisplayNameFor(model => model.IMailItemUniqueId)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IMailItemUniqueId)
-        </dd>*@
+            <dd>
+                @Html.DisplayFor(model => model.IMailItemUniqueId)
+            </dd>*@
 
     </dl>
 </div>
-<p>
+<div class="panel">
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id })*@
-    <p class="disabled"> Edit </p> |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    <p class="disabled"> Edit </p> 
+    | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id }, new { @class = "navbar" })
+    | @Html.ActionLink("Back to List", "Index")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

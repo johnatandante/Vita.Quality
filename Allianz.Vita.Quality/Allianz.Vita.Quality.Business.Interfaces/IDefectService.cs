@@ -8,7 +8,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
     {
         List<IDefect> GetMyTasks();
         List<IDefect> GetAllDefects();
-        void Save(IDefect model);
+        string Save(IDefect model);
         IDefect Get(string id);
         string[] GetAllowedValues(Enum field);
         string GetTrackingUrlDetail(int? id);

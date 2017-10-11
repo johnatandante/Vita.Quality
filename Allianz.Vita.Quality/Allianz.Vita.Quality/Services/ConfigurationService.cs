@@ -152,12 +152,12 @@ namespace Allianz.Vita.Quality.Services
         public string IssueFolderPath
         {
             get
-            {                
+            {
                 return WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
             }
 
         }
-        
+
         public string DefaultSender
         {
             get
@@ -180,6 +180,14 @@ namespace Allianz.Vita.Quality.Services
             get
             {
                 return WebConfigurationManager.AppSettings["TrackingSystemWorkingFeature"].ToString();
+            }
+        }
+
+        public string IssueCompletedFolderPath
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();                
             }
         }
     }
