@@ -19,8 +19,6 @@ namespace Allianz.Vita.Quality.Models
             }
         }
 
-        static Dictionary<string, string[]> _AllowedValues = new Dictionary<string,string[]>();
-
         public string Url
         {
             get
