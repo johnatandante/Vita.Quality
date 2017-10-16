@@ -47,6 +47,7 @@
     <Compile Include="IDefect.cs" />
     <Compile Include="IDefectService.cs" />
     <Compile Include="IFolderItem.cs" />
+    <Compile Include="ILinkService.cs" />
     <Compile Include="IMailItem.cs" />
     <Compile Include="IMailService.cs" />
     <Compile Include="IService.cs" />

@@ -53,10 +53,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\MailServicesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DefectServiceTest.cs" />
-    <Compile Include="Services\StorageServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

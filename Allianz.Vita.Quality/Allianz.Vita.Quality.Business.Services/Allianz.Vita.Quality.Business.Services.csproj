@@ -196,11 +196,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Link\LinkService.cs" />
     <Compile Include="Mail\MailFlag.cs" />
-    <Compile Include="TfsDefectService.cs" />
+    <Compile Include="Defect\TfsDefectService.cs" />
     <Compile Include="Mail\ExchangeMailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StorageService.cs" />
+    <Compile Include="Storage\StorageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Allianz.Vita.Quality.Business.Interfaces\Allianz.Vita.Quality.Business.Interfaces.csproj">

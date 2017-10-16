@@ -112,12 +112,10 @@
             </dd>*@
 
     </dl>
-</div>
-<div class="panel">
-    @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id })*@
-    <p class="disabled"> Edit </p> 
-    | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id }, new { @class = "navbar" })
-    | @Html.ActionLink("Back to List", "Index")
+    <div class="panel">
+        @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id })*@
+        <span class="disabled"> Edit </span> | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id }, new { @class = "navbar" }) | @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
 
 @section Scripts {

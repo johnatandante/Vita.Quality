@@ -1,7 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Services;
+using Allianz.Vita.Quality.Business.Services.Defect;
 using Allianz.Vita.Quality.Business.Services.Mail;
+using Allianz.Vita.Quality.Business.Services.Storage;
 using Allianz.Vita.Quality.Services;
 using Microsoft.Owin;
 using Owin;

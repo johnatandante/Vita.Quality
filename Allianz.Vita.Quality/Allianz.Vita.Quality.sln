@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Busine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Services", "Allianz.Vita.Quality.Business.Services\Allianz.Vita.Quality.Business.Services.csproj", "{173B667A-FFBB-47CE-AE21-5A56D89477CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Services.Test", "Allianz.Vita.Quality.Business.Services.Test\Allianz.Vita.Quality.Business.Services.Test.csproj", "{3868A390-A439-474D-B43A-C53EA3A101F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{173B667A-FFBB-47CE-AE21-5A56D89477CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3868A390-A439-474D-B43A-C53EA3A101F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3868A390-A439-474D-B43A-C53EA3A101F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3868A390-A439-474D-B43A-C53EA3A101F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3868A390-A439-474D-B43A-C53EA3A101F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

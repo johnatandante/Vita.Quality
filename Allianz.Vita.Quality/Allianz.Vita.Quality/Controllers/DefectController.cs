@@ -44,7 +44,8 @@ namespace Allianz.Vita.Quality.Controllers
             
             Service.Autoassign(id);
 
-            return RedirectToAction("Detail", id );
+            return RedirectToAction("Detail", "Defect", new { Id = id } );
+
         }
 
         [HttpPost]
