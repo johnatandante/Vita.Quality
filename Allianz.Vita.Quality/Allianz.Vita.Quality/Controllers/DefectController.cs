@@ -57,7 +57,7 @@ namespace Allianz.Vita.Quality.Controllers
 				return View(model);
 			}
             
-            return RedirectToAction("Detail", Service.Save(model));
+            return RedirectToAction("Detail", "Defect", new { Id = Service.Save(model) });
             
 		}
 
@@ -76,6 +76,24 @@ namespace Allianz.Vita.Quality.Controllers
 			
 			return View(new DefectViewModel(defect));
 		}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Archive(MailItem model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            IMailItem itemRead = Mail.Get(model);
+            Mail.Complete(itemRead);
+
+            return RedirectToAction("Index", "Convert");
+        }
+
+
 
     }
 }

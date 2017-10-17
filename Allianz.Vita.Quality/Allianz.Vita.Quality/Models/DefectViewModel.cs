@@ -18,6 +18,7 @@ namespace Allianz.Vita.Quality.Models
             }
         }
 
+        [DisplayName("Prendi in carico")]
         public bool AutoAssign { get; set; }        
 
         public string Url

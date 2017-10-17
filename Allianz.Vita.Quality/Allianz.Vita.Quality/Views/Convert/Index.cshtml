@@ -9,23 +9,35 @@
 <h4>Public Folder @Model.PublicFolderDisplayName</h4>
 <table class="table">
     <tbody>
-        @foreach (var item in Model.PublicFolderMessages) {
+        @foreach (var item in Model.PublicFolderMessages)
+        {
             <tr>
-                @using (Html.BeginForm("Create", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("UniqueId", item.UniqueId)
-                    <td>
-                        @item.From
-                    </td>
-                    <td>
-                        @item.Subject
-                    </td>
-                    <td>
-                        <div>
+                <td>
+                    @item.From
+                </td>
+                <td>
+                    @item.Subject
+                </td>
+                <td>
+                    <div>
+                        @using (Html.BeginForm("Create", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("UniqueId", item.UniqueId)
                             <input type="submit" class="btn btn-default" value="Convert" title="Convert to Defect" />
-                        </div>
-                    </td>                    
-                }
+                        }
+                    </div>
+                    </td>
+                <td>
+                    <div>
+                        @using (Html.BeginForm("Archive", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("UniqueId", item.UniqueId)
+                            <input type="submit" class="btn btn-default" value="Archive" title="Archive Defect" />
+                        }
+                    </div>
+                </td>
             </tr>
         }
     </tbody>

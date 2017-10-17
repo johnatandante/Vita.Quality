@@ -5,11 +5,29 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 
 namespace Allianz.Vita.Quality.Business.Services.Mail
 {
     public class ExchangeMailService : IMailService
     {
+
+        //static ObjectCache cache;
+
+        //CacheItemPolicy policy
+        //{
+        //    get
+        //    {
+        //        var p = new CacheItemPolicy();
+        //        p.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(120.0);
+        //        return p;
+        //    }
+        //}
+
+        static ExtendedPropertyDefinition PidTagFlagStatus
+        {
+            get { return new ExtendedPropertyDefinition(0x1090, MapiPropertyType.Integer); }
+        }
 
         IConfigurationService Config
         {
@@ -30,6 +48,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
         public ExchangeMailService(ExchangeVersion version, IItemFactory factory)
         {
+            //cache = MemoryCache.Default;
 
             IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
 
@@ -58,9 +77,9 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
         {
 
             ItemView itemView = new ItemView(pageSize ?? int.MaxValue);
-
+            
             FindItemsResults<Item> homeItems = service.FindItems(WellKnownFolderName.Inbox, itemView);
-
+            
             return new List<IMailItem>(
                     homeItems.Select(i => Factory.ToMailItem(i as EmailMessage)
                     ));
@@ -72,6 +91,15 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
             Queue<string> folderNames = new Queue<string>(path.Split('.'));
 
+            string folderKey = "FindFoldersOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString();
+            //CacheItem objectFolderResults = cache.GetCacheItem(folderKey);
+            //if (objectFolderResults == null)
+            //{
+            //    cache.Add(folderKey, FindSubFolder(folderNames), policy);
+            //    objectFolderResults = cache.GetCacheItem(folderKey);
+            //}
+
+            //FindFoldersResults folderResults = objectFolderResults.Value as FindFoldersResults;
             FindFoldersResults folderResults = FindSubFolder(folderNames);
 
             if (!folderResults.Any())
@@ -88,10 +116,24 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
             SearchFilter.SearchFilterCollection collection =
                 new SearchFilter.SearchFilterCollection(LogicalOperator.And);
-
+                        
             collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.Subject, "Request"));
             collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.From, "srm@allianz.it", ContainmentMode.Prefixed, ComparisonMode.IgnoreCase));
 
+            collection.Add(new SearchFilter.Not(new SearchFilter.Exists(PidTagFlagStatus)));
+            //collection.Add(new SearchFilter.IsNotEqualTo(PidTagFlagStatus, (short)MailFlag.Flagged));
+            //collection.Add(new SearchFilter.IsNotEqualTo(PidTagFlagStatus, (short)MailFlag.Complete));
+
+            //string itemsKey = "FindItemsOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString() + folder.Id;
+
+            //CacheItem objectIssueVitaItems = cache.GetCacheItem(itemsKey);
+            //if (objectIssueVitaItems == null)
+            //{
+            //    cache.Add(itemsKey, service.FindItems(folder.Id, collection, issueVitaItemView), policy);
+            //    objectIssueVitaItems = cache.GetCacheItem(itemsKey);
+            //}
+
+            //FindItemsResults<Item> issueVitaItems = objectIssueVitaItems.Value as FindItemsResults<Item>;
             FindItemsResults<Item> issueVitaItems = service.FindItems(folder.Id, collection, issueVitaItemView);
 
             return Factory.ToFolderItem(folder, issueVitaItems);
@@ -181,7 +223,6 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             if (Version < ExchangeVersion.Exchange2013)
             {
                 
-                var PidTagFlagStatus = new ExtendedPropertyDefinition(0x1090, MapiPropertyType.Integer);
                 message.SetExtendedProperty(PidTagFlagStatus, (short)MailFlag.Flagged);
 
             }
@@ -206,7 +247,6 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             }
             else
             {
-                var PidTagFlagStatus = new ExtendedPropertyDefinition(0x1090, MapiPropertyType.Integer);
                 message.SetExtendedProperty(PidTagFlagStatus, (short)MailFlag.Complete );
             }
 

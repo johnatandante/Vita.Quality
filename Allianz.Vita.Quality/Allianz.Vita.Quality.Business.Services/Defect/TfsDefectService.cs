@@ -395,15 +395,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     workItem.Open();
 
                     Autoassign(workItemStore, workItem);
-
-                    string path = GetCurrentIterationPath(workItemStore);
-                    workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
-
-                    // Docs Link to w.i. as parent of...
-                    // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
-                    WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
-                    workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
-
+                    
                     if (!workItem.IsValid())
                         throw new ApplicationException("Errore salvataggio " + workItem.Title);
                     
@@ -417,6 +409,15 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             workItem.Fields[DefectField.AreaPath.FieldName()].Value = config.TrackingSystemUserAreaPath;
             workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
+
+            string path = GetCurrentIterationPath(workItemStore);
+            workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
+
+            // Docs Link to w.i. as parent of...
+            // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
+            WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];            
+            workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
+
         }
 
         private string GetCurrentIterationPath(WorkItemStore workItemStore)
