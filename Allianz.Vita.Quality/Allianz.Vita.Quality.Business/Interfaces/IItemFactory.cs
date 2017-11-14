@@ -25,5 +25,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "");
 
         IAttachment ToAttachment(string subject, byte[] content);
+
+        void MergeTo(IMailItem itemRead, IDefect defect);
+
+        string GetSubject(IMailItem itemRead);
+
     }
 }

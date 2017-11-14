@@ -10,9 +10,9 @@
     <h4>DefectViewModel</h4>
     <hr />
     <div class="panel">
-        <p>
-            <a href="@Model.Url&_a=edit" target="_blank">View in Tracking Tool</a>
-        </p>
+        <div class="form-inline">
+            <a href="@Model.Url&_a=edit" target="_blank">View in Tracking Tool</a> | @Html.ActionLink("Rispondi", "Reply", "Defect", new { Id = Model.Id }) | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id })
+        </div>
     </div>
     <dl class="dl-horizontal">
         <dt>
@@ -114,7 +114,7 @@
     </dl>
     <div class="panel">
         @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id })*@
-        <span class="disabled"> Edit </span> | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id }, new { @class = "navbar" }) | @Html.ActionLink("Back to List", "Index")
+        <span class="disabled"> Edit </span> | @Html.ActionLink("Back to List", "Index")
     </div>
 </div>
 

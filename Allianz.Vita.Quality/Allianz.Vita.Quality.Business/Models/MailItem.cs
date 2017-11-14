@@ -2,7 +2,7 @@
 
 namespace Allianz.Vita.Quality.Business.Models
 {
-	public class MailItem : IMailItem
+	public class MailItem : IMailItem, IMailItemKey
 	{
 		public string UniqueId { get; set; }
 
@@ -22,5 +22,18 @@ namespace Allianz.Vita.Quality.Business.Models
 
 		public string ConversationId { get; set; }
 
-	}
+        public string IMailItemUniqueId
+        {
+            get
+            {
+                return UniqueId;
+            }
+
+            set
+            {
+                UniqueId = value;
+            }
+        }
+
+    }
 }

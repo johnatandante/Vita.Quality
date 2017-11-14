@@ -503,6 +503,8 @@
     <Content Include="Views\Defect\InsertNew.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_jquery_full.cshtml" />
     <Content Include="Views\Defect\Detail.cshtml" />
+    <Content Include="Views\Defect\Reply.cshtml" />
+    <Content Include="Views\Defect\Notify.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

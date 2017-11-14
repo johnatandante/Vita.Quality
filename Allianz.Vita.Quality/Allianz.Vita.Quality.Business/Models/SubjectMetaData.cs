@@ -8,7 +8,7 @@ namespace Allianz.Vita.Quality.Business.Models
     {
         static Dictionary<ushort, string> MappaCompagnia = new Dictionary<ushort, string>()
         {
-            { 1, "AZR" }, { 2, "MI" },{ 5, "AZS" },{ 7, "SASA" },{ 73, "AZL" }
+            { 1, "AZR" }, { 8, "MI" },{ 2, "AZS" },{ 7, "SASA" },{ 73, "AZL" }
         };
 
         static char separator = ' ';

@@ -198,6 +198,19 @@ namespace Allianz.Vita.Quality.Business.Factory
             return new MailAsAttachment() { Title = subject, Content = buffer };
         }
 
+        public void MergeTo(IMailItem itemRead, IDefect defect)
+        {
+            
+            defect.Description = HttpUtility.UrlDecode(itemRead.Content);
+            defect.IMailItemUniqueId = itemRead.UniqueId;
+
+        }
+
+        public string GetSubject(IMailItem itemRead)
+        {
+            return new SubjectMetaData(itemRead.Subject).Title;
+        }
+
         #endregion
     }
 

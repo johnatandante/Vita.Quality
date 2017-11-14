@@ -420,6 +420,45 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         }
 
+        public void MoveStateOn(IDefect defect)
+        {
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            {
+                tpc.Credentials = Credentials;
+
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemCollection collection = GetWorkItemById(workItemStore, defect.DefectID);
+                WorkItem workItem = collection[0];
+                workItem.Open();
+
+                workItem.State = GetNextState(workItem.Fields[DefectField.State.FieldName()]);
+
+                if (!workItem.IsValid())
+                    throw new ApplicationException("Errore salvataggio " + workItem.Title);
+
+                workItem.Save();
+            }
+
+        }
+
+        private string GetNextState(Field field)
+        {
+            string value = string.Empty;
+            switch(field.Value)
+            {
+                case "New":
+                case "Reopened":
+                    value = "In Progress";
+                    break;
+                case "In Progress":
+                    value = "Resolved";
+                    break;
+
+            }
+            
+            return value;
+        }
+
         private string GetCurrentIterationPath(WorkItemStore workItemStore)
         {
 
@@ -458,6 +497,91 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             }
 
             return defaultIterationNode;
+        }
+
+        public IDefect LookFor(IMailItem mailItem)
+        {
+            IDefect result = null;
+
+            IMailItem mail = Mail.Get(mailItem);
+            string subject = Factory.GetSubject(mail);
+
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            {
+                tpc.Credentials = Credentials;
+
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+
+                WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
+                                result = Factory.ToDefectItemCollection(workItems).FirstOrDefault();
+            }
+
+            return result;
+
+        }
+
+        private WorkItemCollection GetWorkItemByTitle(WorkItemStore workItemStore, string title)
+        {
+            QueryDefinition query = GetNewQueryDefinition("GetByTitle",
+                WorkItemOutputFields,
+                Statement.New()
+                    .Where(DefectField.Title, title)
+                    );
+
+            return workItemStore.Query(query.QueryText);
+        }
+
+        public string SaveNotify(IDefect model)
+        {
+            WorkItem workItem;
+
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            {
+                tpc.Credentials = Credentials;
+
+                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                Project project = workItemStore.Projects[TeamProjectName];
+
+                // Create the work item.                 
+                workItem = GetWorkItemById(workItemStore, model.Id.Value.ToString())[0] as WorkItem;
+                workItem.Open();
+
+                if (workItem.State == "Resolved" || model.State == "Verified")
+                {
+                    workItem.State = "Reopened";
+                }
+
+                //workItem.Fields[DefectField.Severity.FieldName()].Value = model.Severity;
+                    //workItem.Fields[DefectField.Severity.FieldName()].AllowedValues[(short)model.Severity];
+
+                // Comments
+                workItem.History = string.Join(Environment.NewLine
+                    , "Pratica sollecitata il" + DateTime.Now.Date.ToShortDateString() + " da " + workItemStore.UserIdentityName
+                    , "" 
+                    , "<em>" + model.Description + "<em>");
+
+                if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
+                {
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    workItem.Attachments.Add(Factory.ToAttachment(att,
+                        comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
+                        fileName: model.Title.Replace('/', '-') + " - Comunicazione("+ (workItem.Attachments.Count + 1) + ").eml"));
+                }
+
+                // Links is read only
+
+                // Save the new
+                if (!workItem.IsValid())
+                    throw new ApplicationException("Errore in inserimento Defect " + workItem.Title);
+
+                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
+
+                workItem.Save();
+
+            }
+
+            return workItem != null ? workItem.Id.ToString() : string.Empty;
+
         }
     }
 }

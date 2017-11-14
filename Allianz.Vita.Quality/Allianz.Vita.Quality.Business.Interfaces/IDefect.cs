@@ -2,7 +2,7 @@
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
-    public interface IDefect
+    public interface IDefect : IMailItemKey
     {
 
         int? Id { get; }
@@ -33,13 +33,11 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         string State { get; }
 
-        string Description { get; }
+        string Description { get; set; }
 
         string[] Comments { get; }
 
         IAttachment[] Attachment { get; }
-
-        string IMailItemUniqueId { get; }
-
+        
 	}
 }

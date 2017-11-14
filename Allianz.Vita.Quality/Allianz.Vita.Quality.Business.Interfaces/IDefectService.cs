@@ -13,5 +13,8 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         string[] GetAllowedValues(Enum field);
         string GetTrackingUrlDetail(int? id);
         void Autoassign(string id);
+        void MoveStateOn(IDefect defect);
+        IDefect LookFor(IMailItem mailItem);
+        string SaveNotify(IDefect defect);
     }
 }

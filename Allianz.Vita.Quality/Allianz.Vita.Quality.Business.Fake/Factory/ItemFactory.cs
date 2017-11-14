@@ -55,6 +55,16 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
             throw new NotImplementedException();
         }
 
+        public string GetSubject(IMailItem itemRead)
+        {
+            return "Request 2017/827273 - 27/09/2017";
+        }
+
+        public void MergeTo(IMailItem itemRead, IDefect defect)
+        {
+            throw new NotImplementedException();
+        }
+
         public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
         {
             throw new NotImplementedException();

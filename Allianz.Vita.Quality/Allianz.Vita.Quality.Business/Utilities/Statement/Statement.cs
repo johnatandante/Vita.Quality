@@ -118,7 +118,7 @@ namespace Allianz.Vita.Quality.Business.Utilities.Statement
         public Statement Where(string name, string value, Op op = null)
         {            
 
-            Clauses.Add(new WhereStatementItem(name.Bracketed(), value.StartsWith("@") ? value : value.Quoted(), op ?? Op.Uguale));
+            Clauses.Add(new WhereStatementItem(name.Bracketed(), (value ?? string.Empty).StartsWith("@") ? value : value.Quoted(), op ?? Op.Uguale));
 
             return this;
         }

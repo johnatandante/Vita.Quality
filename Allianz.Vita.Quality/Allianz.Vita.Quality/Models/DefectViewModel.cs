@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace Allianz.Vita.Quality.Models
 {
 
-    public class DefectViewModel : IDefect {
+    public class DefectViewModel : IDefect, IMailItemKey {
 
         IDefectService Service {
             get
@@ -89,9 +89,17 @@ namespace Allianz.Vita.Quality.Models
         public string DefectType { get; set; }
 
         public SeverityLevel Severity { get; set; }
-        
-        public string State { get; set; }
 
+        public string[] SeverityAllowedValues
+        {
+            get
+            {
+                return Service.GetAllowedValues(DefectField.Severity);
+            }
+        }
+
+        public string State { get; set; }
+        
         [UIHint("tinymce_jquery_full"), AllowHtml]
         public string Description { get; set; }
 

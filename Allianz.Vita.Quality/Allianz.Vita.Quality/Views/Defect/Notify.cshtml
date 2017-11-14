@@ -1,0 +1,90 @@
+﻿@model Allianz.Vita.Quality.Models.DefectViewModel
+@{
+    ViewBag.Title = "Notify to Defect";
+}
+
+<h2>Notify Defect: @Model.Title</h2>
+
+@using (Html.BeginForm("ArchiveDefect", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-2">
+            @Html.AntiForgeryToken()
+            @Html.Hidden("IMailItemUniqueId", Model.IMailItemUniqueId)
+            <input type="submit" class="btn btn-default" value="Archive" title="Archive Defect" />
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("SaveNotify", "Defect", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("IMailItemUniqueId", Model.IMailItemUniqueId);
+
+    @Html.Hidden("Id", Model.Id);
+    @Html.Hidden("DefectId", Model.DefectID);
+    @Html.Hidden("Title", Model.Title);
+    
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-2">
+            <input type="submit" class="btn btn-default" value="Notify Defect" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Agency, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.DisplayFor(m => m.Agency, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.DisplayFor(m => m.AreaPath, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Iteration, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.DisplayFor(m => m.Iteration, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DefectID, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.DisplayFor(m => m.DefectID, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.State, new { @class = "col-md-2 control-label" })
+        <div class="col-md-3">
+            @Html.DisplayFor(m => m.State, new { @class = "form-control" })
+        </div>
+    </div>
+
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.Severity, new { @class = "col-md-2 control-label" })
+            <div class="col-md-3">
+                @Html.DropDownListFor(m => m.Severity, new SelectList(Model.SeverityAllowedValues), "", new { @class = "form-control" })
+            </div>
+        </div>*@
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+        <div class="col-md-2">
+            @Html.EditorFor(m => m.Description, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

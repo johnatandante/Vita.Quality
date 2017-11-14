@@ -36,7 +36,22 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
+        public IDefect LookFor(IMailItem mailItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void MoveStateOn(IDefect defect)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Save(IDefect model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string SaveNotify(IDefect defect)
         {
             throw new NotImplementedException();
         }
