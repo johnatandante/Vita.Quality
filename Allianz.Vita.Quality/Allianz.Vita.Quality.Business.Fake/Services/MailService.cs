@@ -34,7 +34,7 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
-        public List<IMailItem> OpenInbox(int? pageSize = null)
+        public List<IMailItem> OpenInbox(int? pageSize = null, bool? read = null)
         {
             throw new NotImplementedException();
         }

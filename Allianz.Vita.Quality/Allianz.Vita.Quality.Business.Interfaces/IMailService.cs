@@ -5,7 +5,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 	public interface IMailService : IService
 	{
         		
-		List<IMailItem> OpenInbox(int? pageSize = null);
+		List<IMailItem> OpenInbox(int? pageSize = null, bool? read = null);
 
 		IFolderItem OpenFolder(string path, int? pageSize = null, string from = "");
 

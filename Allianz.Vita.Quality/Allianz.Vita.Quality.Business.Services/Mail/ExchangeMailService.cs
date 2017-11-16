@@ -73,12 +73,20 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
         #region IMailService Members
 
-        public List<IMailItem> OpenInbox(int? pageSize = null)
+        public List<IMailItem> OpenInbox(int? pageSize = null, bool? read = null)
         {
 
             ItemView itemView = new ItemView(pageSize ?? int.MaxValue);
+
+            SearchFilter.SearchFilterCollection collection =
+                new SearchFilter.SearchFilterCollection(LogicalOperator.And);
+
+            if (read.HasValue)
+            {
+                collection.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, read.Value));
+            }
             
-            FindItemsResults<Item> homeItems = service.FindItems(WellKnownFolderName.Inbox, itemView);
+            FindItemsResults<Item> homeItems = service.FindItems(WellKnownFolderName.Inbox, collection, itemView);
             
             return new List<IMailItem>(
                     homeItems.Select(i => Factory.ToMailItem(i as EmailMessage)

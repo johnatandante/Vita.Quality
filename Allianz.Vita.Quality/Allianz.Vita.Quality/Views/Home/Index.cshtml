@@ -6,12 +6,14 @@
 <div class="jumbotron">
     <h1>Quality Management User Tool</h1>
     <p class="lead">ASP.NET leads Qualty Management Operators to a new frontier: get access to all SRM Request and convert them into Defects.</p>
-    <p><a href="./Convert/" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <p><a href="./Convert/" class="btn btn-primary btn-lg">Learn more &raquo;</a>
+        <a href="http://online.servizi.ras/Vita/SUV" class="btn btn-primary btn-lg" target="_blank"> Open SUV &raquo;</a>
+    </p>    
 </div>
 
 <div class="row">
     <div class="col-md-3">
-        <h2>Inbox Email</h2>
+        <h2>Inbox Unread Email</h2>
         <p>
             There are at least @Model.InboxMessages.Count() messages in your Inbox.            
         </p>
@@ -21,16 +23,16 @@
         <ul class="list-group">
            @foreach(var item in Model.InboxMessages)
            {
-               <li>@item</li>
+               <li>@item.PadRight(50, ' ').Substring(0, 50) ...</li>
            }
         </ul>
     </div>
     <div class="col-md-5">
-    <h2>SRM Request</h2>
+    <h2>SRM Requests</h2>
     <p>
         There are at least @Model.PublicFolderMessages.Count() messages in @Model.PublicFolderDisplayName.
     </p>
-    <p><a class="btn btn-default" href="./Convert/">Convert Them! &raquo;</a></p>
+    <p> @Html.ActionLink("Convert Them! »", "Index", "Convert", null, new { @class = "btn btn-default" } ) </p>
     <h3>Here's some of them.</h3>
     <ul class="list-group">
         @foreach (var item in Model.PublicFolderMessages)
@@ -44,7 +46,7 @@
         <p>
             ...ad access to their details in TFS :)
         </p>
-        <p><a class="btn btn-default" href="./Defect/">Take a look &raquo;</a></p>
+        <p> @Html.ActionLink("Take a look! »", "Index", "Defect", null, new { @class = "btn btn-default" }) </p>
     </div>
     @*<div class="col-md-3">
         <h2>Get more libraries</h2>

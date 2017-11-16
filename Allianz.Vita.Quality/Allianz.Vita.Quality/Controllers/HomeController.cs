@@ -25,7 +25,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             try
             {
-                model.InboxMessages = Mail.OpenInbox(pageSize: 10)
+                model.InboxMessages = Mail.OpenInbox(pageSize: 10, read: false)
                     .Select(mail => string.Join(" ", mail.Subject, "from", mail.From)).ToArray();
                 
             }

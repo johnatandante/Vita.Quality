@@ -11,7 +11,7 @@
     <hr />
     <div class="panel">
         <div class="form-inline">
-            <a href="@Model.Url&_a=edit" target="_blank">View in Tracking Tool</a> | @Html.ActionLink("Rispondi", "Reply", "Defect", new { Id = Model.Id }) | @Html.ActionLink("Autoassegna", "Autoassign", "Defect", new { Id = Model.Id })
+            <a href="@Model.Url&_a=edit" target="_blank">View in Tracking Tool</a> | @*@Html.ActionLink("Rispondi", "Reply", "Defect", new { id = Model.Id }) |*@ @Html.ActionLink("Prendi in carico", "Autoassign", "Defect", routeValues: new { id = Model.Id }, htmlAttributes: null)
         </div>
     </div>
     <dl class="dl-horizontal">

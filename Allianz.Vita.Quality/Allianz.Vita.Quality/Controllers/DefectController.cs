@@ -4,6 +4,7 @@ using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Controllers
@@ -85,15 +86,36 @@ namespace Allianz.Vita.Quality.Controllers
 
         }
 
-        [HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Create(MailItem model) {
+        //      [HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(MailItem model) {
 
-			if (!ModelState.IsValid) {
-				return View(model);
-			}
+        //	if (!ModelState.IsValid) {
+        //		return View(model);
+        //	}
 
-            IDefect defect = Service.LookFor(ServiceFactory.Get<IItemFactory>().GetNewMailItem(model.UniqueId));
+        //          IDefect defect = Service.LookFor(ServiceFactory.Get<IItemFactory>().GetNewMailItem(model.UniqueId));
+
+        //          if (defect == null)
+        //          {
+        //              IMailItem itemRead = Mail.Get(model);
+        //              Mail.Flag(itemRead);
+        //              defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
+        //              return View(new DefectViewModel(defect));
+        //          }
+        //          else
+        //          {
+        //              return RedirectToAction("Notify", "Defect", new { id = defect.Id, mailId = model.UniqueId });
+        //          }
+
+        //}
+
+        [HttpGet]
+        public ActionResult Create(string id, string mailId)
+        {
+
+            IMailItem model = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(HttpUtility.UrlDecode(mailId)));
+            IDefect defect = Service.LookFor(model);
 
             if (defect == null)
             {
@@ -106,8 +128,8 @@ namespace Allianz.Vita.Quality.Controllers
             {
                 return RedirectToAction("Notify", "Defect", new { id = defect.Id, mailId = model.UniqueId });
             }
-            
-		}
+
+        }
 
         [HttpGet]
         public ActionResult Notify(string id, string mailId)
