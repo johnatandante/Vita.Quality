@@ -99,7 +99,7 @@ namespace Allianz.Vita.Quality.Business.Factory
                 ,
                 FoundIn = Config.CurrentWebAppId
                 ,
-                Agency = data.DecodeCodCompany + " " + data.Agency.ToString()
+                Agency = data.DecodeCodCompany + " " + data.Agency.ToString().PadLeft(4, '0')
                 ,
                 Environment = Config.DefaultEnvironment
                 ,
