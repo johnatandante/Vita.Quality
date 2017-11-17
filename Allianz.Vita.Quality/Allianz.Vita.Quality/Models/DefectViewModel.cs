@@ -1,10 +1,10 @@
-﻿using Allianz.Vita.Quality.Business.Enums;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Allianz.Vita.Quality.Business.Services.Enums;
 
 namespace Allianz.Vita.Quality.Models
 {
@@ -15,6 +15,23 @@ namespace Allianz.Vita.Quality.Models
             get
             {
                 return ServiceFactory.Get<IDefectService>();
+            }
+        }
+
+        IConfigurationService Config
+        {
+            get
+            {
+                return ServiceFactory.Get<IConfigurationService>();
+            }
+        }
+
+        public bool IsAutoAssigned
+        {
+            get
+            {
+                // "Dante Del Favero (Leaesed Employee)"
+                return Service.GetDisplayName() == AssignedTo;
             }
         }
 
@@ -32,6 +49,8 @@ namespace Allianz.Vita.Quality.Models
         public int? Id { get; set; }
 
         public string Title { get; set; }
+
+        public string AssignedTo { get; set; }
 
         public string[] AreaPathAllowedValues
         {
@@ -148,7 +167,9 @@ namespace Allianz.Vita.Quality.Models
 
             IMailItemUniqueId = defect.IMailItemUniqueId;
 
-		}
+            AssignedTo = defect.AssignedTo;
+            
+        }
 	}
 
 }

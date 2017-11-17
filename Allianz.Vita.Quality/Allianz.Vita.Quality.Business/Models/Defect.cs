@@ -41,7 +41,9 @@ namespace Allianz.Vita.Quality.Business.Models
 		public IAttachment[] Attachment { get; set; }
 
         public string IMailItemUniqueId { get; set; }
-        
+
+        public string AssignedTo { get; set; }
+
         #endregion
     }
 }

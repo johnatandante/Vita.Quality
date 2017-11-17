@@ -16,5 +16,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         void MoveStateOn(IDefect defect);
         IDefect LookFor(IMailItem mailItem);
         string SaveNotify(IDefect defect);
+        string GetDisplayName();
+
     }
 }

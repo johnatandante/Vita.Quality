@@ -12,6 +12,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Factory
             throw new NotImplementedException();
         }
 
+        public IDefect GetNewDefect(int? Id, string agency = null, string defectID = null, string defectType = null, string defectSystem = null, string foundIn = null, string environment = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public IFolderItem GetNewFolderItem()
         {
             throw new NotImplementedException();
@@ -64,12 +69,7 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
         {
             throw new NotImplementedException();
         }
-
-        public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public IAttachment ToAttachment(string subject, byte[] content)
         {
             throw new NotImplementedException();

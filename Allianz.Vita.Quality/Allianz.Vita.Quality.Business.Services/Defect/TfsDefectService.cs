@@ -1,6 +1,7 @@
-﻿using Allianz.Vita.Quality.Business.Enums;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Services.Enums;
 using Allianz.Vita.Quality.Business.Utilities;
 using Allianz.Vita.Quality.Business.Utilities.Statement;
 using Microsoft.TeamFoundation.Client;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Allianz.Vita.Quality.Business.Services.Utilities;
 
 namespace Allianz.Vita.Quality.Business.Services.Defect
 {
@@ -61,6 +63,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.Severity.FieldName(),
             DefectField.CreatedDate.FieldName(),
             DefectField.CreatedBy.FieldName(),
+            DefectField.AssignedTo.FieldName(),
         };
 
         NetworkCredential credentials;
@@ -84,20 +87,25 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         }
 
         IItemFactory Factory;
+
         IMailService Mail;
 
-        public TfsDefectService() : this(null, null) { }
+        IStorageService Storage;
+
+        public TfsDefectService() : this(null, null, null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public TfsDefectService(IItemFactory itemFactory, IMailService mail)
+        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage)
         {
             config = ServiceFactory.Get<IConfigurationService>();
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
 
             Mail = mail ?? ServiceFactory.Get<IMailService>();
+
+            Storage = storage ?? ServiceFactory.Get<IStorageService>();
 
         }
 
@@ -140,7 +148,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     WorkItemCollection workItems = workItemStore.Query(newBugsQuery.GetQuery(project: TeamProjectName, user: workItemStore.UserIdentityName));
                     foreach (WorkItem workItem in workItems)
                     {
-                        result.Add(Factory.ToDefectItem(workItem));
+                        result.Add(ToDefectItem(workItem));
                     }
 
                 }
@@ -200,12 +208,48 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 WorkItemCollection workItems = workItemStore.Query(query.GetQuery(project: TeamProjectName, user: workItemStore.UserIdentityName));
 
-                result.AddRange(Factory.ToDefectItemCollection(workItems));
+                result.AddRange(ToDefectItemCollection(workItems));
 
             }
 
             return result;
         }
+
+        private IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems)
+        {
+            List<IDefect> result = new List<IDefect>();
+            foreach (WorkItem workItem in workItems)
+            {
+                result.Add(ToDefectItem(workItem));
+            }
+
+            return result;
+
+        }
+
+        private IDefect ToDefectItem(WorkItem workItem)
+        {
+
+            IDefect defect = Factory.GetNewDefect(workItem.Id,
+                workItem.TryToGetField(DefectField.Agenzia.FieldName()),
+                workItem.TryToGetField(DefectField.DefectID.FieldName()),
+                workItem.TryToGetField(DefectField.DefectType.FieldName()),
+                workItem.TryToGetField(DefectField.DefectSystem.FieldName()),
+                workItem.TryToGetField(DefectField.FoundIn.FieldName()),
+                workItem.TryToGetField(DefectField.environment.FieldName()));
+
+            defect.Title =  workItem.TryToGetField(DefectField.Title.FieldName());
+            defect.AreaPath = workItem.TryToGetField(DefectField.AreaPath.FieldName());
+            defect.Iteration = workItem.TryToGetField(DefectField.IterationPath.FieldName());
+            defect.State = workItem.TryToGetField(DefectField.State.FieldName());
+            defect.Description = workItem.TryToGetField(DefectField.Description.FieldName());
+            defect.Severity = workItem.TryToGetEnumField<SeverityLevel>(DefectField.Severity.FieldName() );
+            defect.AssignedTo = workItem.TryToGetField(DefectField.AssignedTo.FieldName());
+
+            return defect;
+
+        }
+
 
         private QueryDefinition GetNewQueryDefinition(string name, string[] outputFields, Statement statementClauses)
         {
@@ -261,7 +305,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
                     IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
-                    defect.Attachments.Add(Factory.ToAttachment(att,
+                    defect.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + ".eml"));
                 }
@@ -294,7 +338,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 WorkItemCollection workItems = GetWorkItemById(workItemStore, id);
 
-                result = Factory.ToDefectItemCollection(workItems).SingleOrDefault();
+                result = ToDefectItemCollection(workItems).SingleOrDefault();
             }
 
             return result;
@@ -513,7 +557,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
 
                 WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
-                                result = Factory.ToDefectItemCollection(workItems).FirstOrDefault();
+                                result = ToDefectItemCollection(workItems).FirstOrDefault();
             }
 
             return result;
@@ -546,42 +590,93 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 workItem = GetWorkItemById(workItemStore, model.Id.Value.ToString())[0] as WorkItem;
                 workItem.Open();
 
-                if (workItem.State == "Resolved" || model.State == "Verified")
+
+                // Comments & state
+                if (workItem.State == "Resolved")
                 {
-                    workItem.State = "Reopened";
-                }
-
-                //workItem.Fields[DefectField.Severity.FieldName()].Value = model.Severity;
-                    //workItem.Fields[DefectField.Severity.FieldName()].AllowedValues[(short)model.Severity];
-
-                // Comments
-                workItem.History = string.Join(Environment.NewLine
-                    , "Pratica sollecitata il" + DateTime.Now.Date.ToShortDateString() + " da " + workItemStore.UserIdentityName
-                    , "" 
+                    workItem.State = "Verified";
+                    workItem.History = string.Join(Environment.NewLine
+                    , "Reopened on " + DateTime.Now.Date.ToShortDateString() + " by " + workItemStore.UserIdentityName
+                    , ""
                     , "<em>" + model.Description + "<em>");
+
+                    // Save the new
+                    if (!workItem.IsValid())
+                        throw new ApplicationException("Errore in verifica Defect " + workItem.Title);
+
+                    workItem.Save();
+
+                    // Reopen
+                    workItem.Open();
+
+                    // needs to be reopened
+                    workItem.State = "Reopened";
+
+                }
+                else
+                {
+
+                    if (workItem.State == "Verified")
+                    {
+                        workItem.State = "Reopened";
+                    }
+                    
+                    workItem.History = string.Join(Environment.NewLine
+                    , "Notified on " + DateTime.Now.Date.ToShortDateString() + " by " + workItemStore.UserIdentityName
+                    , ""
+                    , "<em>" + model.Description + "<em>");
+
+                }
+                
+                //workItem.Fields[DefectField.Severity.FieldName()].Value = model.Severity;
+                    //workItem.Fields[DefectField.Severity.FieldName()].AllowedValues[(short)model.Severity];             
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
                     IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
-                    workItem.Attachments.Add(Factory.ToAttachment(att,
+                    workItem.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + " - Comunicazione("+ (workItem.Attachments.Count + 1) + ").eml"));
                 }
 
                 // Links is read only
-
+                
                 // Save the new
                 if (!workItem.IsValid())
-                    throw new ApplicationException("Errore in inserimento Defect " + workItem.Title);
+                    throw new ApplicationException("Errore in aggiornamento Defect " + workItem.Title);
 
                 Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
 
                 workItem.Save();
-
+                
             }
 
             return workItem != null ? workItem.Id.ToString() : string.Empty;
 
         }
+
+        public string GetDisplayName()
+        {
+            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            {
+
+                tpc.Credentials = Credentials;
+
+                Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity = null;
+                tpc.GetAuthenticatedIdentity(out identity);
+                
+                return identity.DisplayName;
+            }
+        }
+
+        private Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
+        {            
+            if (string.IsNullOrEmpty(fileName))
+                fileName = "Mail.eml";
+            
+            return new Attachment(Storage.Store(att, fileName), comment);
+
+        }
+
     }
 }

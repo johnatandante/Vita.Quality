@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Allianz.Vita.Quality.Business.Enums
+namespace Allianz.Vita.Quality.Business.Services.Enums
 {
     public enum DefectField
     {

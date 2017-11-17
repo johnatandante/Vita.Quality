@@ -6,14 +6,14 @@ namespace Allianz.Vita.Quality.Business.Interfaces
     {
 
         int? Id { get; }
-
-        string Title { get; }
+        
+        string Title { get; set; }
 
         bool AutoAssign { get; }
 
-        string AreaPath { get; }
+        string AreaPath { get; set; }
 
-        string Iteration { get; }
+        string Iteration { get; set; }
 
         string SurveySystem { get; }
 
@@ -23,15 +23,15 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         string Agency { get; }
 
-        // string AssignedTo { get; }
+        string AssignedTo { get; set; }
 
         string Environment { get; }
 
         string DefectType { get; }
 
-        SeverityLevel Severity { get; }
+        SeverityLevel Severity { get; set; }
 
-        string State { get; }
+        string State { get; set; }
 
         string Description { get; set; }
 

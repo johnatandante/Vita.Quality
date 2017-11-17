@@ -122,6 +122,7 @@ namespace Allianz.Vita.Quality.Controllers
                 IMailItem itemRead = Mail.Get(model);
                 Mail.Flag(itemRead);
                 defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
+                
                 return View(new DefectViewModel(defect));
             }
             else

@@ -1,7 +1,7 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 
-namespace Allianz.Vita.Quality.Business.Utilities
+namespace Allianz.Vita.Quality.Business.Services.Utilities
 {
     static class WorkItemsExtensionMethods
     {

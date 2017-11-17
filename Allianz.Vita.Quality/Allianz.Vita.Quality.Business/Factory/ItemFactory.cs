@@ -1,9 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Models;
-using Allianz.Vita.Quality.Business.Utilities;
 using Microsoft.Exchange.WebServices.Data;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,112 +85,49 @@ namespace Allianz.Vita.Quality.Business.Factory
 
             SubjectMetaData data = new SubjectMetaData(itemRead.Subject);
 
+            string agency =  data.DecodeCodCompany + " " + data.Agency.ToString().PadLeft(4, '0');
+            IDefect defect = GetNewDefect(null, agency: agency, defectID: data.Id);
+            
+            defect.Title = data.Title;
+            defect.Description = HttpUtility.UrlDecode(itemRead.Content);
+            defect.IMailItemUniqueId = itemRead.UniqueId;
+            // defect.AssignedTo = workItem.TryToGetField("System.AssignedTo");
+
+            return defect;
+
+        }
+
+        public IDefect GetNewDefect(int? id = null, string agency = null, string defectID = null, string defectType = null, string defectSystem = null, string foundIn = null, string environment = null)
+        {
             IDefect defect = new Defect()
             {
-                Title = data.Title
-                ,
-                AreaPath = HttpUtility.UrlDecode(Config.DefaultAreaPath)
-                ,
-                SurveySystem = Config.DefaultSurveySystem
-                ,
-                DefectID = data.Id
-                ,
-                FoundIn = Config.CurrentWebAppId
-                ,
-                Agency = data.DecodeCodCompany + " " + data.Agency.ToString().PadLeft(4, '0')
-                ,
-                Environment = Config.DefaultEnvironment
-                ,
-                Iteration = HttpUtility.UrlDecode(Config.DefaultIteration)
-                ,
-                DefectType = Config.DefaultDefectType
-                ,
-                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), Config.DefaultSeverity, true)
-                ,
-                State = Config.DefaultDefectState
-                ,
-                Description = HttpUtility.UrlDecode(itemRead.Content)
-                ,
-                Attachment = new IAttachment[] { }
-                ,
-                Comments = new string[] { }
-                ,
-                IMailItemUniqueId = itemRead.UniqueId
+                Id = id,
+                DefectID = defectID,
+                Agency = agency,
+                
+                SurveySystem = defectSystem ?? Config.DefaultSurveySystem,
+                FoundIn = foundIn ?? Config.CurrentWebAppId,
+                Environment = environment ?? Config.DefaultEnvironment,                
+                DefectType = defectType ?? Config.DefaultDefectType ,
+                
+                AreaPath = HttpUtility.UrlDecode(Config.DefaultAreaPath),
+                Iteration = HttpUtility.UrlDecode(Config.DefaultIteration),
+                State = Config.DefaultDefectState,
+                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), Config.DefaultSeverity, true),
+
+                Attachment = new IAttachment[] { } ,
+                Comments = new string[] { } 
 
             };
 
             return defect;
-
-        }
-
-        public IDefect ToDefectItem(WorkItem workItem)
-        {
-
-            Defect defect = new Defect()
-            {
-                Id = workItem.Id,
-
-                Title = workItem.TryToGetField("System.Title"),
-
-                AreaPath = workItem.TryToGetField("System.AreaPath"),
-
-                Iteration = workItem.TryToGetField("System.IterationPath"),
-
-                SurveySystem = workItem.TryToGetField("Allianz.Alm.DefectSystem"),
-
-                DefectID = workItem.TryToGetField("Allianz.Alm.DefectID"),
-
-                FoundIn = workItem.TryToGetField("Microsoft.VSTS.Build.FoundIn"),
-
-                Agency = workItem.TryToGetField("Allianz.Alm.Agenzia"),
-
-                Environment = workItem.TryToGetField("Allianz.Alm.environment"),
-
-                DefectType = workItem.TryToGetField("Allianz.Alm.DefectType"),
-
-                State = workItem.TryToGetField("System.State"),
-
-                Description = workItem.TryToGetField("System.Description"),
-
-                Severity = workItem.TryToGetEnumField<SeverityLevel>("Microsoft.VSTS.Common.Severity"),
-
-                Comments = new string[] { },
-
-                Attachment = new IAttachment[] { },
-
-            };
-
-            return defect;
-
-        }
-
-        public IEnumerable<IDefect> ToDefectItemCollection(WorkItemCollection workItems)
-        {
-            List<IDefect> result = new List<IDefect>();
-            foreach (WorkItem workItem in workItems)
-            {
-                result.Add(ToDefectItem(workItem));
-            }
-
-            return result;
-
         }
 
         public IMailItem GetNewMailItem(string uniqueId = "")
         {
             return new MailItem() { UniqueId = uniqueId };
-
         }
-
-        public Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
-        {
-            if (string.IsNullOrEmpty(fileName))
-                fileName = "Mail.eml";
-
-            return new Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment(Storage.Store(att, fileName), comment);
-
-        }
-
+        
         public IAttachment ToAttachment(string subject, byte[] buffer)
         {
             return new MailAsAttachment() { Title = subject, Content = buffer };

@@ -26,6 +26,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
+        public string GetDisplayName()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<IDefect> GetMyTasks()
         {
             throw new NotImplementedException();
