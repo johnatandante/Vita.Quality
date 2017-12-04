@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Allianz.Vita.Quality.Extensions;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -45,7 +46,7 @@ namespace Allianz.Vita.Quality.Controllers
             
             Service.Autoassign(id);
 
-            return RedirectToAction("Detail", "Defect", new { Id = id } );
+            return RedirectToAction("Detail", "Defect", new { Id = id } ).Success("Assigned To Me: Done");
 
         }
 
@@ -65,10 +66,12 @@ namespace Allianz.Vita.Quality.Controllers
 
 			if (!ModelState.IsValid) 
 			{
-				return View(model);
+				return RedirectToAction("Create", new { id = model.Id, mailId = model.IMailItemUniqueId })
+                    .Error("Erron in Save");
 			}
             
-            return RedirectToAction("Detail", "Defect", new { Id = Service.Save(model) });
+            return RedirectToAction("Detail", "Defect", new { Id = Service.Save(model) })
+                .Success("Save Ok");
             
 		}
 
@@ -82,33 +85,10 @@ namespace Allianz.Vita.Quality.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Detail", "Defect", new { Id = Service.SaveNotify(model) });
+            return RedirectToAction("Detail", "Defect", new { Id = Service.SaveNotify(model) })
+                .Success("Notified Defect " + model.Id +( (string.IsNullOrEmpty(model.AssignedTo)) ? "" : " to " + model.AssignedTo));
 
         }
-
-        //      [HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(MailItem model) {
-
-        //	if (!ModelState.IsValid) {
-        //		return View(model);
-        //	}
-
-        //          IDefect defect = Service.LookFor(ServiceFactory.Get<IItemFactory>().GetNewMailItem(model.UniqueId));
-
-        //          if (defect == null)
-        //          {
-        //              IMailItem itemRead = Mail.Get(model);
-        //              Mail.Flag(itemRead);
-        //              defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(itemRead);
-        //              return View(new DefectViewModel(defect));
-        //          }
-        //          else
-        //          {
-        //              return RedirectToAction("Notify", "Defect", new { id = defect.Id, mailId = model.UniqueId });
-        //          }
-
-        //}
 
         [HttpGet]
         public ActionResult Create(string id, string mailId)
@@ -157,7 +137,8 @@ namespace Allianz.Vita.Quality.Controllers
             IMailItem itemRead = Mail.Get(model);
             Mail.Complete(itemRead);
 
-            return RedirectToAction("Index", "Convert");
+            return RedirectToAction("Index", "Convert")
+                .Success("Mail archivied: " + itemRead.Subject);
         }
 
         [HttpPost]

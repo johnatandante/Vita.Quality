@@ -1,10 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Controllers
@@ -35,7 +33,7 @@ namespace Allianz.Vita.Quality.Controllers
                 model.PublicFolderMessages = ServiceFactory.Get<IItemFactory>().GetNewMailItemList();
             }
 
-            return View(model);
+            return View(model).Information("Data loaded...");
 
         }
 

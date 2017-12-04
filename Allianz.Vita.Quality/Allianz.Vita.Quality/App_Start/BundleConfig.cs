@@ -11,7 +11,10 @@ namespace Allianz.Vita.Quality
 						"~/Scripts/jquery-{version}.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-						"~/Scripts/jquery.validate*"));
+						"~/Scripts/jquery.validate*",
+                        "~/Scripts/jquery.cookie.js",
+                        "~/Scripts/jQuery.flashMessage.js"
+                        ));
 
 			bundles.Add(new ScriptBundle("~/bundles/react").Include(
 				// Add your JSX files here
