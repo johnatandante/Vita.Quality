@@ -21,7 +21,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return config.TrackingSystemUrl;
+                return  string.Join("/", config.TrackingSystemUrl, config.TrackingSystemCompany);
 
             }
         }
@@ -419,7 +419,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             return string.Join("/",
                 config.TrackingSystemUrl,
-                config.TrackingSystemCompany,
+                //config.TrackingSystemCompany,
                 config.DefaultProjectPath,
                 id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
