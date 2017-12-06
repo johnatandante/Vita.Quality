@@ -25,6 +25,8 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         string AssignedTo { get; set; }
 
+        string ConfirmedNotificationAddress { get; set; }
+
         string Environment { get; }
 
         string DefectType { get; }
@@ -37,7 +39,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
 
         string[] Comments { get; }
 
-        IAttachment[] Attachment { get; }
-        
+        IAttachment[] Attachment { get; }        
+
 	}
 }

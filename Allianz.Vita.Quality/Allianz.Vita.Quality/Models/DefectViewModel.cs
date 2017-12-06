@@ -129,6 +129,9 @@ namespace Allianz.Vita.Quality.Models
 
         public string IMailItemUniqueId { get; set; }
 
+        [DisplayName("Email")]
+        public string ConfirmedNotificationAddress { get; set; }
+
         public DefectViewModel() { }
 
 		public DefectViewModel(IDefect defect) {
@@ -168,7 +171,9 @@ namespace Allianz.Vita.Quality.Models
             IMailItemUniqueId = defect.IMailItemUniqueId;
 
             AssignedTo = defect.AssignedTo;
-            
+
+            ConfirmedNotificationAddress = defect.ConfirmedNotificationAddress;
+
         }
 	}
 

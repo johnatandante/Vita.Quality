@@ -44,6 +44,8 @@ namespace Allianz.Vita.Quality.Business.Models
 
         public string AssignedTo { get; set; }
 
+        public string ConfirmedNotificationAddress { get; set; }
+
         #endregion
     }
 }

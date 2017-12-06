@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Allianz.Vita.Quality.Business.Services.Utilities;
+using Microsoft.TeamFoundation.Framework.Client;
+using Microsoft.TeamFoundation.Framework.Common;
 
 namespace Allianz.Vita.Quality.Business.Services.Defect
 {
@@ -42,7 +44,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 return config.DefaultProjectPath;
             }
         }
-
+        
         static string workItemQuery = "SELECT {0} FROM WorkItems WHERE {1}";
 
         static string myTaskQueryName = "Assigned to me";
@@ -245,12 +247,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             defect.Description = workItem.TryToGetField(DefectField.Description.FieldName());
             defect.Severity = workItem.TryToGetEnumField<SeverityLevel>(DefectField.Severity.FieldName() );
             defect.AssignedTo = workItem.TryToGetField(DefectField.AssignedTo.FieldName());
-
-            foreach(WorkItemLink wiLink in workItem.WorkItemLinks)
-            {
-                //
-            }
-
+            
             return defect;
 
         }
@@ -344,9 +341,37 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 result = ToDefectItem(wi);
 
+                result.ConfirmedNotificationAddress = GetEmailAddress(tpc, result.AssignedTo);
+
             }
 
             return result;
+
+        }
+
+        /// <summary>
+        /// Get Email Address from TFS Account or Display Name 
+        /// </summary>
+        /// <remarks>https://paulselles.wordpress.com/2014/03/24/tfs-api-tfs-user-email-address-lookup-and-reverse-lookup/</remarks>
+        private string GetEmailAddress(TfsTeamProjectCollection tpc, string displayName)
+        {
+            if (string.IsNullOrEmpty(displayName))
+                return string.Empty;
+            try
+            {
+                IIdentityManagementService IdentityManagementService = tpc.GetService<IIdentityManagementService>();
+                TeamFoundationIdentity teamFoundationIdentity =
+                        IdentityManagementService.ReadIdentity(
+                            IdentitySearchFactor.AccountName | IdentitySearchFactor.DisplayName,
+                            displayName,
+                            MembershipQuery.None,
+                            ReadIdentityOptions.None);
+
+                return teamFoundationIdentity.GetAttribute("Mail", null);
+            } catch
+            {
+                return string.Empty;
+            }
 
         }
 
@@ -698,4 +723,5 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         }
 
     }
+
 }

@@ -28,6 +28,16 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
 
+        @if (!string.IsNullOrEmpty(Model.AssignedTo))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.AssignedTo)
+            </dt>
+
+            <dd>
+                <a href="mailto:@Model.ConfirmedNotificationAddress">@Html.DisplayFor(model => model.AssignedTo) </a> 
+            </dd>
+        }
         <dt>
             @Html.DisplayNameFor(model => model.AreaPath)
         </dt>
