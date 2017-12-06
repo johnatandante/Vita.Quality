@@ -33,6 +33,21 @@ namespace Allianz.Vita.Quality.Business.Services.Utilities
             return result;
         }
 
+        public static bool Exist(this LinkCollection collection, int id )
+        {
+            bool result = false;
+            foreach(RelatedLink item in collection)
+            {
+                if(item.RelatedWorkItemId == id)
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
 
     }
 }

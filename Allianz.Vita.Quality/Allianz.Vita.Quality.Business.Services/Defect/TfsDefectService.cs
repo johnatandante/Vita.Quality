@@ -246,6 +246,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             defect.Severity = workItem.TryToGetEnumField<SeverityLevel>(DefectField.Severity.FieldName() );
             defect.AssignedTo = workItem.TryToGetField(DefectField.AssignedTo.FieldName());
 
+            foreach(WorkItemLink wiLink in workItem.WorkItemLinks)
+            {
+                //
+            }
+
             return defect;
 
         }
@@ -335,17 +340,17 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 tpc.Credentials = Credentials;
 
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItem wi = GetWorkItemById(workItemStore, id);
 
-                WorkItemCollection workItems = GetWorkItemById(workItemStore, id);
+                result = ToDefectItem(wi);
 
-                result = ToDefectItemCollection(workItems).SingleOrDefault();
             }
 
             return result;
 
         }
 
-        private WorkItemCollection GetWorkItemById(WorkItemStore workItemStore, string id)
+        private WorkItemCollection GetWorkItemCollectionById(WorkItemStore workItemStore, string id)
         {
             QueryDefinition query = GetNewQueryDefinition("GetById",
                 WorkItemOutputFields,
@@ -354,6 +359,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     );
 
             return workItemStore.Query(query.QueryText);
+        }
+
+        private WorkItem GetWorkItemById(WorkItemStore workItemStore, string id)
+        {
+            WorkItem result = null;
+            if (int.TryParse(id, out int int_id))
+            {
+                result = workItemStore.GetWorkItem(int_id);                
+            }
+
+            return result;
+
         }
 
         static Dictionary<Enum, string[]> _FieldValueCache = new Dictionary<Enum, string[]>();
@@ -431,7 +448,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
 
-                WorkItemCollection collection = GetWorkItemById(workItemStore, id);
+                WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, id);
                 if (collection.Count > 0)
                 {
                     WorkItem workItem = collection[0];
@@ -456,10 +473,13 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             string path = GetCurrentIterationPath(workItemStore);
             workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
 
-            // Docs Link to w.i. as parent of...
-            // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
-            WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];            
-            workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
+            if (!workItem.Links.Exist(int.Parse(config.TrackingSystemWorkingFeature)))
+            {
+                // Docs Link to w.i. as parent of...
+                // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
+                WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
+                workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
+            }
 
         }
 
@@ -470,7 +490,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 tpc.Credentials = Credentials;
 
                 WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
-                WorkItemCollection collection = GetWorkItemById(workItemStore, defect.DefectID);
+                WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, defect.DefectID);
                 WorkItem workItem = collection[0];
                 workItem.Open();
 
@@ -586,7 +606,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item.                 
-                workItem = GetWorkItemById(workItemStore, model.Id.Value.ToString())[0] as WorkItem;
+                workItem = GetWorkItemCollectionById(workItemStore, model.Id.Value.ToString())[0] as WorkItem;
                 workItem.Open();
 
 
