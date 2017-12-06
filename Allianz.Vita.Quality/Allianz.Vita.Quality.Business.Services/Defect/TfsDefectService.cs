@@ -418,8 +418,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
 
             return string.Join("/",
-                config.TrackingSystemUrl,
-                //config.TrackingSystemCompany,
+                TfsUri,
                 config.DefaultProjectPath,
                 id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
