@@ -1,4 +1,5 @@
-﻿@model Allianz.Vita.Quality.Models.HomeViewModel
+﻿@using Microsoft.AspNet.Identity
+@model Allianz.Vita.Quality.Models.HomeViewModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -17,32 +18,53 @@
 <div class="row">
     <div class="col-md-5">
         <h2>Inbox Unread Email</h2>
-        <p>
-            There are at least @Model.InboxMessages.Count() messages in your Inbox.            
-        </p>
-        <p><a class="btn btn-default" href="https://cas01.servizi.allianzit/owa/" target="_blank">check it out! &raquo;</a></p>
+        @if (Request.IsAuthenticated)
+        {
 
-        <h3>Here's some of them:</h3>
-        <ul class="list-group">
-           @foreach(var item in Model.InboxMessages)
-           {
-               <li>@item.PadRight(50, ' ').Substring(0, 50) ...</li>
-           }
-        </ul>
+            <p>
+                There are at least @Model.InboxMessages.Count() messages in your Inbox.            
+            </p>
+            <p><a class="btn btn-default" href="https://cas01.servizi.allianzit/owa/" target="_blank">Check it out! &raquo;</a></p>
+
+            <h3>Here's some of them:</h3>
+            <ul class="list-group">
+               @foreach (var item in Model.InboxMessages)
+               {
+                   <li>@item.PadRight(50, ' ').Substring(0, 50) ...</li>
+               }
+            </ul>
+        }
+        else
+        {
+            <p>
+                Access to Inbox Folder
+            </p>
+            <p><a class="btn btn-default" href="https://cas01.servizi.allianzit/owa/" target="_blank">Check it out! &raquo;</a></p>
+        }
     </div>
     <div class="col-md-7">
-    <h2>SRM Requests</h2>
-    <p>
-        There are at least @Model.PublicFolderMessages.Count() messages in @Model.PublicFolderDisplayName.
-    </p>
-    <p> @Html.ActionLink("Convert Them! »", "Index", "Convert", null, new { @class = "btn btn-default" } ) </p>
-    <h3>Here's some of them:</h3>
-    <ul class="list-group">
-        @foreach (var item in Model.PublicFolderMessages)
+        <h2>SRM Requests</h2>
+        @if (Request.IsAuthenticated)
         {
-            <li>@item</li>
+            <p>
+                There are at least @Model.PublicFolderMessages.Count() messages in @Model.PublicFolderDisplayName.
+            </p>
+            <p> @Html.ActionLink("Convert Them! »", "Index", "Convert", null, new { @class = "btn btn-default" }) </p>
+            <h3>Here's some of them:</h3>
+            <ul class="list-group">
+                @foreach (var item in Model.PublicFolderMessages)
+                {
+                    <li>@item</li>
+                }
+            </ul>
         }
-    </ul>
+        else
+        {
+            <p>
+                Access to Issue Public Folder
+            </p>
+            <p><a class="btn btn-default" href="https://cas01.servizi.allianzit/owa/?ae=Folder&t=IPF.Note&id=PSF.LgAAAAAaRHOQqmYRzZvIAKoAL8RaAwBT8By9zF5bS6um6Vf4%2fkE9AAAHY23UAAAB" target="_blank">Check it out! &raquo;</a></p>
+        }
     </div>
     <div class="col-md-12">
         <div class="col-md-3">

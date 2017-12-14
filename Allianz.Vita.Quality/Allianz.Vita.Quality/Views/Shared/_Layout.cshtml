@@ -24,8 +24,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Pending Requests", "Index", "Convert")</li>
-                    <li>@Html.ActionLink("Defects", "Index", "Defect")</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Pending Requests", "Index", "Convert")</li>
+                        <li>@Html.ActionLink("Defects", "Index", "Defect")</li>
+                    }
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacts", "Contact", "Home")</li>
                     <li class="dropdown">
@@ -41,7 +44,7 @@
                         </ul>
                     </li>
                 </ul>
-                @*@Html.Partial("_LoginPartial")*@
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>

@@ -47,14 +47,15 @@ namespace Allianz.Vita.Quality
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                //RequireUniqueEmail = true
+                
             };
 
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
+                //RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
                 RequireUppercase = true,
@@ -105,5 +106,6 @@ namespace Allianz.Vita.Quality
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }
+
     }
 }
