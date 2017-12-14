@@ -1,5 +1,6 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
+using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Business.Services.Utilities
 {
@@ -48,6 +49,18 @@ namespace Allianz.Vita.Quality.Business.Services.Utilities
             return result;
         }
 
+        public static IEnumerable<string> ToEnumerableStringValues(this NodeCollection nodeCollection, bool deepMode = true)
+        {
+            List<string> nodeList = new List<string>();
+            foreach (Node node in nodeCollection)
+            {
+                nodeList.Add(node.Path);
+                if (deepMode && node.HasChildNodes)
+                    nodeList.AddRange(node.ChildNodes.ToEnumerableStringValues());
+            }
+
+            return nodeList;
+        }
 
     }
 }

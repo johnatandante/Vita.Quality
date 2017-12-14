@@ -286,7 +286,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 } else
                 {
                     defect.AreaPath = model.AreaPath;
-                    defect.IterationPath = model.Iteration;
+                    //defect.IterationPath = model.Iteration;
+                    
+                    // moved to current/<unique node>
+                    defect.IterationPath = GetCurrentIterationPath(workItemStore);
+
                 }
 
                 defect.State = model.State;
@@ -400,13 +404,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         static Dictionary<Enum, string[]> _FieldValueCache = new Dictionary<Enum, string[]>();
 
+        static object _FieldValueCacheLock = new object() { };
+
         public string[] GetAllowedValues(Enum field)
         {
-            if (!_FieldValueCache.ContainsKey(field))
-                _FieldValueCache.Add(field, GetAllowedValues(field.FieldName()));
+            lock (_FieldValueCacheLock)
+            {
+                if (_FieldValueCache.ContainsKey(field))
+                   return _FieldValueCache[field];
 
-            return _FieldValueCache[field];
-
+                _FieldValueCache.Add(field, GetAllowedValues(field.FieldName()));            
+                return _FieldValueCache[field];
+            }
         }
 
         string[] GetAllowedValues(string key)
@@ -421,12 +430,12 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 if (key == "System.AreaPath")
                 {
-                    allowedValues.AddRange(Explore(workItemStore.Projects[TeamProjectName].AreaRootNodes));
+                    allowedValues.AddRange(workItemStore.Projects[TeamProjectName].AreaRootNodes.ToEnumerableStringValues());
 
                 }
                 else if (key == "System.IterationPath")
                 {
-                    allowedValues.AddRange(Explore(workItemStore.Projects[TeamProjectName].IterationRootNodes));
+                    allowedValues.AddRange(workItemStore.Projects[TeamProjectName].IterationRootNodes.ToEnumerableStringValues());
 
                 }
                 else if (workItemStore.FieldDefinitions.Contains(key))
@@ -441,20 +450,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             return allowedValues.ToArray();
 
         }
-
-        private IEnumerable<string> Explore(NodeCollection nodeCollection)
-        {
-            List<string> nodeList = new List<string>();
-            foreach (Node node in nodeCollection)
-            {
-                nodeList.Add(node.Path);
-                if (node.HasChildNodes)
-                    nodeList.AddRange(Explore(node.ChildNodes));
-            }
-
-            return nodeList;
-        }
-
+        
         public string GetTrackingUrlDetail(int? id)
         {
             IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
@@ -554,7 +550,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 , string.Join("\\", config.DefaultIteration.Split('\\').Skip(1)) );
 
             if (node != null)
-                return Explore(node.ChildNodes).FirstOrDefault();
+                return node.ChildNodes.ToEnumerableStringValues().FirstOrDefault();
 
             throw new ApplicationException("Cannot find current path node: " + config.DefaultIteration);
         }
