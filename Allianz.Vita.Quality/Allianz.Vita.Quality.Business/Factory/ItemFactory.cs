@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Net;
+using System.Security.Principal;
 
 namespace Allianz.Vita.Quality.Business.Factory
 {
@@ -144,6 +146,11 @@ namespace Allianz.Vita.Quality.Business.Factory
         public string GetSubject(IMailItem itemRead)
         {
             return new SubjectMetaData(itemRead.Subject).Title;
+        }
+
+        public IUserCredentials GetNewUserCredential(NetworkCredential identity)
+        {
+            return new UserCredential(identity.UserName, UserCredential.AuthenticationMode.Classic.ToString());
         }
 
         #endregion

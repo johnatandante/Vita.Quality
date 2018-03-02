@@ -18,8 +18,17 @@ namespace Allianz.Vita.Quality.Controllers
 			}
 		}
 
+        IIdentityService Auth
+        {
+            get
+            {
+                return ServiceFactory.Get<IIdentityService>();
+            }
+        }
+
 		public ActionResult Index()
         {
+                        
             HomeViewModel model = new HomeViewModel();
 
             List<string> inbox = new List<string>();
@@ -29,7 +38,8 @@ namespace Allianz.Vita.Quality.Controllers
 
             try
             {
-                if (User.Identity.IsAuthenticated)
+                //if (User.Identity.IsAuthenticated)
+                if(Auth.IsAuthenticatedOn(Mail.GetType()))
                     inbox.AddRange( Mail.OpenInbox(pageSize: 10, read: false)
                         .Select(mail => string.Join(" ", mail.Subject, "from", mail.From)));
                 
@@ -42,6 +52,7 @@ namespace Allianz.Vita.Quality.Controllers
             try
             {
                 if (User.Identity.IsAuthenticated)
+                if (Auth.IsAuthenticatedOn(Mail.GetType()))
                 {
                     IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 20, from: "SRM");
                     model.PublicFolderDisplayName = publicFolder.DisplayName;

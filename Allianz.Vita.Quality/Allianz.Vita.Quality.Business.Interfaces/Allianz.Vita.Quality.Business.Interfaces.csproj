@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Enums\SeverityLevel.cs" />
     <Compile Include="IAttachment.cs" />
+    <Compile Include="IIdentityService.cs" />
     <Compile Include="IConfigurationService.cs" />
     <Compile Include="IDefect.cs" />
     <Compile Include="IDefectService.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="IMailService.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IStorageService.cs" />
+    <Compile Include="IUserCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

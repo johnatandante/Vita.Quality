@@ -1,4 +1,5 @@
-﻿using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Attributes;
+using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Allianz.Vita.Quality.Controllers
 {
+    [AuthorizedOnly(typeof(IMailService))]
     public class ConvertController : Controller
     {
         // GET: Convert
