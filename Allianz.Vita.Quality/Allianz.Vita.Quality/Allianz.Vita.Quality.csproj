@@ -538,6 +538,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Allianz.Vita.Quality.Business.Fake\Allianz.Vita.Quality.Business.Fake.csproj">
+      <Project>{a2da316f-3b1d-456f-bd66-a859170b9400}</Project>
+      <Name>Allianz.Vita.Quality.Business.Fake</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Allianz.Vita.Quality.Business.Interfaces\Allianz.Vita.Quality.Business.Interfaces.csproj">
       <Project>{82145157-2858-48d8-a905-f68a8774689a}</Project>
       <Name>Allianz.Vita.Quality.Business.Interfaces</Name>

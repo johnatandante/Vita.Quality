@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {
-    public class MailService : IMailService
+    public class MailServiceFake : IMailService
     {
         public void Complete(IMailItem model)
         {

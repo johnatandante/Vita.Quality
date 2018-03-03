@@ -17,10 +17,10 @@ namespace Allianz.Vita.Quality.Business.Test
         public void Init()
         {
             ServiceFactory.Register<IItemFactory, ItemFactory>();
-            service = ServiceFactory.Register<IMailService, MailService>();
+            service = ServiceFactory.Register<IMailService, MailServiceFake>();
 
             Assert.IsInstanceOfType(service, typeof(IMailService));
-            Assert.IsInstanceOfType(service, typeof(MailService));
+            Assert.IsInstanceOfType(service, typeof(MailServiceFake));
 
         }
 

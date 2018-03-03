@@ -8,17 +8,23 @@ namespace Allianz.Vita.Quality.Business.Interfaces
     public interface IIdentityService : IService
     {
         
-        IUserCredentials LogOn(IIdentity credentials);
+        IUserCredentials LogOn(string credentials);
 
-        IUserCredentials AuthenticateOn(IService service, NetworkCredential networkCredential);
+        IUserCredentials AuthenticateOn(Type service, NetworkCredential networkCredential);
         
-        bool Logoff(IService service);
+        bool Logoff(Type service);
+
+        bool Logoff();
 
         NetworkCredential GetCredentialsFor(IService service);
 
         bool IsAuthenticatedOn(Type service);
 
         bool IsAuthenticated();
+
+        bool IsValidUser(string userName);
+
+        bool IsValidAccount(string userName, string password);
 
     }
 }

@@ -6,6 +6,7 @@ using Allianz.Vita.Quality.Models;
 using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Business.Factory;
 using System.Collections.Generic;
+using System.Web.Mvc.Filters;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -26,7 +27,12 @@ namespace Allianz.Vita.Quality.Controllers
             }
         }
 
-		public ActionResult Index()
+        protected override void OnAuthentication(AuthenticationContext filterContext)
+        {
+            base.OnAuthentication(filterContext);
+        }
+
+        public ActionResult Index()
         {
                         
             HomeViewModel model = new HomeViewModel();

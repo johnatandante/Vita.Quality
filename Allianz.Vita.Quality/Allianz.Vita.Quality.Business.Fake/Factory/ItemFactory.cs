@@ -2,6 +2,7 @@
 using Allianz.Vita.Quality.Business.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Allianz.Vita.Quality.Business.Fake.Factory
 {
@@ -56,6 +57,11 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
 
 
         public IList<IMailItem> GetNewMailItemList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IUserCredentials GetNewUserCredential(NetworkCredential identity)
         {
             throw new NotImplementedException();
         }

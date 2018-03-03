@@ -2,7 +2,7 @@
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {
-    public class ConfigurationService : IConfigurationService
+    public class ConfigurationServiceFake : IConfigurationService
     {
         public string DefaultIteration => string.Empty;
 

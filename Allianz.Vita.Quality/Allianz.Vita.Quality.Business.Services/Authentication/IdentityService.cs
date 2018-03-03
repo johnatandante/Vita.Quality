@@ -3,6 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces;
 using System;
 using System.Net;
 using System.Security.Principal;
+using System.Web.Security;
 
 namespace Allianz.Vita.Quality.Business.Services.Authentication
 {
@@ -26,13 +27,12 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
 
         }
 
-        public IUserCredentials AuthenticateOn(IService service, NetworkCredential networkCredential)
+        public IUserCredentials AuthenticateOn(Type service, NetworkCredential networkCredential)
         {
-            Type type = service.GetType();
-            if (IsAuthenticatedOn(service.GetType()))
+            if (IsAuthenticatedOn(service))
                 return Current;
             
-            Current.AddIdentityFor(networkCredential, service.GetType());
+            Current.AddIdentityFor(networkCredential, service);
             
             return Current;
 
@@ -55,14 +55,33 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
             return Current.IsAuthenticated;
         }
 
-        public bool Logoff(IService service)
+        public bool Logoff(Type service)
         {
-            return Current.Forget(service.GetType());
+            return Current.Forget(service);
         }
 
-        public IUserCredentials LogOn(IIdentity identity)
+        public bool Logoff()
+        {
+            Current = Factory.GetNewUserCredential(new NetworkCredential());
+
+            return true;
+        }
+
+        public IUserCredentials LogOn(string identity)
         {            
-            return Factory.GetNewUserCredential(new NetworkCredential() { UserName = identity.Name });
+            Current = Factory.GetNewUserCredential(new NetworkCredential() { UserName = identity });
+            return Current;
+
+        }
+
+        public bool IsValidUser(string userName)
+        {
+            return !string.IsNullOrEmpty(userName) && userName.Length > 3;
+        }
+
+        public bool IsValidAccount(string userName, string password)
+        {
+            return !(!IsValidUser(userName) || string.IsNullOrEmpty(password));
         }
     }
 }

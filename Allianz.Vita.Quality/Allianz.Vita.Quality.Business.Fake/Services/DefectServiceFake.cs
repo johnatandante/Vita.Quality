@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {
-    public class DefectService : IDefectService
+    public class DefectServiceFake : IDefectService
     {
         public void Autoassign(string id)
         {

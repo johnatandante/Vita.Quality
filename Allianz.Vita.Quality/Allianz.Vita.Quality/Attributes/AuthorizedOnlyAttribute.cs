@@ -18,25 +18,25 @@ namespace Allianz.Vita.Quality.Attributes
         
         protected override sealed void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-
             IIdentityService auth = ServiceFactory.Get<IIdentityService>();
 
-            if (!auth.IsAuthenticated())
+            if (auth.IsAuthenticated())
             {
+                if (Service.Any(s => !auth.IsAuthenticatedOn(s)))
+                {
+                    var viewResult = new ViewResult
+                    {
+                        ViewName = "~/Views/Account/Credentials.cshtml"
+                    };
+                    filterContext.Result = viewResult;
+                }
+            } else {
                 var viewResult = new ViewResult
                 {
                     ViewName = "~/Views/Account/SignIn.cshtml"
                 };
                 filterContext.Result = viewResult;
-            } else if (Service.Any( s => auth.IsAuthenticatedOn(s)))
-            {
-                var viewResult = new ViewResult
-                {
-                    ViewName = "~/Views/Account/Credentials.cshtml"
-                };
-                filterContext.Result = viewResult;
-
-            }
+            } 
         }
     }
 
