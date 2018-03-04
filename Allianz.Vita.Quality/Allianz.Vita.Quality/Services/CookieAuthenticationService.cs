@@ -68,6 +68,24 @@ namespace Allianz.Vita.Quality.Services
                 return (CredentialsViewModel)Json.Decode(ticket.UserData, typeof(CredentialsViewModel));
         }
 
+        internal CredentialsViewModel GetCookie(HttpRequestBase request, string name)
+        {
+            HttpCookie cookie = request.Cookies["Vita.Quality"];
+            if (cookie == null) return new CredentialsViewModel();
+
+            return (CredentialsViewModel)Json.Decode(cookie.Values[name], typeof(CredentialsViewModel));
+        }
+
+        internal void SetCookieData(HttpRequestBase request, string name, CredentialsViewModel model)
+        {
+            HttpCookie myCookie = new HttpCookie("Vita.Quality");
+
+            HttpCookie cookie = request.Cookies[name];
+            if (cookie == null) return new CredentialsViewModel();
+
+            return (CredentialsViewModel)Json.Decode(cookie.Value, typeof(CredentialsViewModel));
+        }
+
         internal void Persist(HttpRequestBase request, HttpResponseBase response,  CredentialsViewModel model, string cookieName, bool persistent)
         {
             HttpCookie authCookie = FormsAuthentication.GetAuthCookie(cookieName, persistent );

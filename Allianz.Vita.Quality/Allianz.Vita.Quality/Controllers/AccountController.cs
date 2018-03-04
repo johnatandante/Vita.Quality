@@ -81,7 +81,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (!model.Initialized)
             {
-                CredentialsViewModel cookieCredentials = CookieService.Get(Request, User.Identity.Name);
+                CredentialsViewModel cookieCredentials = CookieService.GetCookie(Request, User.Identity.Name);
                 model = cookieCredentials;
                 model.Initialized = true;    
             }
