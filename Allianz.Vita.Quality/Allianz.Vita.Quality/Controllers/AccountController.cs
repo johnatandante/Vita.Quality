@@ -81,7 +81,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (!model.Initialized)
             {
-                CredentialsViewModel cookieCredentials = CookieService.GetCookie(Request, User.Identity.Name);
+                CredentialsViewModel cookieCredentials = CookieService.GetData(Request, User.Identity.Name);
                 model = cookieCredentials;
                 model.Initialized = true;    
             }
@@ -134,8 +134,12 @@ namespace Allianz.Vita.Quality.Controllers
                 if (hasChanged)
                 {
                     // save to cookie
-                    CookieService.Persist(Request, Response, model, User.Identity.Name, true);
+                    CookieService.SetData(Request, Response, User.Identity.Name, model);
                 }
+            }
+            else
+            {
+                result = RedirectToAction("SigIn", model);
             }
 
             return result;

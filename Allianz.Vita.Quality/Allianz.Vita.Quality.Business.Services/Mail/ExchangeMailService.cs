@@ -35,8 +35,8 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
                 if (_Service == null)
                     _Service = new ExchangeService(Version);
 
-                // Set the credentials for the on-premises server.
-                _Service.Credentials = new WebCredentials(Credentials.UserName, Credentials.Password);
+                // Set the credentials for the on-premises server.                
+                _Service.Credentials = new WebCredentials(Credentials.UserName, Credentials.Password, Credentials.Domain);
                 _Service.Url = new Uri(Config.MailServiceUrl);
 
                 return _Service;

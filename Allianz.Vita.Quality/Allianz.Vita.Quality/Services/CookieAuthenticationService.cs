@@ -2,14 +2,13 @@
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Models;
 using System;
-using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Security;
 
 namespace Allianz.Vita.Quality.Services
 {
-    class CookieAuthenticationService
+    public class CookieAuthenticationService : IService
     {
 
         IIdentityService Auth;
@@ -23,33 +22,21 @@ namespace Allianz.Vita.Quality.Services
 
         internal void EnsureCookie(HttpRequestBase request, HttpResponseBase response, string cookieName, bool peristent = true)
         {
-            HttpCookie authCookie;
-            string newData = "";
-            if (!request.Cookies.AllKeys.Any(k => k == cookieName))
-            {
-                FormsAuthentication.SetAuthCookie(cookieName, peristent);
-                newData = Json.Encode(new CredentialsViewModel());
-            }
-
-            authCookie = FormsAuthentication.GetAuthCookie(cookieName, peristent);
+            HttpCookie authCookie = FormsAuthentication.GetAuthCookie(cookieName, peristent);
             FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-            if (!string.IsNullOrEmpty(ticket.UserData))
+            
+            CredentialsViewModel model = GetData(request, cookieName);            
+            if (!string.IsNullOrEmpty(model.TFSUserName))
             {
-                newData = ticket.UserData;
-                CredentialsViewModel decoded = (CredentialsViewModel) Json.Decode(newData, typeof(CredentialsViewModel));
-                if (decoded != null && !string.IsNullOrEmpty(decoded.TFSUserName))
-                {
-                    Auth.AuthenticateOn(typeof(IDefectService), new System.Net.NetworkCredential(decoded.TFSUserName, decoded.TFSDomainName, decoded.TFSPassword));
-                }
-                if (decoded != null && !string.IsNullOrEmpty(decoded.ExchangeUserName))
-                {
-                    Auth.AuthenticateOn(typeof(IMailService), new System.Net.NetworkCredential(decoded.ExchangeUserName, decoded.ExchangeDomainName, decoded.ExchangePassword));
-                }
-
+                Auth.AuthenticateOn(typeof(IDefectService), model.TfsCredentials);
+            }
+            if (!string.IsNullOrEmpty(model.ExchangeUserName))
+            {
+                Auth.AuthenticateOn(typeof(IMailService), model.MailCredentials);
             }
 
             FormsAuthenticationTicket newTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name,
-                 ticket.IssueDate, ticket.Expiration, ticket.IsPersistent, newData);
+                 ticket.IssueDate, ticket.Expiration, ticket.IsPersistent, Json.Encode(cookieName));
 
             authCookie.Value = FormsAuthentication.Encrypt(newTicket);
             authCookie.Expires = DateTime.Now.AddMonths(3);
@@ -57,50 +44,54 @@ namespace Allianz.Vita.Quality.Services
             response.Cookies.Add(authCookie);
         }
 
-        internal CredentialsViewModel Get(HttpRequestBase request, string cookieName, bool persistent = true)
+        internal void EnsureAuthentication(HttpRequestBase request, string username)
         {
-            HttpCookie authCookie = FormsAuthentication.GetAuthCookie(cookieName, persistent);
-            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+            if (Auth.IsAuthenticated())
+                return;
+            
+            Auth.LogOn(username);
+            CredentialsViewModel model = GetData(request, username);
 
-            if (string.IsNullOrEmpty(ticket.UserData))
-                return new CredentialsViewModel();
-            else
-                return (CredentialsViewModel)Json.Decode(ticket.UserData, typeof(CredentialsViewModel));
+            if (!Auth.IsAuthenticatedOn(typeof(IMailService)) && !string.IsNullOrEmpty(model.ExchangeUserName))
+                Auth.AuthenticateOn(typeof(IMailService), model.MailCredentials);
+            if (!string.IsNullOrEmpty(model.TFSUserName))
+                Auth.AuthenticateOn(typeof(IDefectService), model.TfsCredentials);
         }
 
-        internal CredentialsViewModel GetCookie(HttpRequestBase request, string name)
+        internal CredentialsViewModel GetData(HttpRequestBase request, string key)
+        {
+            HttpCookie cookie = EnsureMainCookie(request);
+            if (!cookie.HasKeys || cookie.Values[key] == null) return new CredentialsViewModel();
+
+            return (CredentialsViewModel)Json.Decode(cookie.Values[key], typeof(CredentialsViewModel));
+        }
+
+        internal void SetData(HttpRequestBase request, HttpResponseBase response, string key, CredentialsViewModel model)
+        {
+            HttpCookie cookie = EnsureMainCookie(request);
+
+            if (!cookie.HasKeys || cookie.Values[key] == null)
+                cookie.Values.Add(key, null);
+
+            cookie.Values[key] = Json.Encode(model);
+            // renew
+            cookie.Expires = DateTime.Now.AddDays(15);
+
+            response.Cookies.Add(cookie);
+
+        }
+
+        private static HttpCookie EnsureMainCookie(HttpRequestBase request)
         {
             HttpCookie cookie = request.Cookies["Vita.Quality"];
-            if (cookie == null) return new CredentialsViewModel();
+            if (cookie == null)
+            {
+                cookie = new HttpCookie("Vita.Quality");                
+            }
 
-            return (CredentialsViewModel)Json.Decode(cookie.Values[name], typeof(CredentialsViewModel));
+            return cookie;
+
         }
-
-        internal void SetCookieData(HttpRequestBase request, string name, CredentialsViewModel model)
-        {
-            HttpCookie myCookie = new HttpCookie("Vita.Quality");
-
-            HttpCookie cookie = request.Cookies[name];
-            if (cookie == null) return new CredentialsViewModel();
-
-            return (CredentialsViewModel)Json.Decode(cookie.Value, typeof(CredentialsViewModel));
-        }
-
-        internal void Persist(HttpRequestBase request, HttpResponseBase response,  CredentialsViewModel model, string cookieName, bool persistent)
-        {
-            HttpCookie authCookie = FormsAuthentication.GetAuthCookie(cookieName, persistent );
-            authCookie.Expires = DateTime.Now.AddMonths(3);
-
-            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-
-            string newData = Json.Encode(model);
-
-            FormsAuthenticationTicket newTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name,
-                 ticket.IssueDate, ticket.Expiration, ticket.IsPersistent, newData);
-
-            authCookie.Value = FormsAuthentication.Encrypt(newTicket);
-
-            response.Cookies.Add(authCookie);
-        }
+        
     }
 }

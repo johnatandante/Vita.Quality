@@ -39,6 +39,12 @@ namespace Allianz.Vita.Quality.Business.Models
 
         public NetworkCredential GetCredentialFor(Type service)
         {
+            foreach(Type t in service.GetInterfaces())
+            {
+                if (_Identities.ContainsKey(t))
+                    return _Identities[t];
+            }
+
             return _Identities.ContainsKey(service) ? _Identities[service] : null;
 
         }

@@ -5,7 +5,7 @@ using Allianz.Vita.Quality.Business.Services.Storage;
 using Allianz.Vita.Quality.Services;
 using Microsoft.Owin;
 using Owin;
-#if DEBUG
+#if FAKEENV
 using Allianz.Vita.Quality.Business.Fake.Services;
 #else
 using Allianz.Vita.Quality.Business.Services.Defect;
@@ -25,7 +25,9 @@ namespace Allianz.Vita.Quality
             ServiceFactory.Register<IStorageService, StorageService>();
             ServiceFactory.Register<IItemFactory, ItemFactory>();
             ServiceFactory.Register<IIdentityService, IdentityService>();
-#if DEBUG
+            ServiceFactory.Register<CookieAuthenticationService, CookieAuthenticationService>();
+
+#if FAKEENV
             ServiceFactory.Register<IMailService, MailServiceFake>();
             ServiceFactory.Register<IDefectService, DefectServiceFake>();
 #else

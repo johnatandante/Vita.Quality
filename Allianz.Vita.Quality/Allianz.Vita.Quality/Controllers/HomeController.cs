@@ -7,6 +7,7 @@ using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Business.Factory;
 using System.Collections.Generic;
 using System.Web.Mvc.Filters;
+using Allianz.Vita.Quality.Services;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -27,14 +28,28 @@ namespace Allianz.Vita.Quality.Controllers
             }
         }
 
+        CookieAuthenticationService CookieService
+        {
+            get
+            {
+                return ServiceFactory.Get<CookieAuthenticationService>();
+            }
+        }
+
         protected override void OnAuthentication(AuthenticationContext filterContext)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                CookieService.EnsureAuthentication(Request, User.Identity.Name);
+                
+            }
+
             base.OnAuthentication(filterContext);
         }
 
         public ActionResult Index()
         {
-                        
+
             HomeViewModel model = new HomeViewModel();
 
             List<string> inbox = new List<string>();
@@ -57,7 +72,6 @@ namespace Allianz.Vita.Quality.Controllers
 
             try
             {
-                if (User.Identity.IsAuthenticated)
                 if (Auth.IsAuthenticatedOn(Mail.GetType()))
                 {
                     IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 20, from: "SRM");
