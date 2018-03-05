@@ -15,15 +15,15 @@ namespace Allianz.Vita.Quality.Test.Services
         [TestInitialize]
         public void Init()
         {
-            IConfigurationService conf = ServiceFactory.Register<IConfigurationService, ConfigurationService>();
-            IStorageService stor = ServiceFactory.Register<IStorageService, StorageService>();
+            IConfigurationService conf = ServiceFactory.Register<IConfigurationService, ConfigurationServiceFake>();
+            IStorageService stor = ServiceFactory.Register<IStorageService, StorageServiceFake>();
 
             IItemFactory itemFactory = ServiceFactory.Register<IItemFactory, ItemFactory>(stor, conf);
 
-            service = ServiceFactory.Register<IDefectService, DefectService>();
+            service = ServiceFactory.Register<IDefectService, DefectServiceFake>();
             
             Assert.IsInstanceOfType(service, typeof(IDefectService));
-            Assert.IsInstanceOfType(service, typeof(DefectService));
+            Assert.IsInstanceOfType(service, typeof(DefectServiceFake));
 
         }
         

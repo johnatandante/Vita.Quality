@@ -48,10 +48,22 @@ namespace Allianz.Vita.Quality.Models
 
     public class LoginViewModel
     {
+        [Display(Name = "Full Username")]
+        public string UserName
+        {
+            get
+            {
+                return (string.IsNullOrEmpty(Domain) ? Domain + "\\" : string.Empty).Trim() + UserId.Trim();
+            }
+        }
+
+        // [Required]
+        [Display(Name = "Domain")]
+        public string Domain { get; set; }
+
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Username")]
+        public string UserId { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -64,7 +76,23 @@ namespace Allianz.Vita.Quality.Models
 
     public class RegisterViewModel
     {
+        [Display(Name = "Full Username")]
+        public string UserName
+        {
+            get
+            {
+                return (string.IsNullOrEmpty(Domain) ? Domain + "\\" : string.Empty).Trim() + UserId.Trim();
+            }
+        }
+
         [Required]
+        [Display(Name = "Username")]
+        public string UserId { get; set; }
+        
+        [Display(Name = "Domain")]
+        public string Domain { get; set; }
+
+        //[Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -79,6 +107,7 @@ namespace Allianz.Vita.Quality.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
     }
 
     public class ResetPasswordViewModel

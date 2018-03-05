@@ -29,19 +29,9 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         string TrackingSystemCompany { get; }
 
         string DefaultProjectPath { get; }
-
-        string TrackingSystemAccountName { get; }
-
-        string TrackingSystemDomainName { get; }
-
-        string TrackingSystemHashedPassword { get; }
-
+        
         string MailServiceUrl { get; }
-
-        string Password { get; }
-
-        string AccountName { get; }
-
+        
         string DefaultDefectWorkItemType { get; }
 
         string IssueFolderPath { get; }

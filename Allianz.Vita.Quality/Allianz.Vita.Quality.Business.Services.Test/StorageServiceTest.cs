@@ -14,10 +14,10 @@ namespace Allianz.Vita.Quality.Test.Services
         [TestInitialize]
         public void Init()
         {
-            service = ServiceFactory.Register<IStorageService, StorageService>();
+            service = ServiceFactory.Register<IStorageService, StorageServiceFake>();
 
             Assert.IsInstanceOfType(service, typeof(IStorageService));
-            Assert.IsInstanceOfType(service, typeof(StorageService));
+            Assert.IsInstanceOfType(service, typeof(StorageServiceFake));
 
         }
 

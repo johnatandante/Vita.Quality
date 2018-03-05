@@ -5,25 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Caching;
+using System.Net;
+using System.Security.Authentication;
 
 namespace Allianz.Vita.Quality.Business.Services.Mail
 {
     public class ExchangeMailService : IMailService
     {
-
-        //static ObjectCache cache;
-
-        //CacheItemPolicy policy
-        //{
-        //    get
-        //    {
-        //        var p = new CacheItemPolicy();
-        //        p.AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(120.0);
-        //        return p;
-        //    }
-        //}
-
+        
         static ExtendedPropertyDefinition PidTagFlagStatus
         {
             get { return new ExtendedPropertyDefinition(0x1090, MapiPropertyType.Integer); }
@@ -35,40 +24,55 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
         }
 
         public ExchangeVersion Version { get; private set; }
+        
+        static ExchangeService _Service;
 
-        ExchangeService service;
+        ExchangeService Service
+        {
+            get
+            {
+                // Create the binding.
+                if (_Service == null)
+                    _Service = new ExchangeService(Version);
+
+                // Set the credentials for the on-premises server.                
+                _Service.Credentials = new WebCredentials(Credentials.UserName, Credentials.Password, Credentials.Domain);
+                _Service.Url = new Uri(Config.MailServiceUrl);
+
+                return _Service;
+            }
+        }
 
         IItemFactory Factory = null;
+        IIdentityService Auth = null;
+
+        NetworkCredential Credentials
+        {
+            get
+            {
+                if (!Auth.IsAuthenticatedOn(this.GetType()))
+                {
+                    throw new AuthenticationException("Identity not found for Exchange");
+                }
+
+                return Auth.GetCredentialsFor(this);
+            }
+        }
 
         public ExchangeMailService()
-            : this(version: ExchangeVersion.Exchange2010_SP2, factory: null)
+            : this(version: ExchangeVersion.Exchange2010_SP2, factory: null, auth: null)
         {
 
         }
 
-        public ExchangeMailService(ExchangeVersion version, IItemFactory factory)
+        public ExchangeMailService(ExchangeVersion version, IItemFactory factory, IIdentityService auth)
         {
-            //cache = MemoryCache.Default;
-
-            IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
-
-            string email = config.AccountName;
-            string password = config.Password;
-            string defaultUrl = config.MailServiceUrl;
-
+            
             Factory = factory ?? ServiceFactory.Get<IItemFactory>();
-
+            Auth = auth ?? ServiceFactory.Get<IIdentityService>();
+            
             Version = version;
-
-            // Create the binding.
-            service = new ExchangeService(version);
-
-            // Set the credentials for the on-premises server.
-            service.Credentials = new WebCredentials(email, password);
-
-            // Set the URL.
-            service.Url = new Uri(defaultUrl);
-
+            
         }
 
         #region IMailService Members
@@ -86,7 +90,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
                 collection.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, read.Value));
             }
             
-            FindItemsResults<Item> homeItems = service.FindItems(WellKnownFolderName.Inbox, collection, itemView);
+            FindItemsResults<Item> homeItems = Service.FindItems(WellKnownFolderName.Inbox, collection, itemView);
             
             return new List<IMailItem>(
                     homeItems.Select(i => Factory.ToMailItem(i as EmailMessage)
@@ -100,14 +104,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             Queue<string> folderNames = new Queue<string>(path.Split('.'));
 
             string folderKey = "FindFoldersOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString();
-            //CacheItem objectFolderResults = cache.GetCacheItem(folderKey);
-            //if (objectFolderResults == null)
-            //{
-            //    cache.Add(folderKey, FindSubFolder(folderNames), policy);
-            //    objectFolderResults = cache.GetCacheItem(folderKey);
-            //}
-
-            //FindFoldersResults folderResults = objectFolderResults.Value as FindFoldersResults;
+            
             FindFoldersResults folderResults = FindSubFolder(folderNames);
 
             if (!folderResults.Any())
@@ -142,7 +139,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             //}
 
             //FindItemsResults<Item> issueVitaItems = objectIssueVitaItems.Value as FindItemsResults<Item>;
-            FindItemsResults<Item> issueVitaItems = service.FindItems(folder.Id, collection, issueVitaItemView);
+            FindItemsResults<Item> issueVitaItems = Service.FindItems(folder.Id, collection, issueVitaItemView);
 
             return Factory.ToFolderItem(folder, issueVitaItems);
 
@@ -159,12 +156,12 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
             if (folder == null)
             {
-                folderResults = service.FindFolders(WellKnownFolderName.PublicFoldersRoot
+                folderResults = Service.FindFolders(WellKnownFolderName.PublicFoldersRoot
                     , searchFilter, folderView);
             }
             else
             {
-                folderResults = service.FindFolders(folder
+                folderResults = Service.FindFolders(folder
                     , searchFilter, folderView);
             }
 
@@ -193,7 +190,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
                                                 ItemSchema.ConversationId};
 
             PropertySet prop = new PropertySet(BasePropertySet.FirstClassProperties, additionalProperties);
-            return EmailMessage.Bind(service, new ItemId(model.UniqueId));
+            return EmailMessage.Bind(Service, new ItemId(model.UniqueId));
 
         }
 

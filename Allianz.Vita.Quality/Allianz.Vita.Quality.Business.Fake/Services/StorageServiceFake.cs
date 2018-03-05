@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {
-    public class StorageService : IStorageService
+    public class StorageServiceFake : IStorageService
     {
         public string Store(IAttachment att, string fileName)
         {

@@ -7,9 +7,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Allianz.Vita.Quality.Extensions;
+using Allianz.Vita.Quality.Attributes;
 
 namespace Allianz.Vita.Quality.Controllers
 {
+    [AuthorizedOnly(typeof(IMailService), typeof(IDefectService))]
     public class DefectController : Controller
     {
         
@@ -23,9 +25,17 @@ namespace Allianz.Vita.Quality.Controllers
             get { return ServiceFactory.Get<IMailService>(); }
         }
 
+        IIdentityService Auth
+        {
+            get
+            {
+                return ServiceFactory.Get<IIdentityService>();
+            }
+        }
+
         // GET: Defect
         public ActionResult Index() {
-
+            
             List<IDefect> defects = Service.GetAllDefects();
             DefectViewModel[] collection = defects.Select(idefect => new DefectViewModel(idefect)).ToArray();
 

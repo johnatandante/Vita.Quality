@@ -1,5 +1,6 @@
 ﻿using Microsoft.Exchange.WebServices.Data;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
@@ -15,6 +16,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         void MergeTo(IMailItem itemRead, IDefect defect);
         string GetSubject(IMailItem itemRead);
         IAttachment ToAttachment(string subject, byte[] content);
+        IUserCredentials GetNewUserCredential(NetworkCredential identity);
 
     }
 }

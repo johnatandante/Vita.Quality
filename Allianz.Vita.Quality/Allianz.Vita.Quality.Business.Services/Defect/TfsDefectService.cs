@@ -1,18 +1,19 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
-using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Services.Enums;
+using Allianz.Vita.Quality.Business.Services.Utilities;
 using Allianz.Vita.Quality.Business.Utilities;
 using Allianz.Vita.Quality.Business.Utilities.Statement;
 using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Framework.Client;
+using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Allianz.Vita.Quality.Business.Services.Utilities;
-using Microsoft.TeamFoundation.Framework.Client;
-using Microsoft.TeamFoundation.Framework.Common;
+using System.Security.Authentication;
 
 namespace Allianz.Vita.Quality.Business.Services.Defect
 {
@@ -67,24 +68,19 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.CreatedBy.FieldName(),
             DefectField.AssignedTo.FieldName(),
         };
-
-        NetworkCredential credentials;
-
+        
         IConfigurationService config;
 
         public NetworkCredential Credentials
         {
             get
             {
-                if (credentials == null)
+                if (!Auth.IsAuthenticatedOn(this.GetType()))
                 {
-                    credentials = new NetworkCredential(
-                        config.TrackingSystemAccountName,
-                        config.TrackingSystemHashedPassword,
-                        config.TrackingSystemDomainName);
+                    throw new AuthenticationException("Identity not found for TFS");
                 }
 
-                return credentials;
+                return Auth.GetCredentialsFor(this);
             }
         }
 
@@ -94,12 +90,25 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         IStorageService Storage;
 
-        public TfsDefectService() : this(null, null, null) { }
+        IIdentityService Auth;
+
+        TfsTeamProjectCollection Service
+        {
+            get
+            {
+                return new TfsTeamProjectCollection(new Uri(TfsUri))
+                {
+                    Credentials = Credentials
+                };                    
+            }
+        }
+        
+        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage)
+        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage, IIdentityService auth)
         {
             config = ServiceFactory.Get<IConfigurationService>();
 
@@ -109,8 +118,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             Storage = storage ?? ServiceFactory.Get<IStorageService>();
 
-        }
+            Auth = auth ?? ServiceFactory.Get<IIdentityService>();
 
+        }
+        
         /// <summary>
         /// Execute a WIQL query to return a list of bugs using the .NET client library
         /// </summary>
@@ -118,15 +129,13 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         public List<IDefect> GetMyTasks()
         {
             List<IDefect> result = new List<IDefect>();
-
-            // create TfsTeamProjectCollection instance using default credentials
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            
+            using (Service)
             {
 
-                tpc.Credentials = Credentials;
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
 
                 // get the WorkItemStore service
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
                 // get the project context for the work item store
                 Project workItemProject = workItemStore.Projects[TeamProjectName];
 
@@ -178,15 +187,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         public List<IDefect> GetAllDefects()
         {
             List<IDefect> result = new List<IDefect>();
-
-            // create TfsTeamProjectCollection instance using default credentials
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            
+            using (Service)
             {
-
-                tpc.Credentials = Credentials;
-
                 // get the WorkItemStore service
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
 
                 QueryDefinition query = GetNewQueryDefinition("GetAllDefects",
                     WorkItemOutputFields,
@@ -265,11 +270,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem defect;
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item. 
@@ -336,16 +340,15 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             IDefect result = null;
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
                 WorkItem wi = GetWorkItemById(workItemStore, id);
 
                 result = ToDefectItem(wi);
 
-                result.ConfirmedNotificationAddress = GetEmailAddress(tpc, result.AssignedTo);
+                result.ConfirmedNotificationAddress = GetEmailAddress(Service, result.AssignedTo);
 
             }
 
@@ -422,11 +425,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<string> allowedValues = new List<string>();
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
 
                 if (key == "System.AreaPath")
                 {
@@ -463,11 +465,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void Autoassign(string id)
         {
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
 
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, id);
                 if (collection.Count > 0)
@@ -506,11 +507,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void MoveStateOn(IDefect defect)
         {
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, defect.DefectID);
                 WorkItem workItem = collection[0];
                 workItem.Open();
@@ -590,11 +590,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             IMailItem mail = Mail.Get(mailItem);
             string subject = Factory.GetSubject(mail);
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
 
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
 
                 WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
                                 result = ToDefectItemCollection(workItems).FirstOrDefault();
@@ -619,11 +618,9 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem workItem;
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-                tpc.Credentials = Credentials;
-
-                WorkItemStore workItemStore = tpc.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item.                 
@@ -697,13 +694,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public string GetDisplayName()
         {
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(TfsUri)))
+            using (Service)
             {
-
-                tpc.Credentials = Credentials;
-
+                
                 Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity = null;
-                tpc.GetAuthenticatedIdentity(out identity);
+                Service.GetAuthenticatedIdentity(out identity);
                 
                 return identity.DisplayName;
             }
