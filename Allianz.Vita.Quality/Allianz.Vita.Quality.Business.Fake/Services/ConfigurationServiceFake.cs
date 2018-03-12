@@ -1,4 +1,4 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {

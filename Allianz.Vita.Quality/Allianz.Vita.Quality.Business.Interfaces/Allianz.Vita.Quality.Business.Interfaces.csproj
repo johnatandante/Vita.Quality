@@ -42,19 +42,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SeverityLevel.cs" />
-    <Compile Include="IAttachment.cs" />
-    <Compile Include="IIdentityService.cs" />
-    <Compile Include="IConfigurationService.cs" />
-    <Compile Include="IDefect.cs" />
-    <Compile Include="IDefectService.cs" />
-    <Compile Include="IFolderItem.cs" />
-    <Compile Include="ILinkService.cs" />
-    <Compile Include="IMailItem.cs" />
-    <Compile Include="IMailItemKey.cs" />
-    <Compile Include="IMailService.cs" />
-    <Compile Include="IService.cs" />
-    <Compile Include="IStorageService.cs" />
-    <Compile Include="IUserCredentials.cs" />
+    <Compile Include="DataModel\IAttachment.cs" />
+    <Compile Include="Service\IIdentityService.cs" />
+    <Compile Include="Service\IConfigurationService.cs" />
+    <Compile Include="DataModel\IDefect.cs" />
+    <Compile Include="Service\IDefectService.cs" />
+    <Compile Include="DataModel\IFolderItem.cs" />
+    <Compile Include="DataModel\IIssueItem.cs" />
+    <Compile Include="Service\IIssueService.cs" />
+    <Compile Include="Service\ILinkService.cs" />
+    <Compile Include="DataModel\IMailItem.cs" />
+    <Compile Include="DataModel\IMailItemKey.cs" />
+    <Compile Include="Service\IMailService.cs" />
+    <Compile Include="Service\IService.cs" />
+    <Compile Include="Service\IStorageService.cs" />
+    <Compile Include="DataModel\IUserCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

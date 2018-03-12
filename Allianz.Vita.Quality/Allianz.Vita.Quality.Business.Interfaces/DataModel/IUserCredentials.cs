@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Principal;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
     public interface IUserCredentials : IIdentity
     {

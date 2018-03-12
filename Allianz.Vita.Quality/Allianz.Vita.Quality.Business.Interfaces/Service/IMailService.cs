@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using System.Collections.Generic;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
 	public interface IMailService : IService
 	{

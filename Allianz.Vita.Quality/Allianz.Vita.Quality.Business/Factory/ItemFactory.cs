@@ -1,13 +1,14 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Models;
 using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Net;
-using System.Security.Principal;
+using System.Web;
 
 namespace Allianz.Vita.Quality.Business.Factory
 {

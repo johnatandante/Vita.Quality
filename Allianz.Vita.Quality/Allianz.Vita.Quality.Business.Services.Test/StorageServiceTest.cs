@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Fake.Services;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 
 namespace Allianz.Vita.Quality.Test.Services
 {

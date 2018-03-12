@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using System;
 using System.Net;
-using System.Security.Principal;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
     public interface IIdentityService : IService
     {

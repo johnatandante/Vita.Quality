@@ -1,9 +1,9 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
 
 namespace Allianz.Vita.Quality.Business.Models
 {
-	public class Defect : IDefect
+    public class Defect : IDefect
 	{
 
 		#region IDefect Members

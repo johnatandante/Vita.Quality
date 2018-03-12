@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
     public interface IFolderItem
 	{

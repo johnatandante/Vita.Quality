@@ -1,8 +1,9 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
     public interface IDefectService : IService
     {

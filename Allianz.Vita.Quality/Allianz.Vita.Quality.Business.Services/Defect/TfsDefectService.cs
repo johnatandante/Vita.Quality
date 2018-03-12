@@ -1,6 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Services.Enums;
 using Allianz.Vita.Quality.Business.Services.Utilities;
 using Allianz.Vita.Quality.Business.Utilities;
@@ -68,8 +70,8 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.CreatedBy.FieldName(),
             DefectField.AssignedTo.FieldName(),
         };
-        
-        IConfigurationService config;
+
+        Interfaces.Service.IConfigurationService config;
 
         public NetworkCredential Credentials
         {

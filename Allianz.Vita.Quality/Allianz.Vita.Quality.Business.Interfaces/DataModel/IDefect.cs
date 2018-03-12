@@ -1,6 +1,6 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
 
-namespace Allianz.Vita.Quality.Business.Interfaces
+namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
     public interface IDefect : IMailItemKey
     {

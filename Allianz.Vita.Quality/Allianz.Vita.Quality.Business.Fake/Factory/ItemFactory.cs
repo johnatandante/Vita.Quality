@@ -1,5 +1,6 @@
 ﻿using Allianz.Vita.Quality.Business.Fake.Models;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Net;

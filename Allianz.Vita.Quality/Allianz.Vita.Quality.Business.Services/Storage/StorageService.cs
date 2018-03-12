@@ -1,4 +1,5 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System.IO;
 
 namespace Allianz.Vita.Quality.Business.Services.Storage

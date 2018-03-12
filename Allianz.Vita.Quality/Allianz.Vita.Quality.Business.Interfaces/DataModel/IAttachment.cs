@@ -1,4 +1,4 @@
-﻿namespace Allianz.Vita.Quality.Business.Interfaces
+﻿namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
     public interface IAttachment
 	{

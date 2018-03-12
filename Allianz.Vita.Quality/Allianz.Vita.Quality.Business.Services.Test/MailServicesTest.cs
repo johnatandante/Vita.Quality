@@ -5,6 +5,8 @@ using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Fake.Services;
 using System.Linq;
 using System.Collections.Generic;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 
 namespace Allianz.Vita.Quality.Business.Test
 {

@@ -1,4 +1,6 @@
-﻿using Microsoft.Exchange.WebServices.Data;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Microsoft.Exchange.WebServices.Data;
 using System.Collections.Generic;
 using System.Net;
 
