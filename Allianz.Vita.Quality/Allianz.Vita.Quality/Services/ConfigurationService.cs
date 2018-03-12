@@ -1,46 +1,11 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System.Web.Configuration;
-using System.Runtime.Caching;
-using System;
 
 namespace Allianz.Vita.Quality.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        
-        //const string mailAccountName = "MailAccountName";
-        //const string mailHashedPassword = "MailHashedPassword";
-
-        //const string trackingSystemAccountName = "TrackingSystemAccountName";
-        //const string trackingSystemDomainName = "TrackingSystemDomainName";
-        //const string trackingSystemHashedPassword = "TrackingSystemHashedPassword";        
-
-        //static ObjectCache cache;
-
-        //static CacheItemPolicy policy
-        //{
-        //    get
-        //    {
-        //        var p = new CacheItemPolicy
-        //        {
-        //            AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(120.0)
-        //        };
-        //        return p;
-        //    }
-        //}
-
-        //static ConfigurationService()
-        //{
-        //    cache = MemoryCache.Default;            
-
-        //    cache.Add(mailAccountName, string.Empty, policy);
-        //    cache.Add(mailHashedPassword, string.Empty, policy);
-
-        //    cache.Add(trackingSystemAccountName, string.Empty, policy);
-        //    cache.Add(trackingSystemDomainName, string.Empty, policy);
-        //    cache.Add(trackingSystemHashedPassword, string.Empty, policy);
-
-        //}
+             
         
         public string DefaultIteration
         {
@@ -129,25 +94,7 @@ namespace Allianz.Vita.Quality.Services
                 return WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
             }
         }
-
-        //public string Password
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(mailHashedPassword).Value as string;
-        //        //return WebConfigurationManager.AppSettings["MailHashedPassword"].ToString();
-        //    }
-        //}
-
-        //public string AccountName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(mailAccountName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["MailAccountName"].ToString();
-        //    }
-        //}
-
+        
         public string TrackingSystemCompany
         {
             get
@@ -155,34 +102,7 @@ namespace Allianz.Vita.Quality.Services
                 return WebConfigurationManager.AppSettings["TrackingSystemCompany"].ToString();
             }
         }
-
-        //public string TrackingSystemAccountName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemAccountName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemAccountName"].ToString();
-        //    }
-        //}
-
-        //public string TrackingSystemDomainName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemDomainName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemDomainName"].ToString();
-        //    }
-        //}
-
-        //public string TrackingSystemHashedPassword
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemHashedPassword).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemHashedPassword"].ToString();
-        //    }
-        //}
-
+        
         public string DefaultDefectWorkItemType
         {
             get
