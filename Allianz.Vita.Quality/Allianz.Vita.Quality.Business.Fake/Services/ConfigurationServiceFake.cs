@@ -39,5 +39,10 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
         public string TrackingSystemWorkingFeature => string.Empty;
 
         public string IssueCompletedFolderPath => string.Empty;
+
+        public string IssueSystemUrl => string.Empty;
+
+        public int MaxPageItems => 0;
+
     }
 }

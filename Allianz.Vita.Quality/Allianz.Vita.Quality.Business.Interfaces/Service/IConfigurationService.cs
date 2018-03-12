@@ -44,5 +44,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
 
         string TrackingSystemWorkingFeature { get; }
 
+        string IssueSystemUrl { get; }
+        int MaxPageItems { get; }
     }
 }

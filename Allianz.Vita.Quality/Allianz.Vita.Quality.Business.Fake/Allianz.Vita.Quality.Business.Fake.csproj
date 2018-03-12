@@ -200,6 +200,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationServiceFake.cs" />
     <Compile Include="Services\DefectServiceFake.cs" />
+    <Compile Include="Services\IssueServiceFake.cs" />
     <Compile Include="Services\MailServiceFake.cs" />
     <Compile Include="Services\StorageServiceFake.cs" />
   </ItemGroup>

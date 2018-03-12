@@ -1,6 +1,8 @@
 ﻿using Allianz.Vita.Quality.Attributes;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Models;
 using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;

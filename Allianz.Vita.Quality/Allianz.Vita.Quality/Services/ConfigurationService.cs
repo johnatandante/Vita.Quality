@@ -1,11 +1,11 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
+using System;
 using System.Web.Configuration;
 
 namespace Allianz.Vita.Quality.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-             
         
         public string DefaultIteration
         {
@@ -153,5 +153,20 @@ namespace Allianz.Vita.Quality.Services
             }
         }
 
+        public string IssueSystemUrl
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["IssueSystemUrl"].ToString();
+            }
+        }
+
+        public int MaxPageItems
+        {
+            get
+            {
+                return Convert.ToInt32(WebConfigurationManager.AppSettings["IssueMaxPageItems"]);
+            }
+        }
     }
 }

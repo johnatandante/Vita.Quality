@@ -24,6 +24,16 @@ namespace Allianz.Vita.Quality.Business.Fake.Factory
             throw new NotImplementedException();
         }
 
+        public IIssueItem GetNewIssue()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency)
+        {
+            throw new NotImplementedException();
+        }
+
         public IMailItem GetNewMailItem(string uniqueId = "")
         {
             return new MailItem()

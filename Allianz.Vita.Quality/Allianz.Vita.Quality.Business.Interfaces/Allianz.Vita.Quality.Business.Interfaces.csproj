@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\IIssueItem.cs" />
     <Compile Include="Enums\SeverityLevel.cs" />
     <Compile Include="DataModel\IAttachment.cs" />
     <Compile Include="Service\IIdentityService.cs" />
@@ -48,7 +49,6 @@
     <Compile Include="DataModel\IDefect.cs" />
     <Compile Include="Service\IDefectService.cs" />
     <Compile Include="DataModel\IFolderItem.cs" />
-    <Compile Include="DataModel\IIssueItem.cs" />
     <Compile Include="Service\IIssueService.cs" />
     <Compile Include="Service\ILinkService.cs" />
     <Compile Include="DataModel\IMailItem.cs" />

@@ -3,7 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces.Enums;
 
 namespace Allianz.Vita.Quality.Business.Models
 {
-    public class Defect : IDefect
+    public class DefectItem : IDefect
 	{
 
 		#region IDefect Members

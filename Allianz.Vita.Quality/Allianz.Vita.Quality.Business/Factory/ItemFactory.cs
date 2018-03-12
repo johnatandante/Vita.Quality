@@ -51,14 +51,13 @@ namespace Allianz.Vita.Quality.Business.Factory
                 Subject = mail.Subject
                 ,
                 Content = propFull ? mail.Body.Text : string.Empty
-                //, Flagged = propFull ? mail.Flag.FlagStatus != ItemFlagStatus.NotFlagged : false
                 ,
                 Attachments = propFull ? mail.Attachments.ToArray() : new object[] { }
                 ,
                 Categories = propFull ? mail.Categories.ToArray() : new string[] { }
                 ,
                 Importance = propFull ? mail.Importance.ToString() : Importance.Normal.ToString()
-                //, ConversationId = propFull ? mail.ConversationId.UniqueId : string.Empty
+
             };
 
         }
@@ -94,7 +93,6 @@ namespace Allianz.Vita.Quality.Business.Factory
             defect.Title = data.Title;
             defect.Description = HttpUtility.UrlDecode(itemRead.Content);
             defect.IMailItemUniqueId = itemRead.UniqueId;
-            // defect.AssignedTo = workItem.TryToGetField("System.AssignedTo");
 
             return defect;
 
@@ -102,7 +100,7 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         public IDefect GetNewDefect(int? id = null, string agency = null, string defectID = null, string defectType = null, string defectSystem = null, string foundIn = null, string environment = null)
         {
-            IDefect defect = new Defect()
+            IDefect defect = new DefectItem()
             {
                 Id = id,
                 DefectID = defectID,
@@ -152,6 +150,31 @@ namespace Allianz.Vita.Quality.Business.Factory
         public IUserCredentials GetNewUserCredential(NetworkCredential identity)
         {
             return new UserCredential(identity.UserName, UserCredential.AuthenticationMode.Classic.ToString());
+        }
+
+        public IIssueItem GetNewIssue()
+        {
+            return new IssueItem() { };
+        }
+
+        public IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency)
+        {
+
+            return new IssueItem() {
+                   Id = id,
+                   Assignee = assignee,
+                   Created = created,
+                   ResolvedOn = resolvedOn,
+                   ReopenedOn = reopenedOn,
+                   NomeGruppoLife = nomeGruppoLife,
+                   Priority = priority,
+                   Project = project,
+                   Summary = summary,
+                   DigitalAgency = digitalAgency,
+                   Status = status,
+                   IssueType = type
+            };
+
         }
 
         #endregion

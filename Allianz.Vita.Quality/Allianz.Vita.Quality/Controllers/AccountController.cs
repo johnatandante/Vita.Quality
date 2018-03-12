@@ -1,15 +1,12 @@
-﻿using Allianz.Vita.Quality.Models;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Extensions;
+using Allianz.Vita.Quality.Models;
+using Allianz.Vita.Quality.Services;
+using System;
 using System.Web.Mvc;
 using System.Web.Security;
-using Allianz.Vita.Quality.Extensions;
-using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Factory;
-using System;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Web;
-using System.Linq;
-using Allianz.Vita.Quality.Services;
-
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -79,7 +76,7 @@ namespace Allianz.Vita.Quality.Controllers
             if (!Service.IsAuthenticated())
                 RedirectToAction("SignIn");
 
-            if (!model.Initialized)
+            if (model == null || !model.Initialized)
             {
                 CredentialsViewModel cookieCredentials = CookieService.GetData(Request, User.Identity.Name);
                 model = cookieCredentials;
@@ -100,7 +97,7 @@ namespace Allianz.Vita.Quality.Controllers
             {
                 if (Service.IsValidUser(model.TFSUserName))
                 {
-                    if (Service.IsValidAccount(model.ExchangeUserName, model.TFSPassword))
+                    if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
                     {
                         hasChanged = true;
                         Service.Logoff(typeof(IDefectService));

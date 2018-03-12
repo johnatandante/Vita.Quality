@@ -88,9 +88,10 @@
     <Compile Include="Factory\ServiceFactory.cs" />
     <Compile Include="Interfaces\IItemFactory.cs" />
     <Compile Include="Models\FolderItem.cs" />
+    <Compile Include="Models\IssueItem.cs" />
     <Compile Include="Models\MailAsAttachment.cs" />
     <Compile Include="Models\MailItem.cs" />
-    <Compile Include="Models\Defect.cs" />
+    <Compile Include="Models\DefectItem.cs" />
     <Compile Include="Models\SubjectMetaData.cs" />
     <Compile Include="Models\UserCredential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

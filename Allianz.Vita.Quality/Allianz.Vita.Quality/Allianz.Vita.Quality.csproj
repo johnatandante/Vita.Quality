@@ -176,10 +176,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\AuthorizedOnlyAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\_AccountController.cs" />
     <Compile Include="Controllers\ConvertController.cs" />
     <Compile Include="Controllers\DefectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Extensions\FlashMessageExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -190,6 +190,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\DefectViewModel.cs" />
     <Compile Include="Models\ConvertViewModel.cs" />
+    <Compile Include="Models\IssueViewModel.cs" />
     <Compile Include="Models\SignInViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
@@ -519,6 +520,7 @@
     <Content Include="Views\Shared\_Flash.cshtml" />
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\Account\Credentials.cshtml" />
+    <Content Include="Views\Issue\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

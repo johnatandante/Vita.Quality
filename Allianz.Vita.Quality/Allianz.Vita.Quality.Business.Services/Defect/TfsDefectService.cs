@@ -71,7 +71,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.AssignedTo.FieldName(),
         };
 
-        Interfaces.Service.IConfigurationService config;
+        IConfigurationService config;
 
         public NetworkCredential Credentials
         {

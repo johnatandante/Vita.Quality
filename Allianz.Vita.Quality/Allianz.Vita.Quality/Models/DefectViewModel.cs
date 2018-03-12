@@ -1,10 +1,11 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
-using Allianz.Vita.Quality.Business.Factory;
-using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Business.Services.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using Allianz.Vita.Quality.Business.Services.Enums;
 
 namespace Allianz.Vita.Quality.Models
 {

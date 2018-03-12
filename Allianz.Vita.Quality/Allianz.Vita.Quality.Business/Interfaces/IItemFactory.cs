@@ -3,6 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Microsoft.Exchange.WebServices.Data;
 using System.Collections.Generic;
 using System.Net;
+using System;
 
 namespace Allianz.Vita.Quality.Business.Interfaces
 {
@@ -19,6 +20,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces
         string GetSubject(IMailItem itemRead);
         IAttachment ToAttachment(string subject, byte[] content);
         IUserCredentials GetNewUserCredential(NetworkCredential identity);
-
+        IIssueItem GetNewIssue();
+        IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency);
     }
 }

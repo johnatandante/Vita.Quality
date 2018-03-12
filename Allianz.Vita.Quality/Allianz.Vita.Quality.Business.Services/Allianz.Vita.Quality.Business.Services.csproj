@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JiraWebApi, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JiraWebApi.1.3.0\lib\net45\JiraWebApi.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
       <Private>True</Private>
@@ -201,6 +204,7 @@
     <Compile Include="Authentication\IdentityService.cs" />
     <Compile Include="Enums\DefectFields.cs" />
     <Compile Include="Enums\DefectLinkType.cs" />
+    <Compile Include="Issues\JiraIssueService.cs" />
     <Compile Include="Link\LinkService.cs" />
     <Compile Include="Mail\MailFlag.cs" />
     <Compile Include="Defect\TfsDefectService.cs" />
@@ -221,8 +225,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="JiraWebApiDoc.chm" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
