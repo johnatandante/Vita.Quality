@@ -1,5 +1,5 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
-using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Models;
 using System;
 using System.Web;

@@ -5,6 +5,7 @@ using Allianz.Vita.Quality.Business.Services.Storage;
 using Allianz.Vita.Quality.Services;
 using Microsoft.Owin;
 using Owin;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 #if FAKEENV
 using Allianz.Vita.Quality.Business.Fake.Services;
 #else
