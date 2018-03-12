@@ -5,6 +5,7 @@ using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using Allianz.Vita.Quality.Services;
 using System;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -101,7 +102,8 @@ namespace Allianz.Vita.Quality.Controllers
                     {
                         hasChanged = true;
                         Service.Logoff(typeof(IDefectService));
-                        Service.AuthenticateOn(typeof(IDefectService), new System.Net.NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
+                        Service.AuthenticateOn(typeof(IDefectService), 
+                            new NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
                         
                         result = result.Success("TFS Account Data Saved");
                     }
@@ -118,7 +120,24 @@ namespace Allianz.Vita.Quality.Controllers
                         hasChanged = true;
                         Service.Logoff(typeof(IMailService));
                         Service.AuthenticateOn(typeof(IMailService),
-                        new System.Net.NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
+                            new NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
+
+                        result = result.Success("Exchange Account Data Saved");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    }
+                }
+
+                if (Service.IsValidUser(model.JiraUserName))
+                {
+                    if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
+                    {
+                        hasChanged = true;
+                        Service.Logoff(typeof(IIssueService));
+                        Service.AuthenticateOn(typeof(IIssueService),
+                            new NetworkCredential(model.JiraUserName, model.JiraPassword));
 
                         result = result.Success("Exchange Account Data Saved");
                     }

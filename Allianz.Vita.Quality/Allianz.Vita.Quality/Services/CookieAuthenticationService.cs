@@ -11,6 +11,8 @@ namespace Allianz.Vita.Quality.Services
     public class CookieAuthenticationService : IService
     {
 
+        static string CookieQuality = "Vita.Quality";
+
         IIdentityService Auth;
 
         public CookieAuthenticationService() : this(auth: null) { }
@@ -34,6 +36,10 @@ namespace Allianz.Vita.Quality.Services
             {
                 Auth.AuthenticateOn(typeof(IMailService), model.MailCredentials);
             }
+            if (!string.IsNullOrEmpty(model.JiraUserName))
+            {
+                Auth.AuthenticateOn(typeof(IIssueService), model.JiraCredentials);
+            }
 
             FormsAuthenticationTicket newTicket = new FormsAuthenticationTicket(ticket.Version, ticket.Name,
                  ticket.IssueDate, ticket.Expiration, ticket.IsPersistent, Json.Encode(cookieName));
@@ -56,6 +62,8 @@ namespace Allianz.Vita.Quality.Services
                 Auth.AuthenticateOn(typeof(IMailService), model.MailCredentials);
             if (!string.IsNullOrEmpty(model.TFSUserName))
                 Auth.AuthenticateOn(typeof(IDefectService), model.TfsCredentials);
+            if (!string.IsNullOrEmpty(model.JiraUserName))
+                Auth.AuthenticateOn(typeof(IIssueService), model.JiraCredentials);
         }
 
         internal CredentialsViewModel GetData(HttpRequestBase request, string key)
@@ -80,13 +88,13 @@ namespace Allianz.Vita.Quality.Services
             response.Cookies.Add(cookie);
 
         }
-
+        
         private static HttpCookie EnsureMainCookie(HttpRequestBase request)
         {
-            HttpCookie cookie = request.Cookies["Vita.Quality"];
+            HttpCookie cookie = request.Cookies[CookieQuality];
             if (cookie == null)
             {
-                cookie = new HttpCookie("Vita.Quality");                
+                cookie = new HttpCookie(CookieQuality);                
             }
 
             return cookie;
