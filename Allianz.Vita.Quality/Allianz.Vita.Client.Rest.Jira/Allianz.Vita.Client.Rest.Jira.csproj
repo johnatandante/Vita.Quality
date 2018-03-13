@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Allianz.Vita.Client.Rest.Jira</RootNamespace>
+    <AssemblyName>Allianz.Vita.Client.Rest.Jira</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api2\Api2.cs" />
+    <Compile Include="Api2\Application\Properties.cs" />
+    <Compile Include="Api2\Application\Role.cs" />
+    <Compile Include="Api2\Attachment.cs" />
+    <Compile Include="Api2\Auditing.cs" />
+    <Compile Include="Api2\AutocompleteData.cs" />
+    <Compile Include="Api2\Avatar.cs" />
+    <Compile Include="Api2\Cluster\Zdu.cs" />
+    <Compile Include="Api2\Comment.cs" />
+    <Compile Include="Api2\Component.cs" />
+    <Compile Include="Api2\CustomFieldOption.cs" />
+    <Compile Include="Api2\Dashboard\Dashboard.cs" />
+    <Compile Include="Api2\Dashboard\ItemProperties.cs" />
+    <Compile Include="Api2\Field.cs" />
+    <Compile Include="Api2\Filter.cs" />
+    <Compile Include="Api2\Group\Group.cs" />
+    <Compile Include="Api2\Group\Groups.cs" />
+    <Compile Include="Api2\Group\UserPicker.cs" />
+    <Compile Include="Api2\Issue\Attachments.cs" />
+    <Compile Include="Api2\Issue\Issue.cs" />
+    <Compile Include="Api2\Issue\Link\Link.cs" />
+    <Compile Include="Api2\Issue\Link\Type.cs" />
+    <Compile Include="Api2\Issue\Properties.cs" />
+    <Compile Include="Api2\Issue\Request\IssueRequest.cs" />
+    <Compile Include="Api2\Issue\Response\IssueResponse.cs" />
+    <Compile Include="Api2\Issue\SecuritySchemes.cs" />
+    <Compile Include="Api2\Issue\SubTask.cs" />
+    <Compile Include="Api2\Issue\Type\Properties.cs" />
+    <Compile Include="Api2\Issue\Type\Type.cs" />
+    <Compile Include="Api2\Jmx.cs" />
+    <Compile Include="Api2\My\Preferences.cs" />
+    <Compile Include="Api2\My\Self.cs" />
+    <Compile Include="Api2\NotificationScheme.cs" />
+    <Compile Include="Api2\Password.cs" />
+    <Compile Include="Api2\PermissionScheme.cs" />
+    <Compile Include="Api2\Priority.cs" />
+    <Compile Include="Api2\Project\Category.cs" />
+    <Compile Include="Api2\Project\IssueSecurityLevelScheme.cs" />
+    <Compile Include="Api2\Project\NotificationScheme.cs" />
+    <Compile Include="Api2\Project\PermissionScheme.cs" />
+    <Compile Include="Api2\Project\Project.cs" />
+    <Compile Include="Api2\Project\Properties.cs" />
+    <Compile Include="Api2\Project\Role.cs" />
+    <Compile Include="Api2\Project\SecurityLevel.cs" />
+    <Compile Include="Api2\Project\Type.cs" />
+    <Compile Include="Api2\Project\Validate.cs" />
+    <Compile Include="Api2\Reindex\Reindex.cs" />
+    <Compile Include="Api2\Reindex\Request.cs" />
+    <Compile Include="Api2\Resolution.cs" />
+    <Compile Include="Api2\Role.cs" />
+    <Compile Include="Api2\Screens.cs" />
+    <Compile Include="Api2\Search.cs" />
+    <Compile Include="Api2\SecurityLevel.cs" />
+    <Compile Include="Api2\ServerInfo.cs" />
+    <Compile Include="Api2\Settings.cs" />
+    <Compile Include="Api2\Status\Category.cs" />
+    <Compile Include="Api2\Status\Status.cs" />
+    <Compile Include="Api2\Summary.cs" />
+    <Compile Include="Api2\UniversalAvatar.cs" />
+    <Compile Include="Api2\Upgrade.cs" />
+    <Compile Include="Api2\User\User.cs" />
+    <Compile Include="Api2\User\Properties.cs" />
+    <Compile Include="Api2\Version.cs" />
+    <Compile Include="Api2\Workflow.cs" />
+    <Compile Include="Api2\Workflowscheme.cs" />
+    <Compile Include="Api2\Worklog.cs" />
+    <Compile Include="Auth\Auth.cs" />
+    <Compile Include="Auth\Request\Login.cs" />
+    <Compile Include="Auth\Response\Session.cs" />
+    <Compile Include="Auth\WebSudo.cs" />
+    <Compile Include="DataModel\Auth\LoginInfo.cs" />
+    <Compile Include="DataModel\Field.cs" />
+    <Compile Include="DataModel\ResponseField.cs" />
+    <Compile Include="DataModel\Issue.cs" />
+    <Compile Include="DataModel\IssueType.cs" />
+    <Compile Include="DataModel\Priority.cs" />
+    <Compile Include="DataModel\Project.cs" />
+    <Compile Include="DataModel\Status.cs" />
+    <Compile Include="DataModel\User.cs" />
+    <Compile Include="Jira.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Auth\Session.cs" />
+    <Compile Include="RestClient.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
