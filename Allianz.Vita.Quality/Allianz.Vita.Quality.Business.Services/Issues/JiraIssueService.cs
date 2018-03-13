@@ -1,13 +1,15 @@
-﻿using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Client.Rest.Jira;
+using Allianz.Vita.Client.Rest.Jira.DataModel;
+using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
-using JiraWebApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Services.Issues
 {
@@ -177,7 +179,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         {
             get
             {
-                return new Jira( new Uri(JiraUri), Credentials.UserName, Credentials.Password);
+                return new Jira( new Uri(JiraUri), Credentials);
             }
         }
 
@@ -196,14 +198,13 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
             
         }
         
-        public IIssueItem Get(string id)
+        public async Task<IIssueItem> Get(string id)
         {
-
-            using (Service)
+            using (Jira service = Service)
             {
-                return ToIssueItem(Service.GetIssueAsync(id).Result);
+                await service.Login();
+                return ToIssueItem(await service.GetIssueAsync(id));
             }
-            
         }
 
         private IIssueItem ToIssueItem(Issue item)
@@ -221,17 +222,19 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 
         }
 
-        public IIssueItem[] GetAll()
+        public async Task<IEnumerable<IIssueItem>> GetAll()
         {
             List<IIssueItem> results = new List<IIssueItem>();
 
-            using (Service)
+            using (Jira service = Service)
             {
+                await service.Login();
+
                 string jqlquery = WorklogQuery;
 
-                Issue[] result = Service.GetIssuesFromJqlAsync(jqlquery, maxResults: MaxPageItems).Result.ToArray();
+                Issue[] result = (await service.GetIssuesFromJqlAsync(jqlquery, maxResults: MaxPageItems)).ToArray();
 
-                foreach(var item in result)
+                foreach(Issue item in result)
                 {
                     results.Add(ToIssueItem(item));
                 }
@@ -241,16 +244,19 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
             return results.ToArray();
 
         }
-        public IIssueItem[] GetAllPaged(int page)
+        public async Task<IEnumerable<IIssueItem>> GetAllPaged(int page)
         {
             List<IIssueItem> results = new List<IIssueItem>();
             int itemIndex = page > 1 ? page * MaxPageItems : 0;
-            
-            using (Service)
+
+            using (Jira service = Service)
             {
+
+                await service.Login();
+
                 string jqlquery = WorklogQuery;
 
-                Issue[] result = Service.GetIssuesFromJqlAsync(jqlquery, startAt: itemIndex, maxResults: MaxPageItems).Result.ToArray();
+                Issue[] result = (await service.GetIssuesFromJqlAsync(jqlquery, startAt: itemIndex, maxResults: MaxPageItems)).ToArray();
 
                 foreach (Issue item in result)
                 {
@@ -261,5 +267,14 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 
             return results.ToArray();
         }
+
+        public async Task<bool> IsUp()
+        {
+            using (Jira service = Service)
+            {
+                var info = await service.Login();
+                return service.IsAuthenticated;
+            }
+         }
     }
 }

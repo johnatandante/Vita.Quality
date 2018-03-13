@@ -1,0 +1,100 @@
+﻿@model Allianz.Vita.Quality.Models.IssueViewModel
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>Detail</h2>
+
+<div>
+    <h4>Issue @Model.Id</h4>
+    <hr />
+    <div class="panel">
+        <div class="form-inline">
+            <a href="@Model.&_a=edit" target="_blank">View in Tracking Tool</a>
+            @if (!Model.DigitalAgency)
+            {
+                <span>|</span>
+                @Html.ActionLink("Osserva", "Index", "Issue", routeValues: new { id = Model.Id }, htmlAttributes: null)
+            }
+        </div>
+    </div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Summary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Summary)
+        </dd>
+
+        @if (!string.IsNullOrEmpty(Model.Assignee))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Assignee)
+            </dt>
+
+            <dd>
+                <a href="mailto:@Model.Email">@Html.DisplayFor(model => model.Assignee) </a>
+            </dd>
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResolvedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResolvedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Priority)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Project)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IssueType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IssueType)
+        </dd>
+        
+    </dl>
+    <div class="panel">
+        @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id })*@
+        <span class="disabled"> Edit </span> | @Html.ActionLink("Back to List", "Index")
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JiraWebApi, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JiraWebApi.1.3.0\lib\net45\JiraWebApi.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
       <Private>True</Private>
@@ -215,6 +212,10 @@
     <Compile Include="Utilities\WorkItemsExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Allianz.Vita.Client.Rest.Jira\Allianz.Vita.Client.Rest.Jira.csproj">
+      <Project>{e198cfa8-b6b3-4f47-9ead-f8527930b5c0}</Project>
+      <Name>Allianz.Vita.Client.Rest.Jira</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Allianz.Vita.Quality.Business.Interfaces\Allianz.Vita.Quality.Business.Interfaces.csproj">
       <Project>{82145157-2858-48d8-a905-f68a8774689a}</Project>
       <Name>Allianz.Vita.Quality.Business.Interfaces</Name>
@@ -228,7 +229,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="JiraWebApiDoc.chm" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

@@ -2,8 +2,12 @@
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -24,30 +28,36 @@ namespace Allianz.Vita.Quality.Controllers
             }
         }
 
-        //// GET: Issue
-        //public ActionResult Index()
-        //{
-
-        //    IIssueItem[] issues = ;
-
-        //    return View(issues);
-
-        //}
-
-        public ActionResult Index(int page = 0)
+        public async Task<ActionResult> Index()
         {
 
-            IIssueItem[] issues = page > 1 ? Service.GetAllPaged( page ) : Service.GetAll();
+            List<IssueViewModel> issues = new List<IssueViewModel>();
+
+            if(await Service.IsUp())
+            {
+                IIssueItem[] list = (await Service.GetAll()).ToArray();
+                foreach(IIssueItem item in list)
+                {
+                    issues.Add(new IssueViewModel(item));
+                }
+
+                return View(issues)
+                    .Success("Jira is Up: user " + User.Identity.Name 
+                        + " can authenticate with credentials: " + Auth.GetCredentialsFor(Service).UserName);
+            }
+            else
+            {
+                return View(issues)
+                    .Error("Jira Ko: user " + User.Identity.Name 
+                        + " cannot authenticate with credentials: " + Auth.GetCredentialsFor(Service).UserName);
+            }
             
-            return View(issues);
-
         }
-
-
-        public ActionResult Detail(string id)
+        
+        public async Task<ActionResult> Detail(string id)
         {
 
-            IIssueItem issue = Service.Get(id);
+            IIssueItem issue = await Service.Get(id);
 
             return View(new IssueViewModel(issue));
         }

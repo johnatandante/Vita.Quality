@@ -1,19 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using System;
 
 namespace Allianz.Vita.Quality.Models
 {
     public class IssueViewModel
     {
 
+        IConfigurationService Conf
+        {
+            get
+            {
+                return ServiceFactory.Get<IConfigurationService>();
+
+            }
+        }
+
         public IssueViewModel() { }
 
         public IssueViewModel(IIssueItem issue)
         {
-            // this.issue = issue;
+            Id = issue.Id;
+            Assignee = issue.Assignee;
+            Created = issue.Created;
+            ResolvedOn = issue.ResolvedOn;
+            Esamina = issue.Esamina;
+            NomeGruppoLife = issue.NomeGruppoLife;
+            Priority = issue.NomeGruppoLife;
+            Project = issue.NomeGruppoLife;
+            Summary = issue.NomeGruppoLife;
+            DigitalAgency = issue.DigitalAgency.HasValue && issue.DigitalAgency.Value;
+            Status = issue.Status;
+            IssueType = issue.IssueType;
+
+            // Email
+            Email = Assignee + "@Allianz.it";
+            Url = Conf.IssueSystemUrl + "/browse/" + Id;
         }
+
+        public string Id { get; set; }
+
+        public string Area { get; set; }
+
+        public string SubArea { get; set; }
+
+        public string Assignee { get; set; }
+
+        public string Email { get; set; }
+
+        public string Url { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime? ResolvedOn { get; set; }
+
+        public DateTime? ReopenedOn { get; set; }
+
+        public string Esamina { get; set; }
+
+        public string NomeGruppoLife { get; set; }
+
+        public string Priority { get; set; }
+
+        public string Project { get; set; }
+
+        public string Summary { get; set; }
+
+        public bool DigitalAgency { get; set; }
+
+        public string Status { get; set; }
+
+        public string IssueType { get; set; }
+
     }
 }

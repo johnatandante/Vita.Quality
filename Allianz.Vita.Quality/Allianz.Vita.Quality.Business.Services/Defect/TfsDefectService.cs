@@ -132,10 +132,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<IDefect> result = new List<IDefect>();
             
-            using (Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 // get the WorkItemStore service
                 // get the project context for the work item store
@@ -190,10 +190,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<IDefect> result = new List<IDefect>();
             
-            using (Service)
+            using (TfsTeamProjectCollection service = Service)
             {
                 // get the WorkItemStore service
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 QueryDefinition query = GetNewQueryDefinition("GetAllDefects",
                     WorkItemOutputFields,
@@ -272,10 +272,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem defect;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item. 
@@ -342,10 +342,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             IDefect result = null;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 WorkItem wi = GetWorkItemById(workItemStore, id);
 
                 result = ToDefectItem(wi);
@@ -427,10 +427,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<string> allowedValues = new List<string>();
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 if (key == "System.AreaPath")
                 {
@@ -467,10 +467,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void Autoassign(string id)
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, id);
                 if (collection.Count > 0)
@@ -509,10 +509,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void MoveStateOn(IDefect defect)
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, defect.DefectID);
                 WorkItem workItem = collection[0];
                 workItem.Open();
@@ -592,10 +592,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             IMailItem mail = Mail.Get(mailItem);
             string subject = Factory.GetSubject(mail);
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
                                 result = ToDefectItemCollection(workItems).FirstOrDefault();
@@ -620,9 +620,9 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem workItem;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item.                 
@@ -696,11 +696,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public string GetDisplayName()
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
                 
-                Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity = null;
-                Service.GetAuthenticatedIdentity(out identity);
+                TeamFoundationIdentity identity = null;
+                service.GetAuthenticatedIdentity(out identity);
                 
                 return identity.DisplayName;
             }
