@@ -58,6 +58,7 @@
     <Compile Include="Api2\Cluster\Zdu.cs" />
     <Compile Include="Api2\Comment.cs" />
     <Compile Include="Api2\Component.cs" />
+    <Compile Include="Api2\Configuration.cs" />
     <Compile Include="Api2\CustomFieldOption.cs" />
     <Compile Include="Api2\Dashboard\Dashboard.cs" />
     <Compile Include="Api2\Dashboard\ItemProperties.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Api2\Reindex\Reindex.cs" />
     <Compile Include="Api2\Reindex\Request.cs" />
     <Compile Include="Api2\Resolution.cs" />
+    <Compile Include="Api2\Response\ConfigurationResponse.cs" />
     <Compile Include="Api2\Role.cs" />
     <Compile Include="Api2\Screens.cs" />
     <Compile Include="Api2\Search.cs" />
@@ -115,10 +117,12 @@
     <Compile Include="Api2\Workflowscheme.cs" />
     <Compile Include="Api2\Worklog.cs" />
     <Compile Include="Auth\Auth.cs" />
-    <Compile Include="Auth\Request\Login.cs" />
-    <Compile Include="Auth\Response\Session.cs" />
+    <Compile Include="Auth\Request\LoginRequest.cs" />
+    <Compile Include="Auth\Response\CurrentUserResponse.cs" />
+    <Compile Include="Auth\Response\LoginResponse.cs" />
     <Compile Include="Auth\WebSudo.cs" />
     <Compile Include="DataModel\Auth\LoginInfo.cs" />
+    <Compile Include="DataModel\Configuration.cs" />
     <Compile Include="DataModel\Field.cs" />
     <Compile Include="DataModel\ResponseField.cs" />
     <Compile Include="DataModel\Issue.cs" />
@@ -132,7 +136,9 @@
     <Compile Include="Auth\Session.cs" />
     <Compile Include="RestClient.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api2\Request\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />

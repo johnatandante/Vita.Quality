@@ -36,11 +36,11 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth
         {
             loginInfo = new LoginInfo();
 
-            Login login = new Login() { username = credentials.UserName, password = credentials.Password };
-            HttpResponseMessage response = await module.Client.PostAsJsonAsync<Login>(Session.SessionPath, login);
+            LoginRequest login = new LoginRequest() { username = credentials.UserName, password = credentials.Password };
+            HttpResponseMessage response = await module.Client.PostAsJsonAsync<LoginRequest>(Session.SessionPath, login);
             if (response.IsSuccessStatusCode)
             {
-                Response.Session sessionInfo = await response.Content.ReadAsAsync<Response.Session>();
+                Response.LoginResponse sessionInfo = await response.Content.ReadAsAsync<Response.LoginResponse>();
                 loginInfo.SessionId = sessionInfo.session.value;
                 loginInfo.LoginCount = sessionInfo.loginInfo.loginCount;
                 loginInfo.PreviousLogin = sessionInfo.loginInfo.previousLoginTime;
@@ -50,11 +50,24 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth
 
         }
 
+        internal async Task<LoginInfo> GetCurrentUser()
+        {
+            HttpResponseMessage response = await module.Client.GetAsync(Session.SessionPath);
+            response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
+            {
+                Response.CurrentUserResponse result = await response.Content.ReadAsAsync<Response.CurrentUserResponse>();                
+                loginInfo.LoginCount = result.loginInfo.loginCount;
+                loginInfo.PreviousLogin = result.loginInfo.previousLoginTime;
+            }
+
+            return loginInfo;
+        }
+
         internal void Logout()
         {
             loginInfo = null;
             module.Client.DeleteAsync(Session.SessionPath);
-            
         }
         
     }
