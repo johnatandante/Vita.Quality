@@ -10,11 +10,11 @@
     <hr />
     <div class="panel">
         <div class="form-inline">
-            <a href="@Model.&_a=edit" target="_blank">View in Tracking Tool</a>
+            <a href="@Model.Url" target="_blank">View in Issue Tool</a>
             @if (!Model.DigitalAgency)
             {
                 <span>|</span>
-                @Html.ActionLink("Osserva", "Index", "Issue", routeValues: new { id = Model.Id }, htmlAttributes: null)
+                @Html.ActionLink("Osserva", "Index", "Issue", routeValues: new { }, htmlAttributes: null)
             }
         </div>
     </div>

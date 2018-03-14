@@ -19,6 +19,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
         bool? DigitalAgency { get; }
         string Status { get; }
         string IssueType { get; }
-
+        string Email { get; }
     }
 }

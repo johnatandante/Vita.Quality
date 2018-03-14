@@ -1,5 +1,6 @@
 ﻿using Allianz.Vita.Client.Rest.Jira;
 using Allianz.Vita.Client.Rest.Jira.DataModel;
+using Allianz.Vita.Client.Rest.Jira.DataModel.Auth;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
@@ -214,7 +215,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
             string nomeGruppoLife = null;
             bool? digitalAgency = null;
 
-            return Factory.GetNewIssueItem(item.Id, item.IssueType.Name,
+            return Factory.GetNewIssueItem(item.Key, item.IssueType.Name,
                 item.Assignee.ToString(),
                 item.Priority.Name, item.Project.Name,
                 item.Summary, item.Status.Name, item.CreatedDate.Value, item.ResolutionDate,
@@ -272,8 +273,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         {
             using (Jira service = Service)
             {
-                var info = await service.Login();
-                return service.IsAuthenticated;
+                return await service.IsUp();
             }
          }
     }

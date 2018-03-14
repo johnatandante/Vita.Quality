@@ -27,16 +27,16 @@ namespace Allianz.Vita.Quality.Models
             ResolvedOn = issue.ResolvedOn;
             Esamina = issue.Esamina;
             NomeGruppoLife = issue.NomeGruppoLife;
-            Priority = issue.NomeGruppoLife;
-            Project = issue.NomeGruppoLife;
-            Summary = issue.NomeGruppoLife;
+            Priority = issue.Priority;
+            Project = issue.Project;
+            Summary = issue.Summary;
             DigitalAgency = issue.DigitalAgency.HasValue && issue.DigitalAgency.Value;
             Status = issue.Status;
             IssueType = issue.IssueType;
 
             // Email
             Email = Assignee + "@Allianz.it";
-            Url = Conf.IssueSystemUrl + "/browse/" + Id;
+            Url = Conf.IssueSystemUrl + "browse/" + Id;
         }
 
         public string Id { get; set; }
