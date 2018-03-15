@@ -1,10 +1,10 @@
 ﻿using Allianz.Vita.Client.Rest.Jira;
 using Allianz.Vita.Client.Rest.Jira.DataModel;
-using Allianz.Vita.Client.Rest.Jira.DataModel.Auth;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Business.Services.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
     public class JiraIssueService : IIssueService
     {
 
-        static string WorklogQuery = "project in (PRLIFE, NVINDI, HOSTTS, GRLWEB, LAISVC, ATTVIT, GOALPV, LAISBD, CUBDWH, SISCOM, UNIFON) AND issuetype in (\"ISSUE(ANOMALIA)\", \"REQUEST(RICHIESTA)\") AND created >= startOfYear(-2) AND status != CHIUSA ORDER BY created ASC";
+        static string WorklogQuery = "project in (PRLIFE, NVINDI, HOSTTS, GRLWEB, LAISVC, ATTVIT, GOALPV, LAISBD, CUBDWH, SISCOM, UNIFON) AND created >= startOfYear(-2) AND status != CHIUSA";
 
         // Issue Fields
         // Id
@@ -211,16 +211,17 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         private IIssueItem ToIssueItem(Issue item)
         {
             
-            DateTime? reopenedOn = null;
-            string nomeGruppoLife = null;
-            bool? digitalAgency = null;
+            DateTime? reopenedOn = item.CustomFields.ToDateTimeNullable("customfield_17407");
+            string nomeGruppoLife = item.CustomFields.ToValueString("customfield_11901");
+            bool? digitalAgency = item.CustomFields.ToBooleanNullable("customfield_12300");
 
-            return Factory.GetNewIssueItem(item.Key, item.IssueType.Name,
-                item.Assignee.ToString(),
-                item.Priority.Name, item.Project.Name,
+            return Factory.GetNewIssueItem(item.Key, 
+                item.IssueType == null ? string.Empty : item.IssueType.Name,
+                item.Assignee == null ? string.Empty : item.Assignee.ToString(),
+                item.Priority == null ? string.Empty : item.Priority.Name, 
+                item.Project.Name,
                 item.Summary, item.Status.Name, item.CreatedDate.Value, item.ResolutionDate,
                 reopenedOn, nomeGruppoLife, digitalAgency);
-
         }
 
         public async Task<IEnumerable<IIssueItem>> GetAll()
