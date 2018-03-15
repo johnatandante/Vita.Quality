@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Allianz.Vita.Client.Rest.Jira.DataModel.Intefaces;
 
 namespace Allianz.Vita.Client.Rest.Jira.DataModel
 {
-    public abstract class ResponseField
+    public abstract class ResponseField : ResponseItem
     {
         public string self;
 

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
 {
@@ -220,24 +216,9 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
         public string id;
         public string self;
         public string key;
-        public Fields fields = new Fields();
-        public object names = new object();
-        public object schema = new object();
-
-        //public class Names
-        //{
-        //    public string watcher;
-        //    public string attachment;
-        //    public string sub-tasks;
-        //    public string description;
-        //    public string project;
-        //    public string comment;
-        //    public string issuelinks;
-        //    public string worklog;
-        //    public string updated;
-        //    public string timetracking;
-        //}
-
+        public dynamic fields;
+        public Fields CustomFields;
+        
         public class Priority : DataModel.ResponseField
         {
 
@@ -247,7 +228,12 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
 
         }
 
-        public class Issuelink { }
+        public class Issuelink
+        {
+            public string id;
+            public dynamic type;
+            public dynamic outwardIssue;
+        }
 
         public class AvatarUrls
         {
@@ -257,8 +243,9 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
             //32x32	"http://online.azi.allianzit/jira/secure/projectavatar?size=medium&pid=12700&avatarId=10011"
         }
 
-        public class JiraUser : DataModel.ResponseField
+        public class JiraUser
         {
+            public string self;
             public string key;
             public string emailAddress;
             public string displayname;
@@ -324,11 +311,14 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
             public int total;
         }
 
-        public class Watches
+        public class Watcher
         {
             public string self;
             public int watchCount;
             public bool isWatching;
+
+            public JiraUser[] watchers;
+
         }
 
         public class Attachment
@@ -353,9 +343,15 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
             public int startAt;
         }
 
+        public class Resolution : DataModel.ResponseField
+        {
+            public string id;
+            public string description;
+        }
+
         public class Fields
         {
-            public string resolution = null;
+            public Resolution resolution = null;
             public DateTime? lastViewed = null;
             public Priority priority = new Priority();
             public string aggregatetimeoriginalestimate = null;
@@ -376,7 +372,7 @@ namespace Allianz.Vita.Client.Rest.Jira.Api2.Issue.Response
             public string aggregatetimespent = null;
             public DateTime? resolutiondate = null;
             public int workratio;
-            public Watches watches = new Watches();
+            public Watcher watcher = new Watcher();
             public DateTime created;
             public DateTime updated;
             public string timeoriginalestimate = null;

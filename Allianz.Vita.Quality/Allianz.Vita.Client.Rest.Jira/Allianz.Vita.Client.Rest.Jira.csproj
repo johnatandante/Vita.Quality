@@ -97,8 +97,10 @@
     <Compile Include="Api2\Project\Validate.cs" />
     <Compile Include="Api2\Reindex\Reindex.cs" />
     <Compile Include="Api2\Reindex\Request.cs" />
+    <Compile Include="Api2\Request\SearchRequest.cs" />
     <Compile Include="Api2\Resolution.cs" />
     <Compile Include="Api2\Response\ConfigurationResponse.cs" />
+    <Compile Include="Api2\Response\SearchResponse.cs" />
     <Compile Include="Api2\Role.cs" />
     <Compile Include="Api2\Screens.cs" />
     <Compile Include="Api2\Search.cs" />
@@ -124,21 +126,24 @@
     <Compile Include="DataModel\Auth\LoginInfo.cs" />
     <Compile Include="DataModel\Configuration.cs" />
     <Compile Include="DataModel\Field.cs" />
+    <Compile Include="DataModel\Intefaces\RequestItem.cs" />
+    <Compile Include="DataModel\Intefaces\ResponseItem.cs" />
     <Compile Include="DataModel\ResponseField.cs" />
     <Compile Include="DataModel\Issue.cs" />
     <Compile Include="DataModel\IssueType.cs" />
     <Compile Include="DataModel\Priority.cs" />
     <Compile Include="DataModel\Project.cs" />
+    <Compile Include="DataModel\Search.cs" />
     <Compile Include="DataModel\Status.cs" />
     <Compile Include="DataModel\User.cs" />
+    <Compile Include="Utility\Converter.cs" />
+    <Compile Include="Utility\UrlGetExtensionMethods.cs" />
     <Compile Include="Jira.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth\Session.cs" />
     <Compile Include="RestClient.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api2\Request\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />
