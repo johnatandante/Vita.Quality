@@ -26,6 +26,14 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             public string IssueSystemUrl => string.Empty;
 
             public int MaxPageItems => 0;
+
+            public string ReopenedFieldName => string.Empty;
+
+            public string NomeGruppoLifeFieldName => string.Empty;
+
+            public string DigitalAgencyFieldName => string.Empty;
+
+            public string WorklogQuery => string.Empty;
         }
 
         class DefectConfiguration : IDefectConfiguration

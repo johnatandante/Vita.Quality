@@ -16,10 +16,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 {
     public class JiraIssueService : IIssueService
     {
-
-        static string WorklogQuery = "project in (PRLIFE, NVINDI, HOSTTS, GRLWEB, LAISVC, ATTVIT, GOALPV, LAISBD, CUBDWH, SISCOM, UNIFON) AND created >= startOfYear(-2) AND status != CHIUSA";
         
-
         public NetworkCredential Credentials
         {
             get
@@ -74,8 +71,8 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
             
-            Auth = auth ?? ServiceFactory.Get<IIdentityService>();
-            
+            Auth = auth ?? ServiceFactory.Get<IIdentityService>();         
+
         }
         
         public async Task<IIssueItem> Get(string id)
@@ -90,9 +87,9 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         private IIssueItem ToIssueItem(Issue item)
         {
             
-            DateTime? reopenedOn = item.CustomFields.ToDateTimeNullable("customfield_17407");
-            string nomeGruppoLife = item.CustomFields.ToValueString("customfield_11901");
-            bool? digitalAgency = item.CustomFields.ToBooleanNullable("customfield_12300");
+            DateTime? reopenedOn = item.CustomFields.ToDateTimeNullable(Config.ReopenedFieldName);
+            string nomeGruppoLife = item.CustomFields.ToValueString(Config.NomeGruppoLifeFieldName);
+            bool? digitalAgency = item.CustomFields.ToBooleanNullable(Config.DigitalAgencyFieldName);
 
             return Factory.GetNewIssueItem(item.Key, 
                 item.IssueType == null ? string.Empty : item.IssueType.Name,
@@ -111,7 +108,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
             {
                 await service.Login();
 
-                string jqlquery = WorklogQuery;
+                string jqlquery = Config.WorklogQuery;
 
                 Issue[] result = (await service.GetIssuesFromJqlAsync(jqlquery, maxResults: MaxPageItems)).ToArray();
 
@@ -135,7 +132,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 
                 await service.Login();
 
-                string jqlquery = WorklogQuery;
+                string jqlquery = Config.WorklogQuery;
 
                 Issue[] result = (await service.GetIssuesFromJqlAsync(jqlquery, startAt: itemIndex, maxResults: MaxPageItems)).ToArray();
 

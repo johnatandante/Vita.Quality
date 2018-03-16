@@ -117,7 +117,7 @@ namespace Allianz.Vita.Client.Rest.Jira
 
         public async Task<IEnumerable<Issue>> GetIssuesFromJqlAsync(string jqlquery, int startAt = 0, int maxResults = 0)
         {
-            Search result = await search.Get(jqlquery, startAt, maxResults, "");
+            Search result = await search.Get(jqlquery, startAt, maxResults, string.Empty);
             return result.Issues;
         }
 
