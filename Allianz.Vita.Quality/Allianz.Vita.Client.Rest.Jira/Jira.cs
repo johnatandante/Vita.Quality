@@ -59,8 +59,8 @@ namespace Allianz.Vita.Client.Rest.Jira
             Uri = uri;
             Credential = credential;
 
-            auth = new Auth.Auth(client);
-            issue = new Api2.Issue.Issue(client);
+            auth = new Auth.Auth(Client);
+            issue = new Api2.Issue.Issue(Client);
 
         }
 
