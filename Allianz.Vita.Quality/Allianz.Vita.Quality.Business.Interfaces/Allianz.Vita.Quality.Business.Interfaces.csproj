@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModel\IIssueItem.cs" />
+    <Compile Include="DataModel\IKpiContainer.cs" />
+    <Compile Include="DataModel\IKpiItem.cs" />
     <Compile Include="Enums\SeverityLevel.cs" />
     <Compile Include="DataModel\IAttachment.cs" />
     <Compile Include="Service\IIdentityService.cs" />
