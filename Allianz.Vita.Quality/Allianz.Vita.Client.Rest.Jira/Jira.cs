@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Allianz.Vita.Client.Rest.Jira
 {
+    /// <summary>
+    /// Jira Client with Cookie based Auth policy
+    /// </summary>
+    /// <see cref="https://docs.microsoft.com/it-it/aspnet/web-api/overview/security/external-authentication-services"/>    
     public class Jira : IDisposable
     {
 
@@ -51,16 +55,23 @@ namespace Allianz.Vita.Client.Rest.Jira
 
         Auth.Auth auth;
         Api2.Issue.Issue issue;
+        Api2.Configuration configuration;
+        Api2.Search search;
 
         public Jira(Uri uri, NetworkCredential credential = null)
         {
             _instance = this;
 
+
+
             Uri = uri;
             Credential = credential;
 
-            auth = new Auth.Auth(client);
-            issue = new Api2.Issue.Issue(client);
+            auth = new Auth.Auth(Client);
+            issue = new Api2.Issue.Issue(Client);
+            search = new Api2.Search(Client);
+
+            configuration = new Api2.Configuration(Client);
 
         }
 
@@ -71,7 +82,7 @@ namespace Allianz.Vita.Client.Rest.Jira
             
             HttpClient client = new HttpClient(ClientHandler)
             {
-                BaseAddress = Jira.Instance.Uri
+                BaseAddress = Uri
             };
             
             client.DefaultRequestHeaders.Accept.Clear();
@@ -106,17 +117,35 @@ namespace Allianz.Vita.Client.Rest.Jira
 
         public async Task<IEnumerable<Issue>> GetIssuesFromJqlAsync(string jqlquery, int startAt = 0, int maxResults = 0)
         {
-            List<Issue> list = new List<Issue>();
-            Issue item = await GetIssueAsync("PRLIFE-16338");
-            if(!string.IsNullOrEmpty(item.Id))
-                list.Add(item);
-
-            return list;
+            Search result = await search.Get(jqlquery, startAt, maxResults, string.Empty);
+            return result.Issues;
         }
 
         public async Task<Issue> GetIssueAsync(string idOrKey)
         {
             return await issue.Get(idOrKey);
+        }
+
+        public async Task<LoginInfo> GetCurrentUser()
+        {
+            return await auth.GetCurrentUser();
+        }
+
+        public async Task<Configuration> GetConfiguration()
+        {
+            return await configuration.Get();
+        }
+
+        public async Task<bool> IsUp()
+        {
+            try
+            {
+                return await GetConfiguration() != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

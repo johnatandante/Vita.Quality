@@ -107,7 +107,17 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
             throw new NotImplementedException();
         }
 
+        public IFolderItem ToFolderItem(string displayName)
+        {
+            throw new NotImplementedException();
+        }
+
         public IMailItem ToMailItem(Microsoft.Exchange.WebServices.Data.EmailMessage mail, bool propFull = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMailItem ToMailItem(string uniqueId, string from, string subject, string content, object[] attachments, string[] categories, string importance)
         {
             throw new NotImplementedException();
         }

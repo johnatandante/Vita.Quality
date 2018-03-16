@@ -1,7 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
-using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Business.Services.Mail.Factory;
 using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Collections.Generic;
@@ -19,12 +19,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
         {
             get { return new ExtendedPropertyDefinition(0x1090, MapiPropertyType.Integer); }
         }
-
-        IConfigurationService Config
-        {
-            get { return ServiceFactory.Get<IConfigurationService>(); }
-        }
-
+        
         public ExchangeVersion Version { get; private set; }
         
         static ExchangeService _Service;
@@ -45,7 +40,8 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             }
         }
 
-        IItemFactory Factory = null;
+        IMailConfiguration Config = null;
+        IExchangeFactoryItem Factory = null;
         IIdentityService Auth = null;
 
         NetworkCredential Credentials
@@ -62,15 +58,15 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
         }
 
         public ExchangeMailService()
-            : this(version: ExchangeVersion.Exchange2010_SP2, factory: null, auth: null)
-        {
+            : this(version: ExchangeVersion.Exchange2010_SP2, factory: null, auth: null, config: null)
+        { }
 
-        }
-
-        public ExchangeMailService(ExchangeVersion version, IItemFactory factory, IIdentityService auth)
+        public ExchangeMailService(ExchangeVersion version, IExchangeFactoryItem factory, IIdentityService auth, IMailConfiguration config)
         {
-            
-            Factory = factory ?? ServiceFactory.Get<IItemFactory>();
+            Config = config ?? ServiceFactory.Get<IConfigurationService>().Mail;
+
+            Factory = factory ?? ServiceFactory.Ensure<IExchangeFactoryItem, ExchangeFactoryItem>();
+
             Auth = auth ?? ServiceFactory.Get<IIdentityService>();
             
             Version = version;
@@ -105,7 +101,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
             Queue<string> folderNames = new Queue<string>(path.Split('.'));
 
-            string folderKey = "FindFoldersOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString();
+            // string folderKey = "FindFoldersOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString();
             
             FindFoldersResults folderResults = FindSubFolder(folderNames);
 
@@ -124,7 +120,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             SearchFilter.SearchFilterCollection collection =
                 new SearchFilter.SearchFilterCollection(LogicalOperator.And);
                         
-            collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.Subject, "Request"));
+            collection.Add(new SearchFilter.ContainsSubstring(ItemSchema.Subject, "Request"));
             collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.From, "srm@allianz.it", ContainmentMode.Prefixed, ComparisonMode.IgnoreCase));
 
             collection.Add(new SearchFilter.Not(new SearchFilter.Exists(PidTagFlagStatus)));
@@ -202,7 +198,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             return Factory.ToMailItem(email, propFull: true);
 
         }
-
+        
         public IAttachment GetAsAttachment(IMailItem model)
         {
             EmailMessage message = GetEmailMessage(model);
@@ -224,22 +220,16 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
         /// </summary>
         public void Flag(IMailItem model)
         {
-
             EmailMessage message = GetEmailMessage(model, ItemSchema.Flag);
 
             if (Version < ExchangeVersion.Exchange2013)
             {
-                
                 message.SetExtendedProperty(PidTagFlagStatus, (short)MailFlag.Flagged);
-
             }
             else
             {
-
                 message.Flag.FlagStatus = ItemFlagStatus.Flagged;
-                
             }
-
             message.Update(ConflictResolutionMode.AutoResolve);
 
         }
@@ -269,7 +259,6 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
             //message.Move(folderResults.First().Id);
 
         }
-        
 
         #endregion
     }

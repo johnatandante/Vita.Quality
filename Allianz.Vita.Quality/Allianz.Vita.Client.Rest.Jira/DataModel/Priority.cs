@@ -6,7 +6,7 @@ namespace Allianz.Vita.Client.Rest.Jira.DataModel
     {
 
         public string Id { get; }
-
+        
         public Priority(IssueResponse.Priority item) : base(item)
         {
             Id = item.id;

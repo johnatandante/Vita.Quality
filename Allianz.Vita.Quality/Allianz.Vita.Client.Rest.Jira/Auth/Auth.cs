@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System;
 
 namespace Allianz.Vita.Client.Rest.Jira.Auth
 {
@@ -31,7 +32,7 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth
 
         public string SessionName { get; internal set; }
         public string SessionId { get; internal set; }
-        
+
         public async Task<LoginInfo> Login(NetworkCredential networkCredentials)
         {
             info = await session.Login(networkCredentials);
@@ -52,5 +53,9 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth
 
         }
 
+        public async Task<LoginInfo> GetCurrentUser()
+        {
+            return Authenticated ? info : await session.GetCurrentUser();
+        }
     }
 }

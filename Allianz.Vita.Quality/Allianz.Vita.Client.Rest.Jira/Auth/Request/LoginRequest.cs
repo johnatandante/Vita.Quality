@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Allianz.Vita.Client.Rest.Jira.Auth.Request
+﻿namespace Allianz.Vita.Client.Rest.Jira.Auth.Request
 {
     /// <summary>
     /// {
@@ -12,7 +6,7 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth.Request
     ///    "password": "freds_password"
     ///}
     /// </summary>
-    public class Login
+    public class LoginRequest
     {
         public string username { get; set; }
         public string password { get; set; }

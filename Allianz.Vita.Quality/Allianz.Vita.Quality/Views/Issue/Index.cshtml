@@ -7,23 +7,25 @@
 <h2>@ViewBag.Title</h2>
 <div>
     <hr />
+@*
     <p class="disabled">
-        @*@Html.ActionLink("Create New", "Create")*@
+        @Html.ActionLink("Create New", "Create")
         Create New
     </p>
     <hr />
+*@
     @{
         var grid = new WebGrid(Model, rowsPerPage: ViewBag.RowsPerPage, defaultSort: "Id desc");
     }
 
     <div>Showing @ViewBag.RowsPerPage Rows per page on @Model.Count() elements...</div>
     @grid.GetHtml(columns: grid.Columns(
-        //grid.Column("", format:@<a href="./Detail?Id=@item.Id">Details</a>),
-        grid.Column("", format: (item => Html.ActionLink("Detail", "Detail", "Issue", new { Id = item.Id }, new { @class = "navbar" }))),
-        grid.Column("Summary", header: "Issue"),
+        grid.Column("Id", header: "Issue"),
+        grid.Column("Summary", header: "Summary"),
         grid.Column("NomeGruppoLife", header: "Area"),
         grid.Column("Status", header: "State"),
-        grid.Column("", format:@<a href="@item.Url&_a=edit" target="_blank">View in Tracking Tool</a>)
+        grid.Column("", format:@<a href="@item.Url" target="_blank">View in Issue Tool</a>),
+        grid.Column("", format: (item => Html.ActionLink("Detail", "Detail", "Issue", new { Id = item.Id }, new { @class = "navbar" })))
         ))
     <hr />
 </div>

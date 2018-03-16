@@ -26,7 +26,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return  string.Join("/", config.TrackingSystemUrl, config.TrackingSystemCompany);
+                return  string.Join("/", Config.TrackingSystemUrl, Config.TrackingSystemCompany);
 
             }
         }
@@ -35,7 +35,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return config.DefaultDefectWorkItemType;
+                return Config.DefaultDefectWorkItemType;
 
             }
         }
@@ -44,7 +44,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return config.DefaultProjectPath;
+                return Config.DefaultProjectPath;
             }
         }
         
@@ -71,7 +71,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.AssignedTo.FieldName(),
         };
 
-        IConfigurationService config;
+        IDefectConfiguration Config;
 
         public NetworkCredential Credentials
         {
@@ -105,14 +105,14 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             }
         }
         
-        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null) { }
+        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null, config: null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage, IIdentityService auth)
+        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage, IIdentityService auth, IDefectConfiguration config)
         {
-            config = ServiceFactory.Get<IConfigurationService>();
+            Config = config ?? ServiceFactory.Get<IConfigurationService>().Defect;
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
 
@@ -280,7 +280,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 // Create the work item. 
                 defect = project
-                    .WorkItemTypes[ServiceFactory.Get<IConfigurationService>().DefaultDefectWorkItemType]
+                    .WorkItemTypes[Config.DefaultDefectWorkItemType]
                     .NewWorkItem();
 
                 // int ? Id { get; }
@@ -457,11 +457,9 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         
         public string GetTrackingUrlDetail(int? id)
         {
-            IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
-
             return string.Join("/",
                 TfsUri,
-                config.DefaultProjectPath,
+                Config.DefaultProjectPath,
                 id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
 
@@ -491,18 +489,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         private void Autoassign(WorkItemStore workItemStore, WorkItem workItem)
         {
-            workItem.Fields[DefectField.AreaPath.FieldName()].Value = config.TrackingSystemUserAreaPath;
+            workItem.Fields[DefectField.AreaPath.FieldName()].Value = Config.TrackingSystemUserAreaPath;
             workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
 
             string path = GetCurrentIterationPath(workItemStore);
             workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
 
-            if (!workItem.Links.Exist(int.Parse(config.TrackingSystemWorkingFeature)))
+            if (!workItem.Links.Exist(int.Parse(Config.TrackingSystemWorkingFeature)))
             {
                 // Docs Link to w.i. as parent of...
                 // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
                 WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
-                workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
+                workItem.Links.Add(new RelatedLink(linkType, int.Parse(Config.TrackingSystemWorkingFeature)));
             }
 
         }
@@ -549,12 +547,12 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
 
             Node node = FindNodeFromPath(workItemStore.Projects[TeamProjectName].IterationRootNodes
-                , string.Join("\\", config.DefaultIteration.Split('\\').Skip(1)) );
+                , string.Join("\\", Config.DefaultIteration.Split('\\').Skip(1)) );
 
             if (node != null)
                 return node.ChildNodes.ToEnumerableStringValues().FirstOrDefault();
 
-            throw new ApplicationException("Cannot find current path node: " + config.DefaultIteration);
+            throw new ApplicationException("Cannot find current path node: " + Config.DefaultIteration);
         }
 
         private Node FindNodeFromPath(NodeCollection collection, string path)

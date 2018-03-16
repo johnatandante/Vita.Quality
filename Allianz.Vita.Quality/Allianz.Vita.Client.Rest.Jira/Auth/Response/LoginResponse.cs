@@ -16,7 +16,7 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth.Response
     ///}
     ///}
     /// </summary>
-    public class Session
+    public class LoginResponse
     {
         public SessionInfo session = new SessionInfo();
 
@@ -24,15 +24,15 @@ namespace Allianz.Vita.Client.Rest.Jira.Auth.Response
 
 
         public class SessionInfo {
-            public string name;
-            public string value;
+            public string name = string.Empty;
+            public string value = string.Empty;
         }
 
         public class LoginInfo {
-            public int failedLoginCount;
-            public int loginCount;
-            public DateTime lastFailedLoginTime;
-            public DateTime previousLoginTime;
+            public int failedLoginCount = 0;
+            public int loginCount = 0;
+            public DateTime lastFailedLoginTime = DateTime.MinValue;
+            public DateTime previousLoginTime = DateTime.MinValue;
         }
 
     }

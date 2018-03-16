@@ -190,6 +190,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CookieAuthenticationService.cs" />
+    <Compile Include="Services\DefectConfigurationItem.cs" />
+    <Compile Include="Services\IssueConfigurationItem.cs" />
+    <Compile Include="Services\MailConfigurationItem.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

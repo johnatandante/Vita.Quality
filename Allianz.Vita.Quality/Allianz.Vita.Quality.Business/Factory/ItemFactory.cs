@@ -3,7 +3,6 @@ using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Models;
-using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +14,9 @@ namespace Allianz.Vita.Quality.Business.Factory
     public class ItemFactory : IItemFactory
     {
 
-        IStorageService Storage;
+        protected IStorageService Storage;
 
-        IConfigurationService Config;
+        protected IConfigurationService Config;
 
         public ItemFactory() : this(null, null) { }
 
@@ -40,46 +39,27 @@ namespace Allianz.Vita.Quality.Business.Factory
             return new List<IMailItem>();
         }
 
-        public IMailItem ToMailItem(EmailMessage mail, bool propFull = false)
+        public IMailItem ToMailItem(string uniqueId, string from, string subject, string content, object[] attachments, string[] categories, string importance)
         {
             return new MailItem()
             {
-                UniqueId = mail.Id.UniqueId
-                ,
-                From = mail.From.Name
-                ,
-                Subject = mail.Subject
-                ,
-                Content = propFull ? mail.Body.Text : string.Empty
-                ,
-                Attachments = propFull ? mail.Attachments.ToArray() : new object[] { }
-                ,
-                Categories = propFull ? mail.Categories.ToArray() : new string[] { }
-                ,
-                Importance = propFull ? mail.Importance.ToString() : Importance.Normal.ToString()
-
+                UniqueId = uniqueId,
+                From = from,
+                Subject = subject,
+                Content = content,
+                Attachments = attachments,
+                Categories = categories,
+                Importance = importance
             };
-
         }
 
-        public IFolderItem ToFolderItem(Folder folder, FindItemsResults<Item> resultItems = null)
+        public IFolderItem ToFolderItem(string displayName)
         {
-
-            IFolderItem folderItem = new FolderItem()
+            return new FolderItem()
             {
-                DisplayName = folder.DisplayName
-                ,
+                DisplayName = displayName,
                 Messages = new List<IMailItem>()
             };
-
-            if (resultItems != null)
-                resultItems
-                    .Select(i => ToMailItem(i as EmailMessage))
-                    .ToList()
-                    .ForEach(item => folderItem.Messages.Add(item));
-
-            return folderItem;
-
         }
 
         public IDefect GetNewDefect(IMailItem itemRead)
@@ -87,9 +67,9 @@ namespace Allianz.Vita.Quality.Business.Factory
 
             SubjectMetaData data = new SubjectMetaData(itemRead.Subject);
 
-            string agency =  data.DecodeCodCompany + " " + data.Agency.ToString().PadLeft(4, '0');
+            string agency = data.DecodeCodCompany + " " + data.Agency.ToString().PadLeft(4, '0');
             IDefect defect = GetNewDefect(null, agency: agency, defectID: data.Id);
-            
+
             defect.Title = data.Title;
             defect.Description = HttpUtility.UrlDecode(itemRead.Content);
             defect.IMailItemUniqueId = itemRead.UniqueId;
@@ -100,24 +80,26 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         public IDefect GetNewDefect(int? id = null, string agency = null, string defectID = null, string defectType = null, string defectSystem = null, string foundIn = null, string environment = null)
         {
+            IDefectConfiguration config = this.Config.Defect;
+
             IDefect defect = new DefectItem()
             {
                 Id = id,
                 DefectID = defectID,
                 Agency = agency,
-                
-                SurveySystem = defectSystem ?? Config.DefaultSurveySystem,
-                FoundIn = foundIn ?? Config.CurrentWebAppId,
-                Environment = environment ?? Config.DefaultEnvironment,                
-                DefectType = defectType ?? Config.DefaultDefectType ,
-                
-                AreaPath = HttpUtility.UrlDecode(Config.DefaultAreaPath),
-                Iteration = HttpUtility.UrlDecode(Config.DefaultIteration),
-                State = Config.DefaultDefectState,
-                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), Config.DefaultSeverity, true),
 
-                Attachment = new IAttachment[] { } ,
-                Comments = new string[] { } 
+                SurveySystem = defectSystem ?? config.DefaultSurveySystem,
+                FoundIn = foundIn ?? config.CurrentWebAppId,
+                Environment = environment ?? config.DefaultEnvironment,
+                DefectType = defectType ?? config.DefaultDefectType,
+
+                AreaPath = HttpUtility.UrlDecode(config.DefaultAreaPath),
+                Iteration = HttpUtility.UrlDecode(config.DefaultIteration),
+                State = config.DefaultDefectState,
+                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), config.DefaultSeverity, true),
+
+                Attachment = new IAttachment[] { },
+                Comments = new string[] { }
 
             };
 
@@ -128,7 +110,7 @@ namespace Allianz.Vita.Quality.Business.Factory
         {
             return new MailItem() { UniqueId = uniqueId };
         }
-        
+
         public IAttachment ToAttachment(string subject, byte[] buffer)
         {
             return new MailAsAttachment() { Title = subject, Content = buffer };
@@ -136,7 +118,7 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         public void MergeTo(IMailItem itemRead, IDefect defect)
         {
-            
+
             defect.Description = HttpUtility.UrlDecode(itemRead.Content);
             defect.IMailItemUniqueId = itemRead.UniqueId;
 
@@ -160,22 +142,24 @@ namespace Allianz.Vita.Quality.Business.Factory
         public IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency)
         {
 
-            return new IssueItem() {
-                   Id = id,
-                   Assignee = assignee,
-                   Created = created,
-                   ResolvedOn = resolvedOn,
-                   ReopenedOn = reopenedOn,
-                   NomeGruppoLife = nomeGruppoLife,
-                   Priority = priority,
-                   Project = project,
-                   Summary = summary,
-                   DigitalAgency = digitalAgency,
-                   Status = status,
-                   IssueType = type
+            return new IssueItem()
+            {
+                Id = id,
+                Assignee = assignee,
+                Created = created,
+                ResolvedOn = resolvedOn,
+                ReopenedOn = reopenedOn,
+                NomeGruppoLife = nomeGruppoLife,
+                Priority = priority,
+                Project = project,
+                Summary = summary,
+                DigitalAgency = digitalAgency,
+                Status = status,
+                IssueType = type
             };
 
         }
+
 
         #endregion
     }

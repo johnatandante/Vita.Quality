@@ -35,5 +35,7 @@ namespace Allianz.Vita.Quality.Business.Models
 
         public string IssueType { get; set; }
 
+        public string Email { get; set; }
+
     }
 }
