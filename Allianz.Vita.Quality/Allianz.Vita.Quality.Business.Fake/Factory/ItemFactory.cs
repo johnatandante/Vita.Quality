@@ -92,27 +92,7 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
             throw new NotImplementedException();
         }
 
-        public IDefect ToDefectItem(Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem w)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IDefect> ToDefectItemCollection(Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemCollection workItems)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IFolderItem ToFolderItem(Microsoft.Exchange.WebServices.Data.Folder folder, Microsoft.Exchange.WebServices.Data.FindItemsResults<Microsoft.Exchange.WebServices.Data.Item> resultItems = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public IFolderItem ToFolderItem(string displayName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMailItem ToMailItem(Microsoft.Exchange.WebServices.Data.EmailMessage mail, bool propFull = false)
         {
             throw new NotImplementedException();
         }
