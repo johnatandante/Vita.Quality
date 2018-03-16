@@ -8,11 +8,11 @@ namespace Allianz.Vita.Quality.Models
     public class IssueViewModel
     {
 
-        IConfigurationService Conf
+        IIssueConfiguration Conf
         {
             get
             {
-                return ServiceFactory.Get<IConfigurationService>();
+                return ServiceFactory.Get<IConfigurationService>().Issue;
 
             }
         }

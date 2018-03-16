@@ -19,13 +19,14 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
 
         static string WorklogQuery = "project in (PRLIFE, NVINDI, HOSTTS, GRLWEB, LAISVC, ATTVIT, GOALPV, LAISBD, CUBDWH, SISCOM, UNIFON) AND created >= startOfYear(-2) AND status != CHIUSA";
         
+
         public NetworkCredential Credentials
         {
             get
             {
                 if (!Auth.IsAuthenticatedOn(this.GetType()))
                 {
-                    throw new AuthenticationException("Identity not found for TFS");
+                    throw new AuthenticationException("Identity not found for JIRA");
                 }
 
                 return Auth.GetCredentialsFor(this);
@@ -36,8 +37,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         {
             get
             {
-                return config.IssueSystemUrl;
-
+                return Config.IssueSystemUrl;
             }
         }
 
@@ -45,11 +45,11 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         {
             get
             {
-                return config.MaxPageItems;
+                return Config.MaxPageItems;
             }
         }
 
-        IConfigurationService config;
+        IIssueConfiguration Config;
 
         IIdentityService Auth;
 
@@ -63,14 +63,14 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
             }
         }
 
-        public JiraIssueService() : this(itemFactory:null, auth: null) { }
+        public JiraIssueService() : this(itemFactory:null, auth: null, config: null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public JiraIssueService(IItemFactory itemFactory,  IIdentityService auth)
+        public JiraIssueService(IItemFactory itemFactory,  IIdentityService auth, IIssueConfiguration config)
         {
-            config = ServiceFactory.Get<IConfigurationService>();
+            Config = config ?? ServiceFactory.Get<IConfigurationService>().Issue;
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
             

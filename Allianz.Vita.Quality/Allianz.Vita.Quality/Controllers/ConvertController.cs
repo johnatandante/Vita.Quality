@@ -22,7 +22,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             try
             {
-                IConfigurationService conf = ServiceFactory.Get<IConfigurationService>();
+                IMailConfiguration conf = ServiceFactory.Get<IConfigurationService>().Mail;
 
                 if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
 

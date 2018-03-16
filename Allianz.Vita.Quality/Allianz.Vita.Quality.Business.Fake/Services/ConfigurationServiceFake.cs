@@ -4,45 +4,60 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
 {
     public class ConfigurationServiceFake : IConfigurationService
     {
-        public string DefaultIteration => string.Empty;
+        public IMailConfiguration Mail { get; }
 
-        public string DefaultAreaPath => string.Empty;
+        public IIssueConfiguration Issue { get; }
 
-        public string DefaultSurveySystem => string.Empty;
+        public IDefectConfiguration Defect { get; }
 
-        public string CurrentWebAppId => string.Empty;
+        class MailConfiguration : IMailConfiguration
+        {
+            public string MailServiceUrl => string.Empty;
 
-        public string DefaultEnvironment => string.Empty;
+            public string IssueFolderPath => string.Empty;
 
-        public string DefaultSeverity => string.Empty;
+            public string IssueCompletedFolderPath => string.Empty;
 
-        public string DefaultDefectState => string.Empty;
+            public string DefaultSender => string.Empty;
+        }
 
-        public string DefaultDefectType => string.Empty;
+        class IssueConfiguration : IIssueConfiguration
+        {
+            public string IssueSystemUrl => string.Empty;
 
-        public string TrackingSystemUrl => string.Empty;
+            public int MaxPageItems => 0;
+        }
 
-        public string DefaultProjectPath => string.Empty;
+        class DefectConfiguration : IDefectConfiguration
+        {
+            public string DefaultIteration => string.Empty;
 
-        public string MailServiceUrl => string.Empty;
-        
-        public string TrackingSystemCompany => string.Empty;
+            public string DefaultAreaPath => string.Empty;
 
-        public string DefaultDefectWorkItemType => string.Empty;
+            public string DefaultSurveySystem => string.Empty;
 
-        public string IssueFolderPath => string.Empty;
+            public string CurrentWebAppId => string.Empty;
 
-        public string DefaultSender => string.Empty;
+            public string DefaultEnvironment => string.Empty;
 
-        public string TrackingSystemUserAreaPath => string.Empty;
+            public string DefaultSeverity => string.Empty;
 
-        public string TrackingSystemWorkingFeature => string.Empty;
+            public string DefaultDefectState => string.Empty;
 
-        public string IssueCompletedFolderPath => string.Empty;
+            public string DefaultDefectType => string.Empty;
 
-        public string IssueSystemUrl => string.Empty;
+            public string TrackingSystemUrl => string.Empty;
 
-        public int MaxPageItems => 0;
+            public string TrackingSystemCompany => string.Empty;
+
+            public string DefaultProjectPath => string.Empty;
+
+            public string TrackingSystemUserAreaPath => string.Empty;
+
+            public string TrackingSystemWorkingFeature => string.Empty;
+
+            public string DefaultDefectWorkItemType => string.Empty;
+        }
 
     }
 }

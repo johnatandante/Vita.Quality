@@ -7,6 +7,58 @@ namespace Allianz.Vita.Quality.Services
     public class ConfigurationService : IConfigurationService
     {
         
+        public IMailConfiguration Mail { get; }
+
+        public IIssueConfiguration Issue { get; }
+
+        public IDefectConfiguration Defect { get; }
+
+        public ConfigurationService()
+        {
+            Mail = new MailConfiguration();
+            Defect = new DefectConfiguration();
+            Issue = new IssueConfiguration();
+        }
+    }
+
+    class MailConfiguration : IMailConfiguration
+    {
+        public string MailServiceUrl
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
+            }
+        }
+        
+        public string IssueFolderPath
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
+            }
+        }
+
+        public string DefaultSender
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["MailDefaultSender"].ToString();
+            }
+        }
+
+        public string IssueCompletedFolderPath
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();
+            }
+        }
+
+    }
+
+    class DefectConfiguration : IDefectConfiguration
+    {
         public string DefaultIteration
         {
             get
@@ -87,46 +139,12 @@ namespace Allianz.Vita.Quality.Services
             }
         }
 
-        public string MailServiceUrl
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
-            }
-        }
-        
-        public string TrackingSystemCompany
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["TrackingSystemCompany"].ToString();
-            }
-        }
-        
         public string DefaultDefectWorkItemType
         {
             get
             {
                 return WebConfigurationManager.AppSettings["DefaultDefectWorkItemType"].ToString();
             }
-        }
-
-        public string IssueFolderPath
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
-            }
-
-        }
-
-        public string DefaultSender
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["MailDefaultSender"].ToString();
-            }
-
         }
 
         public string TrackingSystemUserAreaPath
@@ -145,14 +163,18 @@ namespace Allianz.Vita.Quality.Services
             }
         }
 
-        public string IssueCompletedFolderPath
+        public string TrackingSystemCompany
         {
             get
             {
-                return WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();                
+                return WebConfigurationManager.AppSettings["TrackingSystemCompany"].ToString();
             }
         }
 
+    }
+
+    class IssueConfiguration : IIssueConfiguration
+    {
         public string IssueSystemUrl
         {
             get
@@ -168,5 +190,7 @@ namespace Allianz.Vita.Quality.Services
                 return Convert.ToInt32(WebConfigurationManager.AppSettings["IssueMaxPageItems"]);
             }
         }
+
     }
+
 }

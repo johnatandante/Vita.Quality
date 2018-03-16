@@ -9,6 +9,12 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         static Dictionary<Type, IService> _Services = new Dictionary<Type, IService>();
 
+        public static bool IsDefined<TService>() where TService : IService
+        {
+            return _Services.ContainsKey(typeof(TService));
+        }
+
+
         public static TService Get<TService>() where TService : IService
         {
             IService service;
@@ -47,6 +53,14 @@ namespace Allianz.Vita.Quality.Business.Factory
             _Services[typeof(TService)] = instance;
             
         }
-        
+
+        public static TService Ensure<TService, TInstance>()
+            where TService : IService
+            where TInstance : TService
+        {
+            return IsDefined<TService>() ?
+                Get<TService>()
+                : Register<TService, TInstance>();
+        }
     }
 }
