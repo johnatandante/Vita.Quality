@@ -34,7 +34,7 @@ namespace Allianz.Vita.Quality.Business.Services.Issues
         {
             get
             {
-                return Config.IssueSystemUrl;
+                return Config.Url;
             }
         }
 

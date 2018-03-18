@@ -233,6 +233,10 @@
       <Project>{7a4f732f-d97b-47ef-b521-75a066e6de57}</Project>
       <Name>Allianz.Vita.Quality.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Allianz.Vita.Storage\Allianz.Vita.Storage.csproj">
+      <Project>{a674f7cf-6aef-4596-aad0-1d0d2a368e70}</Project>
+      <Name>Allianz.Vita.Storage</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

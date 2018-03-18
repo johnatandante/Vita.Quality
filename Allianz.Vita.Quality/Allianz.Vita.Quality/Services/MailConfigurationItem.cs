@@ -5,7 +5,7 @@ namespace Allianz.Vita.Quality.Services
 {
     class MailConfigurationItem : IMailConfiguration
     {
-        public string MailServiceUrl => WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
+        public string Url => WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
         
         public string IssueFolderPath => WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
 
@@ -13,5 +13,6 @@ namespace Allianz.Vita.Quality.Services
 
         public string IssueCompletedFolderPath => WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();
 
+        public string ServiceName => "Mail";
     }
 }

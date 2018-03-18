@@ -1,6 +1,6 @@
 ﻿namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
-    public interface IDefectConfiguration
+    public interface IDefectConfiguration : IConfigurationItem
     {
         string DefaultIteration { get; }
         string DefaultAreaPath { get; }
@@ -10,7 +10,6 @@
         string DefaultSeverity { get; }
         string DefaultDefectState { get; }
         string DefaultDefectType { get; }
-        string TrackingSystemUrl { get; }
         string TrackingSystemCompany { get; }
         string DefaultProjectPath { get; }
         string TrackingSystemUserAreaPath { get; }

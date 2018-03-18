@@ -14,16 +14,12 @@ namespace Allianz.Vita.Quality.Business.Factory
     public class ItemFactory : IItemFactory
     {
 
-        protected IStorageService Storage;
-
         protected IConfigurationService Config;
 
-        public ItemFactory() : this(null, null) { }
+        public ItemFactory() : this(null) { }
 
-        public ItemFactory(IStorageService storage, IConfigurationService config)
+        public ItemFactory(IConfigurationService config)
         {
-            Storage = storage ?? ServiceFactory.Get<IStorageService>();
-
             Config = config ?? ServiceFactory.Get<IConfigurationService>();
         }
 

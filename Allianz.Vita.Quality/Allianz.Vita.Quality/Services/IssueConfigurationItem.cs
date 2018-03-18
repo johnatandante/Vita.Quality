@@ -6,7 +6,9 @@ namespace Allianz.Vita.Quality.Services
 {
     class IssueConfigurationItem : IIssueConfiguration
     {
-        public string IssueSystemUrl =>  WebConfigurationManager.AppSettings["IssueSystemUrl"].ToString();
+        public string ServiceName => "Issue";
+
+        public string Url =>  WebConfigurationManager.AppSettings["IssueSystemUrl"].ToString();
 
         public int MaxPageItems => Convert.ToInt32(WebConfigurationManager.AppSettings["IssueMaxPageItems"]);
 

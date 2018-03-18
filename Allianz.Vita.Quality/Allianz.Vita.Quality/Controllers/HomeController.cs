@@ -100,7 +100,7 @@ namespace Allianz.Vita.Quality.Controllers
 		}
 
 		public ActionResult About() {
-            ViewBag.TfsProjectUrl = ServiceFactory.Get<IConfigurationService>().Defect.TrackingSystemUrl;
+            ViewBag.TfsProjectUrl = ServiceFactory.Get<IConfigurationService>().Defect.Url;
             
             return View();
 		}

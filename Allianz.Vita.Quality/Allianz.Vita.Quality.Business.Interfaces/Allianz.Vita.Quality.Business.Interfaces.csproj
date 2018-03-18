@@ -46,6 +46,7 @@
     <Compile Include="DataModel\IKpiItem.cs" />
     <Compile Include="Enums\SeverityLevel.cs" />
     <Compile Include="DataModel\IAttachment.cs" />
+    <Compile Include="Service\IConfigurationItem.cs" />
     <Compile Include="Service\IDefectConfiguration.cs" />
     <Compile Include="Service\IIdentityService.cs" />
     <Compile Include="Service\IConfigurationService.cs" />

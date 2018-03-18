@@ -36,7 +36,7 @@ namespace Allianz.Vita.Quality.Models
 
             // Email
             Email = Assignee + "@Allianz.it";
-            Url = Conf.IssueSystemUrl + "browse/" + Id;
+            Url = Conf.Url + "browse/" + Id;
         }
 
         public string Id { get; set; }

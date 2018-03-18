@@ -26,7 +26,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return  string.Join("/", Config.TrackingSystemUrl, Config.TrackingSystemCompany);
+                return  string.Join("/", Config.Url, Config.TrackingSystemCompany);
 
             }
         }

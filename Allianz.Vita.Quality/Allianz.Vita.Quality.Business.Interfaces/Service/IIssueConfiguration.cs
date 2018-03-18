@@ -1,8 +1,7 @@
 ﻿namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
-    public interface IIssueConfiguration
+    public interface IIssueConfiguration : IConfigurationItem
     {
-        string IssueSystemUrl { get; }
         int MaxPageItems { get; }
         string ReopenedFieldName { get; }
         string NomeGruppoLifeFieldName { get; }

@@ -5,6 +5,9 @@ namespace Allianz.Vita.Quality.Services
 {
     public class DefectConfigurationItem : IDefectConfiguration
     {
+
+        public string ServiceName => "Defect";
+
         public string DefaultIteration
         {
             get
@@ -69,7 +72,7 @@ namespace Allianz.Vita.Quality.Services
             }
         }
 
-        public string TrackingSystemUrl
+        public string Url
         {
             get
             {

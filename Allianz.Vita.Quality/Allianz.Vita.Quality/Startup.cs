@@ -24,9 +24,9 @@ namespace Allianz.Vita.Quality
             ConfigureAuth(app);
 
             ServiceFactory.Register<IConfigurationService, ConfigurationService>();
-            ServiceFactory.Register<IStorageService, StorageService>();
             ServiceFactory.Register<IItemFactory, ItemFactory>();
             ServiceFactory.Register<IIdentityService, IdentityService>();
+            ServiceFactory.Register<IStorageService, StorageService>();
 
             ServiceFactory.Register<CookieAuthenticationService, CookieAuthenticationService>();
 

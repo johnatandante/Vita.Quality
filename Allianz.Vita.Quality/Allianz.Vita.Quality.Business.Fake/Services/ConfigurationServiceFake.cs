@@ -19,6 +19,10 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             public string IssueCompletedFolderPath => string.Empty;
 
             public string DefaultSender => string.Empty;
+
+            public string ServiceName => string.Empty;
+
+            public string Url => string.Empty;
         }
 
         class IssueConfiguration : IIssueConfiguration
@@ -34,6 +38,10 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             public string DigitalAgencyFieldName => string.Empty;
 
             public string WorklogQuery => string.Empty;
+
+            public string ServiceName => string.Empty;
+
+            public string Url => string.Empty;
         }
 
         class DefectConfiguration : IDefectConfiguration
@@ -65,6 +73,10 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             public string TrackingSystemWorkingFeature => string.Empty;
 
             public string DefaultDefectWorkItemType => string.Empty;
+
+            public string ServiceName => string.Empty;
+
+            public string Url => string.Empty;
         }
 
     }
