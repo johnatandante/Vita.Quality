@@ -166,7 +166,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CredentialsViewModel.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\DefectViewModel.cs" />
@@ -221,18 +220,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\_ForgotPassword.cshtml" />
-    <Content Include="Views\Account\_ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\_Login.cshtml" />
-    <Content Include="Views\Account\_Register.cshtml" />
-    <Content Include="Views\Account\_ResetPassword.cshtml" />
-    <Content Include="Views\Account\_ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\_SendCode.cshtml" />
-    <Content Include="Views\Account\_VerifyCode.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Convert\Index.cshtml" />
@@ -248,6 +235,10 @@
     <Content Include="Views\Account\Credentials.cshtml" />
     <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Issue\Detail.cshtml" />
+    <Content Include="Views\Account\Mail.cshtml" />
+    <Content Include="Views\Shared\_AccountSettingsPartial.cshtml" />
+    <Content Include="Views\Account\Defect.cshtml" />
+    <Content Include="Views\Account\Issue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

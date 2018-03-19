@@ -10,6 +10,12 @@ namespace Allianz.Vita.Storage.Initializer
 
     public class ConfigurationInitializer : DropCreateDatabaseIfModelChanges<ConfigurationDbContext>
     {
+        public override sealed void InitializeDatabase(ConfigurationDbContext context)
+        {
+            base.InitializeDatabase(context);
+
+        }
+
         protected override sealed void Seed(ConfigurationDbContext context)
         {
             var issueConfiguration = new List<IssueConfigurationDbModel>
@@ -50,7 +56,6 @@ namespace Allianz.Vita.Storage.Initializer
             };
             defectConfiguration.ForEach(s => context.DefectConfiguration.Add(s));
 
-            context.SaveChanges();
             var mailConfiguration = new List<MailConfigurationDbModel>
             {
                 new MailConfigurationDbModel {
@@ -67,7 +72,8 @@ namespace Allianz.Vita.Storage.Initializer
             context.AppConfiguration.Add(new ConfigurationDbModel() {
                 Defect = defectConfiguration.First(),
                 Issue = issueConfiguration.First(),
-                Mail = mailConfiguration.First()
+                Mail = mailConfiguration.First(),
+                StartDate = DateTime.Now
             });
 
             context.SaveChanges();

@@ -5,6 +5,8 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
 {
     public class DefectConfigurationDbModel : IDefectConfiguration
     {
+        public int ID { get; set; }
+
         public string DefaultIteration { get; set; }
 
         public string DefaultAreaPath { get; set; }

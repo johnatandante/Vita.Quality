@@ -10,5 +10,8 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
     public interface IStorageService : IService
     {
         string Store(IAttachment att, string fileName);
+
+        bool Store(IIssueConfiguration item);
+        IConfigurationService GetConfiguration();
     }
 }

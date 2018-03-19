@@ -25,6 +25,14 @@ namespace Allianz.Vita.Quality.Controllers
             }
         }
 
+        IStorageService Store
+        {
+            get
+            {
+                return ServiceFactory.Get<IStorageService>();
+            }
+        }
+
         [HttpGet]
         public ActionResult SignIn(SignInViewModel model)
         {
@@ -88,6 +96,57 @@ namespace Allianz.Vita.Quality.Controllers
 
         }
 
+        [HttpGet]
+        public ActionResult Issue()
+        {
+            IConfigurationService conf = Store.GetConfiguration();
+            
+            return View(new IssueCredentialsViewModel(conf.Issue));
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateIssueSettings(IssueCredentialsViewModel model)
+        {
+            ActionResult result = RedirectToAction("Issue", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Issue", model)
+                        .Success("Issue data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Issue data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
+        [HttpGet]
+        public ActionResult Defect()
+        {
+            IConfigurationService conf = Store.GetConfiguration();
+
+            return View(new DefectCredentialsViewModel(conf.Defect));
+        }
+
+        [HttpGet]
+        public ActionResult Mail()
+        {
+            IConfigurationService conf = Store.GetConfiguration();
+
+            return View(new MailCredentialsViewModel(conf.Mail));
+        }
+
+
         [HttpPost]
         public ActionResult UpdateCredentials(CredentialsViewModel model)
         {
@@ -96,7 +155,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (ModelState.IsValid)
             {
-                if (Service.IsValidUser(model.TFSUserName))
+                if (model.UpdateTfsAccount)
                 {
                     if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
                     {
@@ -113,7 +172,7 @@ namespace Allianz.Vita.Quality.Controllers
                     }
                 }
 
-                if (Service.IsValidUser(model.ExchangeUserName))
+                if (model.UpdateExchangeAccount)
                 {
                     if (Service.IsValidAccount(model.ExchangeUserName, model.ExchangePassword))
                     {
@@ -130,7 +189,7 @@ namespace Allianz.Vita.Quality.Controllers
                     }
                 }
 
-                if (Service.IsValidUser(model.JiraUserName))
+                if (model.UpdateJiraAccount)
                 {
                     if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
                     {

@@ -5,6 +5,8 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
 {
     public class MailConfigurationDbModel : IMailConfiguration
     {
+        public int ID { get; set; }
+
         public string IssueFolderPath { get; set; }
 
         public string IssueCompletedFolderPath { get; set; }

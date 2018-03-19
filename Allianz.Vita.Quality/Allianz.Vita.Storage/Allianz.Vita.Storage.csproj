@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\Configuration\ConfigurationDbModel.cs" />
+    <Compile Include="DataModels\Configuration\ConfigurationServiceData.cs" />
     <Compile Include="DataModels\Configuration\DefectConfigurationDbModel.cs" />
     <Compile Include="DataModels\Configuration\IssueConfigurationDbModel.cs" />
     <Compile Include="DataModels\Configuration\MailConfigurationDbModel.cs" />

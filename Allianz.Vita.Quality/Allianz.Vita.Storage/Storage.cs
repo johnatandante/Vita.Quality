@@ -25,14 +25,77 @@ namespace Allianz.Vita.Storage
 
         ConfigurationDbContext Configuration;
 
+        ConfigurationDbModel Current
+        {
+            get
+            {
+                return Configuration.AppConfiguration
+                    .Where(t => t.StartDate <= DateTime.Now)
+                    .OrderByDescending(t => t.StartDate)
+                    .FirstOrDefault();
+            }
+        }
+
+        public IConfigurationService GetConfiguration()
+        {
+            ConfigurationServiceData result = new ConfigurationServiceData();
+            if (Current != null)
+            {
+                if(Current.Mail != null)
+                    result.Mail = new ConfigurationServiceData.MailConfigurationData(Current.Mail);
+                if (Current.Issue != null)
+                    result.Issue = new ConfigurationServiceData.IssueConfigurationData(Current.Issue);
+                if (Current.Defect != null)
+                    result.Defect = new ConfigurationServiceData.DefectConfigurationData(Current.Defect);
+            }
+
+            return result;
+
+        }
 
         public Storage(NetworkCredential credential=null, Uri uri=null)
         {
             Configuration = new ConfigurationDbContext();
 
+            foreach(var conf in GetConfigurations()) {
+                Console.WriteLine("Conf: " + conf.ID + " - " + conf.StartDate);
+                if (conf.Mail != null)
+                {
+                    Console.WriteLine("Mail: " + conf.Mail.Url + " - " + conf.Mail.StartDate);
+                }
+                if (conf.Defect != null)
+                {
+                    Console.WriteLine("Defect: " + conf.Defect.Url + " - " + conf.Defect.StartDate);
+                }
+                if (conf.Issue != null)
+                {
+                    Console.WriteLine("Issue: " + conf.Issue.Url + " - " + conf.Issue.StartDate);
+                }
+
+            }
+
         }
 
-        public ConfigurationDbModel[] GetConfiguration()
+        public bool SaveIssue(IIssueConfiguration item)
+        {
+            IssueConfigurationDbModel dbItem = new IssueConfigurationDbModel(item);
+
+            Configuration.IssueConfiguration.Add(dbItem);
+            int result = Configuration.SaveChanges();
+
+            if (Current != null)
+            {
+                if (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate)
+                {
+                    Current.Issue = dbItem;
+                    result += Configuration.SaveChanges();
+                }
+            }
+
+            return result > 0;
+        }
+        
+        ConfigurationDbModel[] GetConfigurations()
         {
             return Configuration.AppConfiguration.ToArray();
         }
