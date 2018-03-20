@@ -85,7 +85,7 @@ namespace Allianz.Vita.Storage
 
             if (Current != null)
             {
-                if (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate)
+                if (Current.Issue == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate))
                 {
                     Current.Issue = dbItem;
                     result += Configuration.SaveChanges();

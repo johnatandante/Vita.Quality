@@ -83,6 +83,8 @@ namespace Allianz.Vita.Quality.Models
 
     public class IssueCredentialsViewModel : IIssueConfiguration
     {
+        public IssueCredentialsViewModel() { }
+
         public IssueCredentialsViewModel(IIssueConfiguration model)
         {
             MaxPageItems = model.MaxPageItems;
@@ -120,6 +122,8 @@ namespace Allianz.Vita.Quality.Models
 
     public class MailCredentialsViewModel : IMailConfiguration
     {
+        public MailCredentialsViewModel() { }
+
         public MailCredentialsViewModel(IMailConfiguration model)
         {
             IssueFolderPath = model.IssueFolderPath;
@@ -142,6 +146,8 @@ namespace Allianz.Vita.Quality.Models
 
     public class DefectCredentialsViewModel : IDefectConfiguration
     {
+        public DefectCredentialsViewModel() { }
+
         public DefectCredentialsViewModel(IDefectConfiguration model)
         {
             Url = model.Url;
