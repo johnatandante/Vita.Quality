@@ -1,1 +1,141 @@
-﻿
+﻿@model Allianz.Vita.Quality.Models.DefectCredentialsViewModel
+@{
+    ViewBag.Title = "Defect Settings";
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div id="menuSettings" class="col-md-4">
+        @Html.Partial("_AccountSettingsPartial")
+    </div>
+    <div class="col-md-8">
+        <section id="connectionForm">
+
+            <h3>Setup your Jira Account</h3>
+            @using (Html.BeginForm("UpdateDefectSettings", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Partial("_AccountCommonSettingsPartial")
+
+                <div>
+                    <h4>Scope Fields</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Company, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.Company, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WebAppId, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.WebAppId, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Environment, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.Environment, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SurveySystem, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.SurveySystem, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Defect Fields</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WorkItemType, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.WorkItemType, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.AreaPath, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.AreaPath, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Severity, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.Severity, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DefectState, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.DefectState, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DefectType, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.DefectType, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>User WorkItem Settings</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Iteration, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.Iteration, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ProjectPath, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.ProjectPath, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.UserAreaPath, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.UserAreaPath, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WorkingFeature, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.WorkingFeature, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+

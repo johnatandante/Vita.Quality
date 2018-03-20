@@ -22,7 +22,7 @@ namespace Allianz.Vita.Quality
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-
+            
             ServiceFactory.Register<IConfigurationService, ConfigurationService>();
             ServiceFactory.Register<IItemFactory, ItemFactory>();
             ServiceFactory.Register<IIdentityService, IdentityService>();

@@ -14,10 +14,14 @@ namespace Allianz.Vita.Storage.Initializer
         {
             base.InitializeDatabase(context);
 
-        }
+        }        
 
         protected override sealed void Seed(ConfigurationDbContext context)
         {
+            var conf = new ConfigurationDbModel() {
+                StartDate = DateTime.Now
+            };
+
             var issueConfiguration = new List<IssueConfigurationDbModel>
             {
                 new IssueConfigurationDbModel{
@@ -28,7 +32,8 @@ namespace Allianz.Vita.Storage.Initializer
                     ServiceName = "Issue",
                     Url = "",
                     WorklogQuery = "created >= startOfYear()",
-                    StartDate=DateTime.Now
+                    StartDate=DateTime.Now,
+                    Configuration = conf                   
                 },
             };
             issueConfiguration.ForEach(s => context.IssueConfiguration.Add(s));
@@ -36,22 +41,23 @@ namespace Allianz.Vita.Storage.Initializer
             var defectConfiguration = new List<DefectConfigurationDbModel>
             {
                 new DefectConfigurationDbModel{
-                    CurrentWebAppId = string.Empty,
-                    DefaultAreaPath = string.Empty,
-                    DefaultDefectState = string.Empty,
-                    DefaultDefectType = string.Empty,
-                    DefaultDefectWorkItemType = string.Empty,
-                    DefaultEnvironment = "Prod",
-                    DefaultIteration = string.Empty,
-                    DefaultProjectPath = string.Empty,
-                    DefaultSeverity = string.Empty,
-                    DefaultSurveySystem = string.Empty,
-                    TrackingSystemCompany = string.Empty,
-                    TrackingSystemUserAreaPath = string.Empty,
-                    TrackingSystemWorkingFeature = string.Empty,
+                    WebAppId = string.Empty,
+                    AreaPath = string.Empty,
+                    DefectState = string.Empty,
+                    DefectType = string.Empty,
+                    WorkItemType = string.Empty,
+                    Environment = "Prod",
+                    Iteration = string.Empty,
+                    ProjectPath = string.Empty,
+                    Severity = string.Empty,
+                    SurveySystem = string.Empty,
+                    Company = string.Empty,
+                    UserAreaPath = string.Empty,
+                    WorkingFeature = string.Empty,
                     ServiceName = "Defect",
-                    Url = "https://outlook.live.com/EWS/Exchange.asmx",
-                    StartDate = DateTime.Now
+                    Url = "",
+                    StartDate = DateTime.Now,
+                    Configuration = conf
                 },
             };
             defectConfiguration.ForEach(s => context.DefectConfiguration.Add(s));
@@ -60,21 +66,17 @@ namespace Allianz.Vita.Storage.Initializer
             {
                 new MailConfigurationDbModel {
                     DefaultSender = "",
-                    IssueCompletedFolderPath = "",
+                    CompletedFolderPath = "",
                     IssueFolderPath = "",
                     ServiceName = "Mail",
                     Url = "https://outlook.live.com/EWS/Exchange.asmx",
-                    StartDate = DateTime.Now
+                    StartDate = DateTime.Now,
+                    Configuration = conf
                 },
             };
             mailConfiguration.ForEach(s => context.MailConfiguration.Add(s));
 
-            context.AppConfiguration.Add(new ConfigurationDbModel() {
-                Defect = defectConfiguration.First(),
-                Issue = issueConfiguration.First(),
-                Mail = mailConfiguration.First(),
-                StartDate = DateTime.Now
-            });
+            context.AppConfiguration.Add(conf);
 
             context.SaveChanges();
         }

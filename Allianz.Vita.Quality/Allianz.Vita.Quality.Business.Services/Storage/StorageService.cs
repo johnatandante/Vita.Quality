@@ -10,9 +10,14 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
     {
         IConfigurationService Conf = null;
         IIdentityService Auth = null;
-        
-        Vita.Storage.Storage Service;
 
+        Vita.Storage.Storage Service {
+            get
+            {
+                return new Vita.Storage.Storage();
+            }
+        }
+        
         public StorageService() : this(conf: null, auth: null) { }
 
         public StorageService(IConfigurationService conf, IIdentityService auth)
@@ -20,14 +25,24 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
             Conf = conf ?? ServiceFactory.Get<IConfigurationService>();
 
             Auth = auth ?? ServiceFactory.Get<IIdentityService>();
+            
+            InitConf();
+        }
 
-            Service = new Vita.Storage.Storage();            
-
+        private void InitConf()
+        {
+            IConfigurationService dbConf = GetConfiguration();
+            if(dbConf.Mail != null) Conf.Mail = dbConf.Mail;
+            if (dbConf.Defect != null) Conf.Defect = dbConf.Defect;
+            if (dbConf.Issue != null) Conf.Issue = dbConf.Issue;
         }
 
         public IConfigurationService GetConfiguration()
         {
-            return Service.GetConfiguration();
+            using (var service = Service)
+            {
+                return service.GetConfiguration();
+            }
 
         }
 
@@ -36,7 +51,10 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
             bool result = false;
             try
             {
-                result = Service.SaveIssue(item);
+                using (var service = Service)
+                {
+                    result = service.SaveIssue(item);
+                }
             }catch(Exception e)
             {
                 Console.Write("Error on save item {0}: {1}", item.ServiceName, e.Message);
@@ -44,6 +62,42 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
             
             return result;
 
+        }
+        
+        public bool Store(IMailConfiguration item)
+        {
+            bool result = false;
+            try
+            {
+                using (var service = Service)
+                {
+                    result = service.SaveMail(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error on save item {0}: {1}", item.ServiceName, e.Message);
+            }
+
+            return result;
+        }
+
+        public bool Store(IDefectConfiguration item)
+        {
+            bool result = false;
+            try
+            {
+                using (var service = Service)
+                {
+                    result = service.SaveDefect(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error on save item {0}: {1}", item.ServiceName, e.Message);
+            }
+
+            return result;
         }
 
         public string Store(IAttachment att, string fileName)
@@ -53,5 +107,6 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
 
             return fullpath;
         }
+                
     }
 }

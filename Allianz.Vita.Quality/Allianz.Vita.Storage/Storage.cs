@@ -1,13 +1,9 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
-using Allianz.Vita.Quality.Business.Interfaces.Service;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Storage.DataContext;
 using Allianz.Vita.Storage.DataModels.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Allianz.Vita.Storage
 {
@@ -19,7 +15,7 @@ namespace Allianz.Vita.Storage
             typeof(System.Data.Entity.SqlServer.SqlProviderServices).ToString();
         }
 
-        //public NetworkCredential Credentials { get; set; }
+        public NetworkCredential Credentials { get; set; }
 
         //public Uri Uri { get; set; }
 
@@ -30,7 +26,6 @@ namespace Allianz.Vita.Storage
             get
             {
                 return Configuration.AppConfiguration
-                    .Where(t => t.StartDate <= DateTime.Now)
                     .OrderByDescending(t => t.StartDate)
                     .FirstOrDefault();
             }
@@ -57,23 +52,45 @@ namespace Allianz.Vita.Storage
         {
             Configuration = new ConfigurationDbContext();
 
-            foreach(var conf in GetConfigurations()) {
-                Console.WriteLine("Conf: " + conf.ID + " - " + conf.StartDate);
-                if (conf.Mail != null)
-                {
-                    Console.WriteLine("Mail: " + conf.Mail.Url + " - " + conf.Mail.StartDate);
-                }
-                if (conf.Defect != null)
-                {
-                    Console.WriteLine("Defect: " + conf.Defect.Url + " - " + conf.Defect.StartDate);
-                }
-                if (conf.Issue != null)
-                {
-                    Console.WriteLine("Issue: " + conf.Issue.Url + " - " + conf.Issue.StartDate);
-                }
+        }
 
+        private static void Trace(IConfigurationItem item)
+        {
+            if (item == null) return;
+            Console.WriteLine(item.ServiceName + ": " + item.Url);
+        }
+
+        public bool SaveDefect(IDefectConfiguration item)
+        {
+            DefectConfigurationDbModel dbItem = new DefectConfigurationDbModel(item);
+
+            Configuration.DefectConfiguration.Add(dbItem);
+            int result = Configuration.SaveChanges();
+
+            if (Current.Defect == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Defect.StartDate))
+            {
+                dbItem.Configuration = Current;
+                result += Configuration.SaveChanges();
             }
 
+            return result > 0;
+        }
+
+        public bool SaveMail(IMailConfiguration item)
+        {
+            MailConfigurationDbModel dbItem = new MailConfigurationDbModel(item);
+            Current.Mail = new MailConfigurationDbModel(item);
+
+            Configuration.MailConfiguration.Add(dbItem);
+            int result = Configuration.SaveChanges();
+
+            if (Current.Mail == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Mail.StartDate))
+            {
+                dbItem.Configuration = Current;
+                result += Configuration.SaveChanges();
+            }
+
+            return result > 0;
         }
 
         public bool SaveIssue(IIssueConfiguration item)
@@ -82,14 +99,11 @@ namespace Allianz.Vita.Storage
 
             Configuration.IssueConfiguration.Add(dbItem);
             int result = Configuration.SaveChanges();
-
-            if (Current != null)
+            
+            if (Current.Issue == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate))
             {
-                if (Current.Issue == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate))
-                {
-                    Current.Issue = dbItem;
-                    result += Configuration.SaveChanges();
-                }
+                dbItem.Configuration = Current;
+                result += Configuration.SaveChanges();
             }
 
             return result > 0;
@@ -102,18 +116,14 @@ namespace Allianz.Vita.Storage
 
         public void StoreConfiguration(IMailConfiguration mailConf = null, IDefectConfiguration defectConf = null, IIssueConfiguration issueConf = null)
         {
-            ConfigurationDbModel current = Configuration.AppConfiguration
-                .Where(t => t.StartDate <= DateTime.Now)
-                .OrderByDescending(t => t.StartDate)
-                .FirstOrDefault();
-
+ 
             if(issueConf != null)
             {
                 IssueConfigurationDbModel issueNewConf = new IssueConfigurationDbModel() {
                     StartDate = DateTime.Now
                 };
                 Configuration.IssueConfiguration.Add(issueNewConf);
-                current.Issue = issueNewConf;
+                Current.Issue = issueNewConf;
             }
 
             if (defectConf != null)
@@ -123,7 +133,7 @@ namespace Allianz.Vita.Storage
                     StartDate = DateTime.Now
                 };
                 Configuration.DefectConfiguration.Add(defectNewConf);
-                current.Defect = defectNewConf;
+                Current.Defect = defectNewConf;
             }
 
             if (issueConf != null)
@@ -133,10 +143,12 @@ namespace Allianz.Vita.Storage
                     StartDate = DateTime.Now
                 };
                 Configuration.MailConfiguration.Add(mailNewConf);
-                current.Mail = mailNewConf;
+                Current.Mail = mailNewConf;
             }
 
-            Configuration.AppConfiguration.Add(current);
+            Configuration.AppConfiguration.Add(Current);
+            Configuration.SaveChanges();
+
         }
 
         public void Dispose()

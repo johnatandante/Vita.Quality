@@ -24,7 +24,7 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
             public MailConfigurationData(MailConfigurationDbModel model)
             {
                 IssueFolderPath = model.IssueFolderPath;
-                IssueCompletedFolderPath = model.IssueCompletedFolderPath;
+                CompletedFolderPath = model.CompletedFolderPath;
                 DefaultSender = model.DefaultSender;
                 ServiceName = model.ServiceName;
                 Url = model.Url;
@@ -32,7 +32,7 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
 
             public string IssueFolderPath { get; set; }
 
-            public string IssueCompletedFolderPath { get; set; }
+            public string CompletedFolderPath { get; set; }
 
             public string DefaultSender { get; set; }
 
@@ -76,48 +76,48 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
             public DefectConfigurationData() { }
             public DefectConfigurationData(DefectConfigurationDbModel model)
             {
-                DefaultIteration = model.DefaultIteration;
-                DefaultAreaPath = model.DefaultAreaPath;
-                DefaultSurveySystem = model.DefaultSurveySystem;
-                CurrentWebAppId = model.CurrentWebAppId;
-                DefaultEnvironment = model.DefaultEnvironment;
-                DefaultSeverity = model.DefaultSeverity;
-                DefaultDefectState = model.DefaultDefectState;
-                DefaultDefectType = model.DefaultDefectType;
-                TrackingSystemCompany = model.TrackingSystemCompany;
-                DefaultProjectPath = model.DefaultProjectPath;
-                TrackingSystemUserAreaPath = model.TrackingSystemUserAreaPath;
-                TrackingSystemWorkingFeature = model.TrackingSystemWorkingFeature;
-                DefaultDefectWorkItemType = model.DefaultDefectWorkItemType;
+                Iteration = model.Iteration;
+                AreaPath = model.AreaPath;
+                SurveySystem = model.SurveySystem;
+                WebAppId = model.WebAppId;
+                Environment = model.Environment;
+                Severity = model.Severity;
+                DefectState = model.DefectState;
+                DefectType = model.DefectType;
+                Company = model.Company;
+                ProjectPath = model.ProjectPath;
+                UserAreaPath = model.UserAreaPath;
+                WorkingFeature = model.WorkingFeature;
+                WorkItemType = model.WorkItemType;
                 ServiceName = model.ServiceName;
                 Url = model.Url;
             }
 
-            public string DefaultIteration { get; set; }
+            public string Iteration { get; set; }
 
-            public string DefaultAreaPath { get; set; }
+            public string AreaPath { get; set; }
 
-            public string DefaultSurveySystem { get; set; }
+            public string SurveySystem { get; set; }
 
-            public string CurrentWebAppId { get; set; }
+            public string WebAppId { get; set; }
 
-            public string DefaultEnvironment { get; set; }
+            public string Environment { get; set; }
 
-            public string DefaultSeverity { get; set; }
+            public string Severity { get; set; }
 
-            public string DefaultDefectState { get; set; }
+            public string DefectState { get; set; }
 
-            public string DefaultDefectType { get; set; }
+            public string DefectType { get; set; }
 
-            public string TrackingSystemCompany { get; set; }
+            public string Company { get; set; }
 
-            public string DefaultProjectPath { get; set; }
+            public string ProjectPath { get; set; }
 
-            public string TrackingSystemUserAreaPath { get; set; }
+            public string UserAreaPath { get; set; }
 
-            public string TrackingSystemWorkingFeature { get; set; }
+            public string WorkingFeature { get; set; }
 
-            public string DefaultDefectWorkItemType { get; set; }
+            public string WorkItemType { get; set; }
 
             public string ServiceName { get; set; }
 

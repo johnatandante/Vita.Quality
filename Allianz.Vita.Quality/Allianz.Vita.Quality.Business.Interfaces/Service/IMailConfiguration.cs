@@ -3,7 +3,7 @@
     public interface IMailConfiguration : IConfigurationItem
     {
         string IssueFolderPath { get; }
-        string IssueCompletedFolderPath { get; }
+        string CompletedFolderPath { get; }
         string DefaultSender { get; }
     }
 }

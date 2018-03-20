@@ -11,7 +11,11 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
     {
         string Store(IAttachment att, string fileName);
 
-        bool Store(IIssueConfiguration item);
         IConfigurationService GetConfiguration();
+
+        bool Store(IIssueConfiguration item);
+        bool Store(IMailConfiguration item);
+        bool Store(IDefectConfiguration item);
+
     }
 }

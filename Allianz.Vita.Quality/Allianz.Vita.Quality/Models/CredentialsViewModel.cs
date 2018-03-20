@@ -81,19 +81,17 @@ namespace Allianz.Vita.Quality.Models
         }
     }
 
-    public class IssueCredentialsViewModel : IIssueConfiguration
+    public class IssueCredentialsViewModel : BaseCredentialsViewModel, IIssueConfiguration
     {
         public IssueCredentialsViewModel() { }
 
-        public IssueCredentialsViewModel(IIssueConfiguration model)
+        public IssueCredentialsViewModel(IIssueConfiguration model) : base(model.ServiceName, model.Url)
         {
             MaxPageItems = model.MaxPageItems;
             ReopenedFieldName = model.ReopenedFieldName;
             NomeGruppoLifeFieldName = model.NomeGruppoLifeFieldName;
             DigitalAgencyFieldName = model.DigitalAgencyFieldName;
             WorklogQuery = model.WorklogQuery;
-            Url = model.Url;
-            ServiceName = model.ServiceName;
         }
 
         [DisplayName("Query Result Size")]
@@ -112,77 +110,104 @@ namespace Allianz.Vita.Quality.Models
         [DisplayName("Worklog Filter Query")]
         public string WorklogQuery { get; set; }
 
+    }
+
+    public class MailCredentialsViewModel : BaseCredentialsViewModel, IMailConfiguration
+    {
+        public MailCredentialsViewModel() { }
+
+        public MailCredentialsViewModel(IMailConfiguration model) : base(model.ServiceName, model.Url)
+        {
+            IssueFolderPath = model.IssueFolderPath;
+            CompletedFolderPath = model.CompletedFolderPath;
+            DefaultSender = model.DefaultSender;
+        }
+
+        [DisplayName("Issue Folder")]
+        public string IssueFolderPath {get; set; }
+        
+        [DisplayName("Archive Folder")]
+        public string CompletedFolderPath {get; set; }
+        
+        [DisplayName("Sender")]
+        public string DefaultSender {get; set; }
+
+    }
+
+    public class DefectCredentialsViewModel : BaseCredentialsViewModel, IDefectConfiguration
+    {
+        public DefectCredentialsViewModel() { }
+
+        public DefectCredentialsViewModel(IDefectConfiguration model) : base(model.ServiceName, model.Url)
+        {
+            Url = model.Url;
+            ServiceName = model.ServiceName;
+        }
+
+        [DisplayName("Iteration")]
+        [AllowHtml]
+        public string Iteration {get; set; }
+
+        [DisplayName("Area Path")]
+        [AllowHtml]
+        public string AreaPath {get; set; }
+
+        [DisplayName("Survey System")]
+        public string SurveySystem {get; set; }
+
+        [DisplayName("Web App Id")]
+        [AllowHtml]
+        public string WebAppId {get; set; }
+
+        [DisplayName("Environment")]
+        public string Environment {get; set; }
+
+        [DisplayName("Severity")]
+        public string Severity {get; set; }
+
+        [DisplayName("Defect State")]
+        public string DefectState {get; set; }
+
+        [DisplayName("Defect Type")]
+        public string DefectType {get; set; }
+
+        [DisplayName("Company")]
+        public string Company {get; set; }
+
+        [DisplayName("Project Path")]
+        [AllowHtml]
+        public string ProjectPath {get; set; }
+
+        [DisplayName("User Area Path")]
+        [AllowHtml]
+        public string UserAreaPath {get; set; }
+
+        [DisplayName("Mail Feature")]
+        public string WorkingFeature {get; set; }
+
+        [DisplayName("Defect Work Item Type")]
+        public string WorkItemType {get; set; }
+        
+    }
+
+    public class BaseCredentialsViewModel : IConfigurationItem
+    {
+        public BaseCredentialsViewModel() { }
+
+        public BaseCredentialsViewModel(IConfigurationItem model) : this(model.ServiceName, model.Url) { }
+
+        public BaseCredentialsViewModel(string serviceName, string url)
+        {
+            ServiceName = serviceName;
+            Url = url;
+        }
+
         [DisplayName("Service Name")]
         public string ServiceName { get; set; }
 
         [AllowHtml]
         public string Url { get; set; }
 
-    }
-
-    public class MailCredentialsViewModel : IMailConfiguration
-    {
-        public MailCredentialsViewModel() { }
-
-        public MailCredentialsViewModel(IMailConfiguration model)
-        {
-            IssueFolderPath = model.IssueFolderPath;
-            IssueCompletedFolderPath = model.IssueCompletedFolderPath;
-            DefaultSender = model.DefaultSender;
-            ServiceName = model.ServiceName;
-            Url = model.Url;
-        }
-
-        public string IssueFolderPath {get; set; }
-
-        public string IssueCompletedFolderPath {get; set; }
-
-        public string DefaultSender {get; set; }
-
-        public string ServiceName {get; set; }
-
-        public string Url {get; set; }
-    }
-
-    public class DefectCredentialsViewModel : IDefectConfiguration
-    {
-        public DefectCredentialsViewModel() { }
-
-        public DefectCredentialsViewModel(IDefectConfiguration model)
-        {
-            Url = model.Url;
-            ServiceName = model.ServiceName;
-        }
-
-        public string DefaultIteration {get; set; }
-
-        public string DefaultAreaPath {get; set; }
-
-        public string DefaultSurveySystem {get; set; }
-
-        public string CurrentWebAppId {get; set; }
-
-        public string DefaultEnvironment {get; set; }
-
-        public string DefaultSeverity {get; set; }
-
-        public string DefaultDefectState {get; set; }
-
-        public string DefaultDefectType {get; set; }
-
-        public string TrackingSystemCompany {get; set; }
-
-        public string DefaultProjectPath {get; set; }
-
-        public string TrackingSystemUserAreaPath {get; set; }
-
-        public string TrackingSystemWorkingFeature {get; set; }
-
-        public string DefaultDefectWorkItemType {get; set; }
-
-        public string ServiceName {get; set; }
-
-        public string Url {get; set; }
     }
 
 }

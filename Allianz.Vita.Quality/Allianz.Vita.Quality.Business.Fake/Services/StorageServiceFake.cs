@@ -20,5 +20,15 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool Store(IMailConfiguration item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Store(IDefectConfiguration item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

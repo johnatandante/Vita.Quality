@@ -26,7 +26,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return  string.Join("/", Config.Url, Config.TrackingSystemCompany);
+                return  string.Join("/", Config.Url, Config.Company);
 
             }
         }
@@ -35,7 +35,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return Config.DefaultDefectWorkItemType;
+                return Config.WorkItemType;
 
             }
         }
@@ -44,7 +44,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return Config.DefaultProjectPath;
+                return Config.ProjectPath;
             }
         }
         
@@ -280,7 +280,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 // Create the work item. 
                 defect = project
-                    .WorkItemTypes[Config.DefaultDefectWorkItemType]
+                    .WorkItemTypes[Config.WorkItemType]
                     .NewWorkItem();
 
                 // int ? Id { get; }
@@ -459,7 +459,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             return string.Join("/",
                 TfsUri,
-                Config.DefaultProjectPath,
+                Config.ProjectPath,
                 id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
 
@@ -489,18 +489,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         private void Autoassign(WorkItemStore workItemStore, WorkItem workItem)
         {
-            workItem.Fields[DefectField.AreaPath.FieldName()].Value = Config.TrackingSystemUserAreaPath;
+            workItem.Fields[DefectField.AreaPath.FieldName()].Value = Config.UserAreaPath;
             workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
 
             string path = GetCurrentIterationPath(workItemStore);
             workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
 
-            if (!workItem.Links.Exist(int.Parse(Config.TrackingSystemWorkingFeature)))
+            if (!workItem.Links.Exist(int.Parse(Config.WorkingFeature)))
             {
                 // Docs Link to w.i. as parent of...
                 // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
                 WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
-                workItem.Links.Add(new RelatedLink(linkType, int.Parse(Config.TrackingSystemWorkingFeature)));
+                workItem.Links.Add(new RelatedLink(linkType, int.Parse(Config.WorkingFeature)));
             }
 
         }
@@ -547,12 +547,12 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
 
             Node node = FindNodeFromPath(workItemStore.Projects[TeamProjectName].IterationRootNodes
-                , string.Join("\\", Config.DefaultIteration.Split('\\').Skip(1)) );
+                , string.Join("\\", Config.Iteration.Split('\\').Skip(1)) );
 
             if (node != null)
                 return node.ChildNodes.ToEnumerableStringValues().FirstOrDefault();
 
-            throw new ApplicationException("Cannot find current path node: " + Config.DefaultIteration);
+            throw new ApplicationException("Cannot find current path node: " + Config.Iteration);
         }
 
         private Node FindNodeFromPath(NodeCollection collection, string path)

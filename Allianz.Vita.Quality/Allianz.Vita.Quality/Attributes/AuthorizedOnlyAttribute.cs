@@ -42,7 +42,7 @@ namespace Allianz.Vita.Quality.Attributes
             IIdentityService auth = ServiceFactory.Get<IIdentityService>();
             if (ServiceFactory.Get<IIdentityService>().IsAuthenticated())
             {
-                action = "Credentials";                
+                action = "Credentials";
             }
             else
             {

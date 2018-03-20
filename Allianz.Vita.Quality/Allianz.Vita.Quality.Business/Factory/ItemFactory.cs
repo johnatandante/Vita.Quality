@@ -84,15 +84,15 @@ namespace Allianz.Vita.Quality.Business.Factory
                 DefectID = defectID,
                 Agency = agency,
 
-                SurveySystem = defectSystem ?? config.DefaultSurveySystem,
-                FoundIn = foundIn ?? config.CurrentWebAppId,
-                Environment = environment ?? config.DefaultEnvironment,
-                DefectType = defectType ?? config.DefaultDefectType,
+                SurveySystem = defectSystem ?? config.SurveySystem,
+                FoundIn = foundIn ?? config.WebAppId,
+                Environment = environment ?? config.Environment,
+                DefectType = defectType ?? config.DefectType,
 
-                AreaPath = HttpUtility.UrlDecode(config.DefaultAreaPath),
-                Iteration = HttpUtility.UrlDecode(config.DefaultIteration),
-                State = config.DefaultDefectState,
-                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), config.DefaultSeverity, true),
+                AreaPath = HttpUtility.UrlDecode(config.AreaPath),
+                Iteration = HttpUtility.UrlDecode(config.Iteration),
+                State = config.DefectState,
+                Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), config.Severity, true),
 
                 Attachment = new IAttachment[] { },
                 Comments = new string[] { }
