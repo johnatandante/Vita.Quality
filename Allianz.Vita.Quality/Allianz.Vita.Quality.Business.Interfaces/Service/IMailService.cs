@@ -8,7 +8,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
         		
 		List<IMailItem> OpenInbox(int? pageSize = null, bool? read = null);
 
-		IFolderItem OpenFolder(string path, int? pageSize = null, string from = "");
+		IFolderItem OpenFolder(string path, int? pageSize = null, string from = "", string subject = "");
 
 		IMailItem Get(IMailItem model);
 

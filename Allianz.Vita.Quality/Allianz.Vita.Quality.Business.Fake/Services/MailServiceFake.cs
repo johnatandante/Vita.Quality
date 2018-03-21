@@ -27,7 +27,7 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
-        public IFolderItem OpenFolder(string path, int? pageSize = null, string from = "")
+        public IFolderItem OpenFolder(string path, int? pageSize = null, string from = "", string subject = "")
         {
             throw new NotImplementedException();
         }

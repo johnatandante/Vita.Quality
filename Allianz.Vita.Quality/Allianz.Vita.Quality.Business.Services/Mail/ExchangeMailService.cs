@@ -96,7 +96,7 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
         }
 
-        public IFolderItem OpenFolder(string path, int? pageSize = null, string from = "")
+        public IFolderItem OpenFolder(string path, int? pageSize = null, string from = "", string subject = "")
         {
 
             Queue<string> folderNames = new Queue<string>(path.Split('.'));
@@ -115,28 +115,17 @@ namespace Allianz.Vita.Quality.Business.Services.Mail
 
             ItemView issueVitaItemView = new ItemView(pageSize ?? int.MaxValue);
             issueVitaItemView.PropertySet = new PropertySet(BasePropertySet.FirstClassProperties);
-            // issueVitaItemView.PropertySet.RequestedBodyType = BodyType.HTML;
 
             SearchFilter.SearchFilterCollection collection =
                 new SearchFilter.SearchFilterCollection(LogicalOperator.And);
-                        
-            collection.Add(new SearchFilter.ContainsSubstring(ItemSchema.Subject, "Request"));
-            collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.From, "srm@allianz.it", ContainmentMode.Prefixed, ComparisonMode.IgnoreCase));
+            collection.Add(new SearchFilter.ContainsSubstring(ItemSchema.Subject, subject, ContainmentMode.Substring, ComparisonMode.IgnoreCase));
+            collection.Add(new SearchFilter.ContainsSubstring(EmailMessageSchema.From, from, ContainmentMode.Substring, ComparisonMode.IgnoreCase));
 
             collection.Add(new SearchFilter.Not(new SearchFilter.Exists(PidTagFlagStatus)));
+
             //collection.Add(new SearchFilter.IsNotEqualTo(PidTagFlagStatus, (short)MailFlag.Flagged));
             //collection.Add(new SearchFilter.IsNotEqualTo(PidTagFlagStatus, (short)MailFlag.Complete));
-
-            //string itemsKey = "FindItemsOpenFolder" + path + (pageSize.HasValue ? pageSize.Value.ToString() : string.Empty) + from.ToString() + folder.Id;
-
-            //CacheItem objectIssueVitaItems = cache.GetCacheItem(itemsKey);
-            //if (objectIssueVitaItems == null)
-            //{
-            //    cache.Add(itemsKey, service.FindItems(folder.Id, collection, issueVitaItemView), policy);
-            //    objectIssueVitaItems = cache.GetCacheItem(itemsKey);
-            //}
-
-            //FindItemsResults<Item> issueVitaItems = objectIssueVitaItems.Value as FindItemsResults<Item>;
+            
             FindItemsResults<Item> issueVitaItems = Service.FindItems(folder.Id, collection, issueVitaItemView);
 
             return Factory.ToFolderItem(folder, issueVitaItems);

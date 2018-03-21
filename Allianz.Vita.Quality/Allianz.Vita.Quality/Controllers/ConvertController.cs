@@ -26,7 +26,7 @@ namespace Allianz.Vita.Quality.Controllers
 
                 if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
 
-                IFolderItem publicFolder = Mail.OpenFolder(conf.IssueFolderPath , pageSize: 100, from: conf.DefaultSender);
+                IFolderItem publicFolder = Mail.OpenFolder(conf.IssueFolderPath , pageSize: 100, from: conf.DefaultSender, subject: "Request");
 
                 model.PublicFolderDisplayName = publicFolder.DisplayName;
 
