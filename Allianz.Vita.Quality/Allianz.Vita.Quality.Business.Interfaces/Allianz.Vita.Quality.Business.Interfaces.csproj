@@ -46,6 +46,7 @@
     <Compile Include="DataModel\IKpiItem.cs" />
     <Compile Include="Enums\SeverityLevel.cs" />
     <Compile Include="DataModel\IAttachment.cs" />
+    <Compile Include="Service\IConfigurationItem.cs" />
     <Compile Include="Service\IDefectConfiguration.cs" />
     <Compile Include="Service\IIdentityService.cs" />
     <Compile Include="Service\IConfigurationService.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="DataModel\IFolderItem.cs" />
     <Compile Include="Service\IIssueConfiguration.cs" />
     <Compile Include="Service\IIssueService.cs" />
+    <Compile Include="Service\IItem.cs" />
     <Compile Include="Service\ILinkService.cs" />
     <Compile Include="DataModel\IMailItem.cs" />
     <Compile Include="DataModel\IMailItemKey.cs" />

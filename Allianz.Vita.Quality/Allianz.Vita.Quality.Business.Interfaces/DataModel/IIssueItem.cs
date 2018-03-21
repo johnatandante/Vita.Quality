@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
+using System;
 
 namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
@@ -26,7 +27,7 @@ namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
     /// - Team Allianz
     /// - Tipo segnalazione
     /// </summary>
-    public interface IIssueItem
+    public interface IIssueItem : IItem
     {
         string Id { get; }
         string Area { get; }

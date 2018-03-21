@@ -2,9 +2,9 @@
 {
     public interface IConfigurationService : IService
     {
-        IMailConfiguration Mail { get; }
-        IIssueConfiguration Issue { get; }
-        IDefectConfiguration Defect { get; }
+        IMailConfiguration Mail { get; set; }
+        IIssueConfiguration Issue { get; set; }
+        IDefectConfiguration Defect { get; set; }
     }
     
 }

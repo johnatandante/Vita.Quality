@@ -8,8 +8,11 @@ namespace Allianz.Vita.Quality.Business.Models
 		public string DisplayName { get; set; }
 		public IList<IMailItem> Messages { get; set; }
 		
-        public FolderItem()
+        public FolderItem() : this(string.Empty) { }
+
+        public FolderItem(string displayName)
         {
+            DisplayName = displayName;
             Messages = new List<IMailItem>();
         }
 

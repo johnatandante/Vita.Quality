@@ -1,6 +1,8 @@
-﻿namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
+
+namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
-    public interface IMailItem
+    public interface IMailItem : IItem
 	{
 		string UniqueId { get; }
 		string From { get; }

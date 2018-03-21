@@ -4,6 +4,7 @@ namespace Allianz.Vita.Quality.Business.Models
 {
     class MailAsAttachment : IAttachment
     {
+
         public string Title { get; set; }
 
         public byte[] Content { get; set; }

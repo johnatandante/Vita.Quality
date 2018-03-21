@@ -25,6 +25,14 @@ namespace Allianz.Vita.Quality.Controllers
             }
         }
 
+        IStorageService Store
+        {
+            get
+            {
+                return ServiceFactory.Get<IStorageService>();
+            }
+        }
+
         [HttpGet]
         public ActionResult SignIn(SignInViewModel model)
         {
@@ -65,7 +73,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Index(CredentialsViewModel model)
         {
             if (!Service.IsAuthenticated())
-                RedirectToAction("SignIn");
+                return RedirectToAction("SignIn");
 
             return View(model);
 
@@ -75,7 +83,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Credentials(CredentialsViewModel model)
         {
             if (!Service.IsAuthenticated())
-                RedirectToAction("SignIn");
+                return RedirectToAction("SignIn");
 
             if (model == null || !model.Initialized)
             {
@@ -88,6 +96,129 @@ namespace Allianz.Vita.Quality.Controllers
 
         }
 
+        [HttpGet]
+        public ActionResult Issue(IssueCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new IssueCredentialsViewModel(conf.Issue);
+            }
+            
+            return View(model);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateIssueSettings(IssueCredentialsViewModel model)
+        {
+            ActionResult result = View("Issue", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Issue", model)
+                        .Success("Issue data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Issue data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
+        [HttpGet]
+        public ActionResult Defect(DefectCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                return RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new DefectCredentialsViewModel(conf.Defect);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateDefectSettings(DefectCredentialsViewModel model)
+        {
+            ActionResult result = View("Defect", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Defect", model)
+                        .Success("Defect data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Defect data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
+        [HttpGet]
+        public ActionResult Mail(MailCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                return RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new MailCredentialsViewModel(conf.Mail);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateMailSettings(MailCredentialsViewModel model)
+        {
+            ActionResult result = View("Mail", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Mail", model)
+                        .Success("Mail data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Mail data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
         [HttpPost]
         public ActionResult UpdateCredentials(CredentialsViewModel model)
         {
@@ -96,7 +227,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (ModelState.IsValid)
             {
-                if (Service.IsValidUser(model.TFSUserName))
+                if (model.UpdateTfsAccount)
                 {
                     if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
                     {
@@ -113,7 +244,7 @@ namespace Allianz.Vita.Quality.Controllers
                     }
                 }
 
-                if (Service.IsValidUser(model.ExchangeUserName))
+                if (model.UpdateExchangeAccount)
                 {
                     if (Service.IsValidAccount(model.ExchangeUserName, model.ExchangePassword))
                     {
@@ -130,7 +261,7 @@ namespace Allianz.Vita.Quality.Controllers
                     }
                 }
 
-                if (Service.IsValidUser(model.JiraUserName))
+                if (model.UpdateJiraAccount)
                 {
                     if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
                     {

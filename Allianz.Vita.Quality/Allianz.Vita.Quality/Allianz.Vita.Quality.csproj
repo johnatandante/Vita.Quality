@@ -155,6 +155,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\Startup.InitOrDie.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\AuthorizedOnlyAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -166,7 +167,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CredentialsViewModel.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\DefectViewModel.cs" />
@@ -176,24 +176,36 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\CookieAuthenticationService.cs" />
-    <Compile Include="Services\DefectConfigurationItem.cs" />
-    <Compile Include="Services\IssueConfigurationItem.cs" />
-    <Compile Include="Services\MailConfigurationItem.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="libs\Microsoft.WITDataStore32.dll" />
     <Content Include="libs\Microsoft.WITDataStore64.dll" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Compile Include="App_Start\Startup.Services.cs" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\HelloWorld.jsx" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.flashMessage.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -201,6 +213,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\tinymce\license.txt" />
@@ -221,18 +234,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\_ForgotPassword.cshtml" />
-    <Content Include="Views\Account\_ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\_Login.cshtml" />
-    <Content Include="Views\Account\_Register.cshtml" />
-    <Content Include="Views\Account\_ResetPassword.cshtml" />
-    <Content Include="Views\Account\_ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\_SendCode.cshtml" />
-    <Content Include="Views\Account\_VerifyCode.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Convert\Index.cshtml" />
@@ -248,6 +249,11 @@
     <Content Include="Views\Account\Credentials.cshtml" />
     <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Issue\Detail.cshtml" />
+    <Content Include="Views\Account\Mail.cshtml" />
+    <Content Include="Views\Shared\_AccountSettingsPartial.cshtml" />
+    <Content Include="Views\Account\Defect.cshtml" />
+    <Content Include="Views\Account\Issue.cshtml" />
+    <Content Include="Views\Shared\_AccountCommonSettingsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

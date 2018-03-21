@@ -1,6 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Fake.Models;
 using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,22 +10,17 @@ namespace Allianz.Vita.Quality.Business.Fake.Factory
 {
     public class ItemFactory : IItemFactory
     {
+        public T GetNew<T>(params object[] parameters) where T : IItem
+        {
+            throw new NotImplementedException();
+        }
+
         public IDefect GetNewDefect(IMailItem itemRead)
         {
             throw new NotImplementedException();
         }
 
         public IDefect GetNewDefect(int? Id, string agency = null, string defectID = null, string defectType = null, string defectSystem = null, string foundIn = null, string environment = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IFolderItem GetNewFolderItem()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IIssueItem GetNewIssue()
         {
             throw new NotImplementedException();
         }

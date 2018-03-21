@@ -12,7 +12,7 @@
         <a href="http://online.servizi.ras/Vita/SUV" class="btn btn-primary btn-lg" target="_blank"> Open SUV &raquo;</a>
         <a href="http://online.servizi.ras/Vita/Sisco" class="btn btn-primary btn-lg" target="_blank"> Open SisCo &raquo;</a>
         <a href="http://online.azi.allianzit/jira" class="btn btn-primary btn-lg" target="_blank"> Open Jira &raquo;</a>
-    </p>    
+    </p>
 </div>
 
 <div class="row">
@@ -22,16 +22,16 @@
         {
 
             <p>
-                There are at least @Model.InboxMessages.Count() messages in your Inbox.            
+                There are at least @Model.InboxMessages.Count() messages in your Inbox.
             </p>
             <p><a class="btn btn-default" href="https://cas01.servizi.allianzit/owa/" target="_blank">Check it out! &raquo;</a></p>
 
             <h3>Here's some of them:</h3>
             <ul class="list-group">
-               @foreach (var item in Model.InboxMessages)
-               {
-                   <li>@item.PadRight(50, ' ').Substring(0, 50) ...</li>
-               }
+                @foreach (var item in Model.InboxMessages)
+                {
+                    <li>@item.PadRight(50, ' ').Substring(0, 50) ...</li>
+                }
             </ul>
         }
         else
@@ -97,4 +97,4 @@
         </div>
     </div>
 
-    </div>
+</div>

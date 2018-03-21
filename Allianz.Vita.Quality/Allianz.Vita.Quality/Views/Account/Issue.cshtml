@@ -1,0 +1,77 @@
+﻿@model Allianz.Vita.Quality.Models.IssueCredentialsViewModel
+@{
+    ViewBag.Title = "Issue Settings";
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div id="menuSettings" class="col-md-4">
+        @Html.Partial("_AccountSettingsPartial")
+    </div>
+    <div class="col-md-8">
+        <section id="connectionForm">
+
+            <h3>Setup your Jira Account</h3>
+            @using (Html.BeginForm("UpdateIssueSettings", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Partial("_AccountCommonSettingsPartial")
+
+                <div>
+                    <h4>Custom Fields</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.DigitalAgencyFieldName, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.DigitalAgencyFieldName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ReopenedFieldName, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.ReopenedFieldName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.NomeGruppoLifeFieldName, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.NomeGruppoLifeFieldName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Query Settings</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.MaxPageItems, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.MaxPageItems, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.MaxPageItems, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WorklogQuery, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-12">
+                                    @Html.TextAreaFor(m => m.WorklogQuery, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
