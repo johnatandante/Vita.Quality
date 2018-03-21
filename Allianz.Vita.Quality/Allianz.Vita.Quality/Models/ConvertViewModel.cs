@@ -1,4 +1,4 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using System.Collections.Generic;
 
 namespace Allianz.Vita.Quality.Models

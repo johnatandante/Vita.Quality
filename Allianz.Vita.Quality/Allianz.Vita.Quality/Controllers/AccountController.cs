@@ -1,15 +1,13 @@
-﻿using Allianz.Vita.Quality.Models;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Extensions;
+using Allianz.Vita.Quality.Models;
+using Allianz.Vita.Quality.Services;
+using System;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
-using Allianz.Vita.Quality.Extensions;
-using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Business.Factory;
-using System;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Web;
-using System.Linq;
-using Allianz.Vita.Quality.Services;
-
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -24,6 +22,14 @@ namespace Allianz.Vita.Quality.Controllers
             get
             {
                 return ServiceFactory.Get<IIdentityService>();
+            }
+        }
+
+        IStorageService Store
+        {
+            get
+            {
+                return ServiceFactory.Get<IStorageService>();
             }
         }
 
@@ -67,7 +73,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Index(CredentialsViewModel model)
         {
             if (!Service.IsAuthenticated())
-                RedirectToAction("SignIn");
+                return RedirectToAction("SignIn");
 
             return View(model);
 
@@ -77,9 +83,9 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Credentials(CredentialsViewModel model)
         {
             if (!Service.IsAuthenticated())
-                RedirectToAction("SignIn");
+                return RedirectToAction("SignIn");
 
-            if (!model.Initialized)
+            if (model == null || !model.Initialized)
             {
                 CredentialsViewModel cookieCredentials = CookieService.GetData(Request, User.Identity.Name);
                 model = cookieCredentials;
@@ -87,6 +93,129 @@ namespace Allianz.Vita.Quality.Controllers
             }
 
             return View(model);
+
+        }
+
+        [HttpGet]
+        public ActionResult Issue(IssueCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new IssueCredentialsViewModel(conf.Issue);
+            }
+            
+            return View(model);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateIssueSettings(IssueCredentialsViewModel model)
+        {
+            ActionResult result = View("Issue", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Issue", model)
+                        .Success("Issue data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Issue data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
+        [HttpGet]
+        public ActionResult Defect(DefectCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                return RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new DefectCredentialsViewModel(conf.Defect);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateDefectSettings(DefectCredentialsViewModel model)
+        {
+            ActionResult result = View("Defect", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Defect", model)
+                        .Success("Defect data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Defect data can't be saved.");
+                }
+
+            }
+
+            return result;
+
+        }
+
+        [HttpGet]
+        public ActionResult Mail(MailCredentialsViewModel model)
+        {
+            if (!Service.IsAuthenticated())
+                return RedirectToAction("SignIn");
+
+            if (model == null || model.ServiceName == null)
+            {
+                IConfigurationService conf = Store.GetConfiguration();
+                model = new MailCredentialsViewModel(conf.Mail);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateMailSettings(MailCredentialsViewModel model)
+        {
+            ActionResult result = View("Mail", model)
+                .Warning("Data model is not valid...");
+
+            if (ModelState.IsValid)
+            {
+                if (Store.Store(model))
+                {
+                    result = RedirectToAction("Mail", model)
+                        .Success("Mail data successfully saved.");
+                }
+                else
+                {
+                    result = result
+                        .Error("Mail data can't be saved.");
+                }
+
+            }
+
+            return result;
 
         }
 
@@ -98,13 +227,14 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (ModelState.IsValid)
             {
-                if (Service.IsValidUser(model.TFSUserName))
+                if (model.UpdateTfsAccount)
                 {
-                    if (Service.IsValidAccount(model.ExchangeUserName, model.TFSPassword))
+                    if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
                     {
                         hasChanged = true;
                         Service.Logoff(typeof(IDefectService));
-                        Service.AuthenticateOn(typeof(IDefectService), new System.Net.NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
+                        Service.AuthenticateOn(typeof(IDefectService), 
+                            new NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
                         
                         result = result.Success("TFS Account Data Saved");
                     }
@@ -114,14 +244,31 @@ namespace Allianz.Vita.Quality.Controllers
                     }
                 }
 
-                if (Service.IsValidUser(model.ExchangeUserName))
+                if (model.UpdateExchangeAccount)
                 {
                     if (Service.IsValidAccount(model.ExchangeUserName, model.ExchangePassword))
                     {
                         hasChanged = true;
                         Service.Logoff(typeof(IMailService));
                         Service.AuthenticateOn(typeof(IMailService),
-                        new System.Net.NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
+                            new NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
+
+                        result = result.Success("Exchange Account Data Saved");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    }
+                }
+
+                if (model.UpdateJiraAccount)
+                {
+                    if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
+                    {
+                        hasChanged = true;
+                        Service.Logoff(typeof(IIssueService));
+                        Service.AuthenticateOn(typeof(IIssueService),
+                            new NetworkCredential(model.JiraUserName, model.JiraPassword));
 
                         result = result.Success("Exchange Account Data Saved");
                     }

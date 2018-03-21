@@ -1,9 +1,16 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 
 namespace Allianz.Vita.Quality.Business.Models
 {
-	public class MailItem : IMailItem, IMailItemKey
+    public class MailItem : IMailItem, IMailItemKey
 	{
+        public MailItem() { }
+
+        public MailItem(string uniqueId)
+        {
+            UniqueId = uniqueId;
+        }
+
 		public string UniqueId { get; set; }
 
 		public string From { get; set; }

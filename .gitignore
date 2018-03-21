@@ -19,6 +19,7 @@ bld/
 
 # Roslyn cache directories
 *.ide/
+*.vs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -194,3 +195,5 @@ ModelManifest.xml
 /Allianz.Vita.Quality/.vs/Allianz.Vita.Quality/v15/Server/sqlite3/storage.ide-wal
 /Allianz.Vita.Quality/.vs/Allianz.Vita.Quality/v15/Server/sqlite3/storage.ide-shm
 /Allianz.Vita.Quality/.vs/Allianz.Vita.Quality/v15/Server/sqlite3/db.lock
+/Allianz.Vita.Quality/.nuget
+/Allianz.Vita.Quality/.vs/config

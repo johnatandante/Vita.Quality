@@ -1,6 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Fake.Services;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +56,7 @@ namespace Allianz.Vita.Quality.Test.Services
         [TestMethod]
         public void InsertDefect()
         {
-            IMailItem mailItem = ServiceFactory.Get<IItemFactory>().GetNewMailItem();
+            IMailItem mailItem = ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>();
             IDefect defect = ServiceFactory.Get<IItemFactory>().GetNewDefect(mailItem);
 
             service.Save(defect);

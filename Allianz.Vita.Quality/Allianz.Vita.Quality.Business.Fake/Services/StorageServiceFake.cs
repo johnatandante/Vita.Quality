@@ -1,15 +1,32 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Fake.Services
 {
     public class StorageServiceFake : IStorageService
     {
+        public IConfigurationService GetConfiguration()
+        {
+            throw new NotImplementedException();
+        }
+
         public string Store(IAttachment att, string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Store(IIssueConfiguration item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Store(IMailConfiguration item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Store(IDefectConfiguration item)
         {
             throw new NotImplementedException();
         }

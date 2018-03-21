@@ -1,9 +1,9 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
 using System.Net;
-using System.Security.Principal;
-using System.Web.Security;
 
 namespace Allianz.Vita.Quality.Business.Services.Authentication
 {

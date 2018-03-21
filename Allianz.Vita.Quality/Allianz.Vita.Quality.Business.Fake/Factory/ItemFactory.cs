@@ -1,5 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Fake.Models;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -8,6 +10,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Factory
 {
     public class ItemFactory : IItemFactory
     {
+        public T GetNew<T>(params object[] parameters) where T : IItem
+        {
+            throw new NotImplementedException();
+        }
+
         public IDefect GetNewDefect(IMailItem itemRead)
         {
             throw new NotImplementedException();
@@ -18,7 +25,7 @@ namespace Allianz.Vita.Quality.Business.Fake.Factory
             throw new NotImplementedException();
         }
 
-        public IFolderItem GetNewFolderItem()
+        public IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency)
         {
             throw new NotImplementedException();
         }
@@ -81,22 +88,12 @@ Potete cortesemente verificare l'errore che si presenta in emissione nuova propo
             throw new NotImplementedException();
         }
 
-        public IDefect ToDefectItem(Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem w)
+        public IFolderItem ToFolderItem(string displayName)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IDefect> ToDefectItemCollection(Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemCollection workItems)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IFolderItem ToFolderItem(Microsoft.Exchange.WebServices.Data.Folder folder, Microsoft.Exchange.WebServices.Data.FindItemsResults<Microsoft.Exchange.WebServices.Data.Item> resultItems = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMailItem ToMailItem(Microsoft.Exchange.WebServices.Data.EmailMessage mail, bool propFull = false)
+        public IMailItem ToMailItem(string uniqueId, string from, string subject, string content, object[] attachments, string[] categories, string importance)
         {
             throw new NotImplementedException();
         }

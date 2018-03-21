@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality", "Allianz.Vita.Quality\Allianz.Vita.Quality.csproj", "{837777EC-AF3A-447E-ACFC-4B5F58E3F924}"
 EndProject
@@ -18,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Services", "Allianz.Vita.Quality.Business.Services\Allianz.Vita.Quality.Business.Services.csproj", "{173B667A-FFBB-47CE-AE21-5A56D89477CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Quality.Business.Services.Test", "Allianz.Vita.Quality.Business.Services.Test\Allianz.Vita.Quality.Business.Services.Test.csproj", "{3868A390-A439-474D-B43A-C53EA3A101F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Client.Rest.Jira", "Allianz.Vita.Client.Rest.Jira\Allianz.Vita.Client.Rest.Jira.csproj", "{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Allianz.Vita.Storage", "Allianz.Vita.Storage\Allianz.Vita.Storage.csproj", "{A674F7CF-6AEF-4596-AAD0-1D0D2A368E70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{3868A390-A439-474D-B43A-C53EA3A101F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3868A390-A439-474D-B43A-C53EA3A101F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3868A390-A439-474D-B43A-C53EA3A101F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E198CFA8-B6B3-4F47-9EAD-F8527930B5C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A674F7CF-6AEF-4596-AAD0-1D0D2A368E70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A674F7CF-6AEF-4596-AAD0-1D0D2A368E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A674F7CF-6AEF-4596-AAD0-1D0D2A368E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A674F7CF-6AEF-4596-AAD0-1D0D2A368E70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

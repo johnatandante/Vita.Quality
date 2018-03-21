@@ -1,9 +1,6 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
+﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Factory
 {
@@ -11,6 +8,12 @@ namespace Allianz.Vita.Quality.Business.Factory
     {
 
         static Dictionary<Type, IService> _Services = new Dictionary<Type, IService>();
+
+        public static bool IsDefined<TService>() where TService : IService
+        {
+            return _Services.ContainsKey(typeof(TService));
+        }
+
 
         public static TService Get<TService>() where TService : IService
         {
@@ -50,6 +53,14 @@ namespace Allianz.Vita.Quality.Business.Factory
             _Services[typeof(TService)] = instance;
             
         }
-        
+
+        public static TService Ensure<TService, TInstance>()
+            where TService : IService
+            where TInstance : TService
+        {
+            return IsDefined<TService>() ?
+                Get<TService>()
+                : Register<TService, TInstance>();
+        }
     }
 }

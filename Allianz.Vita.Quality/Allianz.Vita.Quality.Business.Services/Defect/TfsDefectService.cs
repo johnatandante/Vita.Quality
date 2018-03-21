@@ -1,6 +1,8 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Services.Enums;
 using Allianz.Vita.Quality.Business.Services.Utilities;
 using Allianz.Vita.Quality.Business.Utilities;
@@ -24,7 +26,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return  string.Join("/", config.TrackingSystemUrl, config.TrackingSystemCompany);
+                return  string.Join("/", Config.Url, Config.Company);
 
             }
         }
@@ -33,7 +35,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return config.DefaultDefectWorkItemType;
+                return Config.WorkItemType;
 
             }
         }
@@ -42,7 +44,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return config.DefaultProjectPath;
+                return Config.ProjectPath;
             }
         }
         
@@ -68,8 +70,8 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             DefectField.CreatedBy.FieldName(),
             DefectField.AssignedTo.FieldName(),
         };
-        
-        IConfigurationService config;
+
+        IDefectConfiguration Config;
 
         public NetworkCredential Credentials
         {
@@ -103,14 +105,14 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             }
         }
         
-        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null) { }
+        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null, config: null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
         /// </summary>
-        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage, IIdentityService auth)
+        public TfsDefectService(IItemFactory itemFactory, IMailService mail, IStorageService storage, IIdentityService auth, IDefectConfiguration config)
         {
-            config = ServiceFactory.Get<IConfigurationService>();
+            Config = config ?? ServiceFactory.Get<IConfigurationService>().Defect;
 
             Factory = itemFactory ?? ServiceFactory.Get<IItemFactory>();
 
@@ -130,10 +132,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<IDefect> result = new List<IDefect>();
             
-            using (Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 // get the WorkItemStore service
                 // get the project context for the work item store
@@ -188,10 +190,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<IDefect> result = new List<IDefect>();
             
-            using (Service)
+            using (TfsTeamProjectCollection service = Service)
             {
                 // get the WorkItemStore service
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 QueryDefinition query = GetNewQueryDefinition("GetAllDefects",
                     WorkItemOutputFields,
@@ -270,15 +272,15 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem defect;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item. 
                 defect = project
-                    .WorkItemTypes[ServiceFactory.Get<IConfigurationService>().DefaultDefectWorkItemType]
+                    .WorkItemTypes[Config.WorkItemType]
                     .NewWorkItem();
 
                 // int ? Id { get; }
@@ -314,7 +316,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
-                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
                     defect.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + ".eml"));
@@ -326,7 +328,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (!defect.IsValid())
                     throw new ApplicationException("Errore in inserimento Defect " + defect.Title);
 
-                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 defect.Save();
                 
@@ -340,10 +342,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             IDefect result = null;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 WorkItem wi = GetWorkItemById(workItemStore, id);
 
                 result = ToDefectItem(wi);
@@ -425,10 +427,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             List<string> allowedValues = new List<string>();
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 if (key == "System.AreaPath")
                 {
@@ -455,20 +457,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         
         public string GetTrackingUrlDetail(int? id)
         {
-            IConfigurationService config = ServiceFactory.Get<IConfigurationService>();
-
             return string.Join("/",
                 TfsUri,
-                config.DefaultProjectPath,
+                Config.ProjectPath,
                 id.HasValue ? "_workItems?id=" + id.Value.ToString() : string.Empty);
         }
 
         public void Autoassign(string id)
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, id);
                 if (collection.Count > 0)
@@ -489,28 +489,28 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         private void Autoassign(WorkItemStore workItemStore, WorkItem workItem)
         {
-            workItem.Fields[DefectField.AreaPath.FieldName()].Value = config.TrackingSystemUserAreaPath;
+            workItem.Fields[DefectField.AreaPath.FieldName()].Value = Config.UserAreaPath;
             workItem.Fields[DefectField.AssignedTo.FieldName()].Value = workItemStore.UserIdentityName;
 
             string path = GetCurrentIterationPath(workItemStore);
             workItem.Fields[DefectField.IterationPath.FieldName()].Value = path;
 
-            if (!workItem.Links.Exist(int.Parse(config.TrackingSystemWorkingFeature)))
+            if (!workItem.Links.Exist(int.Parse(Config.WorkingFeature)))
             {
                 // Docs Link to w.i. as parent of...
                 // https://docs.microsoft.com/en-us/vsts/work/customize/reference/link-type-element-reference                    
                 WorkItemLinkTypeEnd linkType = workItemStore.WorkItemLinkTypes.LinkTypeEnds[DefectLinkType.Child.FieldName()];
-                workItem.Links.Add(new RelatedLink(linkType, int.Parse(config.TrackingSystemWorkingFeature)));
+                workItem.Links.Add(new RelatedLink(linkType, int.Parse(Config.WorkingFeature)));
             }
 
         }
 
         public void MoveStateOn(IDefect defect)
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 WorkItemCollection collection = GetWorkItemCollectionById(workItemStore, defect.DefectID);
                 WorkItem workItem = collection[0];
                 workItem.Open();
@@ -547,12 +547,12 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
 
             Node node = FindNodeFromPath(workItemStore.Projects[TeamProjectName].IterationRootNodes
-                , string.Join("\\", config.DefaultIteration.Split('\\').Skip(1)) );
+                , string.Join("\\", Config.Iteration.Split('\\').Skip(1)) );
 
             if (node != null)
                 return node.ChildNodes.ToEnumerableStringValues().FirstOrDefault();
 
-            throw new ApplicationException("Cannot find current path node: " + config.DefaultIteration);
+            throw new ApplicationException("Cannot find current path node: " + Config.Iteration);
         }
 
         private Node FindNodeFromPath(NodeCollection collection, string path)
@@ -590,10 +590,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             IMailItem mail = Mail.Get(mailItem);
             string subject = Factory.GetSubject(mail);
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
 
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
                 WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
                                 result = ToDefectItemCollection(workItems).FirstOrDefault();
@@ -618,9 +618,9 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem workItem;
 
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
-                WorkItemStore workItemStore = Service.GetService<WorkItemStore>();
+                WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
 
                 // Create the work item.                 
@@ -670,7 +670,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
-                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
                     workItem.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + " - Comunicazione("+ (workItem.Attachments.Count + 1) + ").eml"));
@@ -682,7 +682,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (!workItem.IsValid())
                     throw new ApplicationException("Errore in aggiornamento Defect " + workItem.Title);
 
-                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 workItem.Save();
                 
@@ -694,11 +694,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public string GetDisplayName()
         {
-            using (Service)
+             using (TfsTeamProjectCollection service = Service)
             {
                 
-                Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity = null;
-                Service.GetAuthenticatedIdentity(out identity);
+                TeamFoundationIdentity identity = null;
+                service.GetAuthenticatedIdentity(out identity);
                 
                 return identity.DisplayName;
             }

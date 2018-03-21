@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Extensions;
+using Allianz.Vita.Quality.Models;
+using Allianz.Vita.Quality.Services;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Allianz.Vita.Quality.Business.Interfaces;
-using Allianz.Vita.Quality.Models;
-using Allianz.Vita.Quality.Extensions;
-using Allianz.Vita.Quality.Business.Factory;
-using System.Collections.Generic;
 using System.Web.Mvc.Filters;
-using Allianz.Vita.Quality.Services;
 
 namespace Allianz.Vita.Quality.Controllers
 {
-	public class HomeController : Controller
+    public class HomeController : Controller
 	{        
         
         IMailService Mail {
@@ -99,7 +100,7 @@ namespace Allianz.Vita.Quality.Controllers
 		}
 
 		public ActionResult About() {
-            ViewBag.TfsProjectUrl = ServiceFactory.Get<IConfigurationService>().TrackingSystemUrl;
+            ViewBag.TfsProjectUrl = ServiceFactory.Get<IConfigurationService>().Defect.Url;
             
             return View();
 		}

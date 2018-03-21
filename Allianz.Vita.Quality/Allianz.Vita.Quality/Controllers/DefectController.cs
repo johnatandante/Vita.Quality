@@ -1,13 +1,15 @@
-﻿using Allianz.Vita.Quality.Business.Factory;
+﻿using Allianz.Vita.Quality.Attributes;
+using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Models;
+using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Allianz.Vita.Quality.Extensions;
-using Allianz.Vita.Quality.Attributes;
 
 namespace Allianz.Vita.Quality.Controllers
 {
@@ -104,7 +106,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Create(string id, string mailId)
         {
 
-            IMailItem model = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(HttpUtility.UrlDecode(mailId)));
+            IMailItem model = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(HttpUtility.UrlDecode(mailId)));
             IDefect defect = Service.LookFor(model);
 
             if (defect == null)
@@ -127,7 +129,7 @@ namespace Allianz.Vita.Quality.Controllers
         {
             IDefect defect = Service.Get(id);
             
-            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(mailId));
+            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(mailId));
             Mail.Flag(itemRead);
             ServiceFactory.Get<IItemFactory>().MergeTo(itemRead, defect);
             
@@ -161,7 +163,7 @@ namespace Allianz.Vita.Quality.Controllers
                 return View(model);
             }
 
-            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(model.IMailItemUniqueId));
+            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(model.IMailItemUniqueId));
             Mail.Complete(itemRead);
 
             return RedirectToAction("Index", "Convert");

@@ -1,237 +1,177 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces;
-using System.Web.Configuration;
-using System.Runtime.Caching;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
+using System.Web.Configuration;
 
 namespace Allianz.Vita.Quality.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        
-        //const string mailAccountName = "MailAccountName";
-        //const string mailHashedPassword = "MailHashedPassword";
 
-        //const string trackingSystemAccountName = "TrackingSystemAccountName";
-        //const string trackingSystemDomainName = "TrackingSystemDomainName";
-        //const string trackingSystemHashedPassword = "TrackingSystemHashedPassword";        
+        public IMailConfiguration Mail { get; set; }
 
-        //static ObjectCache cache;
+        public IIssueConfiguration Issue { get; set; }
 
-        //static CacheItemPolicy policy
-        //{
-        //    get
-        //    {
-        //        var p = new CacheItemPolicy
-        //        {
-        //            AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(120.0)
-        //        };
-        //        return p;
-        //    }
-        //}
+        public IDefectConfiguration Defect { get; set; }
 
-        //static ConfigurationService()
-        //{
-        //    cache = MemoryCache.Default;            
-
-        //    cache.Add(mailAccountName, string.Empty, policy);
-        //    cache.Add(mailHashedPassword, string.Empty, policy);
-
-        //    cache.Add(trackingSystemAccountName, string.Empty, policy);
-        //    cache.Add(trackingSystemDomainName, string.Empty, policy);
-        //    cache.Add(trackingSystemHashedPassword, string.Empty, policy);
-
-        //}
-        
-        public string DefaultIteration
+        public ConfigurationService()
         {
-            get
-            {
-                return WebConfigurationManager.AppSettings["DefaultIteration"].ToString();
-            }
+            Mail = new WebConfigMailConfigurationItem();
+            Defect = new WebConfigDefectConfigurationItem();
+            Issue = new WebConfigIssueConfigurationItem();
+
         }
 
-        public string DefaultAreaPath
+        class WebConfigDefectConfigurationItem : IDefectConfiguration
         {
-            get
+
+            public string ServiceName => "Defect";
+
+            public string Iteration
             {
-                return WebConfigurationManager.AppSettings["DefaultAreaPath"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultIteration"].ToString();
+                }
             }
-        }
 
-        public string DefaultSurveySystem
-        {
-            get
+            public string AreaPath
             {
-                return WebConfigurationManager.AppSettings["DefaultSurveySystem"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultAreaPath"].ToString();
+                }
             }
-        }
 
-        public string CurrentWebAppId
-        {
-            get
+            public string SurveySystem
             {
-                return WebConfigurationManager.AppSettings["CurrentWebAppId"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultSurveySystem"].ToString();
+                }
             }
-        }
 
-        public string DefaultEnvironment
-        {
-            get
+            public string WebAppId
             {
-                return WebConfigurationManager.AppSettings["DefaultEnvironment"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["CurrentWebAppId"].ToString();
+                }
             }
-        }
 
-        public string DefaultSeverity
-        {
-            get
+            public string Environment
             {
-                return WebConfigurationManager.AppSettings["DefaultSeverity"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultEnvironment"].ToString();
+                }
             }
-        }
 
-        public string DefaultDefectState
-        {
-            get
+            public string Severity
             {
-                return WebConfigurationManager.AppSettings["DefaultDefectState"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultSeverity"].ToString();
+                }
             }
-        }
 
-        public string DefaultDefectType
-        {
-            get
+            public string DefectState
             {
-                return WebConfigurationManager.AppSettings["DefaultDefectType"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultDefectState"].ToString();
+                }
             }
-        }
 
-        public string TrackingSystemUrl
-        {
-            get
+            public string DefectType
             {
-                return WebConfigurationManager.AppSettings["TrackingSystemUrl"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultDefectType"].ToString();
+                }
             }
-        }
 
-        public string DefaultProjectPath
-        {
-            get
+            public string Url
             {
-                return WebConfigurationManager.AppSettings["DefaultProjectPath"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["TrackingSystemUrl"].ToString();
+                }
             }
-        }
 
-        public string MailServiceUrl
-        {
-            get
+            public string ProjectPath
             {
-                return WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultProjectPath"].ToString();
+                }
             }
-        }
 
-        //public string Password
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(mailHashedPassword).Value as string;
-        //        //return WebConfigurationManager.AppSettings["MailHashedPassword"].ToString();
-        //    }
-        //}
-
-        //public string AccountName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(mailAccountName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["MailAccountName"].ToString();
-        //    }
-        //}
-
-        public string TrackingSystemCompany
-        {
-            get
+            public string WorkItemType
             {
-                return WebConfigurationManager.AppSettings["TrackingSystemCompany"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["DefaultDefectWorkItemType"].ToString();
+                }
             }
-        }
 
-        //public string TrackingSystemAccountName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemAccountName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemAccountName"].ToString();
-        //    }
-        //}
-
-        //public string TrackingSystemDomainName
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemDomainName).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemDomainName"].ToString();
-        //    }
-        //}
-
-        //public string TrackingSystemHashedPassword
-        //{
-        //    get
-        //    {
-        //        return cache.GetCacheItem(trackingSystemHashedPassword).Value as string;
-        //        //return WebConfigurationManager.AppSettings["TrackingSystemHashedPassword"].ToString();
-        //    }
-        //}
-
-        public string DefaultDefectWorkItemType
-        {
-            get
+            public string UserAreaPath
             {
-                return WebConfigurationManager.AppSettings["DefaultDefectWorkItemType"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["TrackingSystemUserAreaPath"].ToString();
+                }
             }
-        }
 
-        public string IssueFolderPath
-        {
-            get
+            public string WorkingFeature
             {
-                return WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
+                get
+                {
+                    return WebConfigurationManager.AppSettings["TrackingSystemWorkingFeature"].ToString();
+                }
+            }
+
+            public string Company
+            {
+                get
+                {
+                    return WebConfigurationManager.AppSettings["TrackingSystemCompany"].ToString();
+                }
             }
 
         }
 
-        public string DefaultSender
+        class WebConfigIssueConfigurationItem : IIssueConfiguration
         {
-            get
-            {
-                return WebConfigurationManager.AppSettings["MailDefaultSender"].ToString();
-            }
+            public string ServiceName => "Issue";
 
+            public string Url => WebConfigurationManager.AppSettings["IssueSystemUrl"].ToString();
+
+            public int MaxPageItems => Convert.ToInt32(WebConfigurationManager.AppSettings["IssueMaxPageItems"]);
+
+            public string ReopenedFieldName => WebConfigurationManager.AppSettings["ReopenedFieldName"].ToString();
+
+            public string NomeGruppoLifeFieldName => WebConfigurationManager.AppSettings["NomeGruppoLifeFieldName"].ToString();
+
+            public string DigitalAgencyFieldName => WebConfigurationManager.AppSettings["DigitalAgencyFieldName"].ToString();
+
+            public string WorklogQuery => WebConfigurationManager.AppSettings["WorklogQuery"].ToString();
         }
 
-        public string TrackingSystemUserAreaPath
+        class WebConfigMailConfigurationItem : IMailConfiguration
         {
-            get
-            {
-                return WebConfigurationManager.AppSettings["TrackingSystemUserAreaPath"].ToString();
-            }
-        }
+            public string Url => WebConfigurationManager.AppSettings["MailServiceUrl"].ToString();
 
-        public string TrackingSystemWorkingFeature
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["TrackingSystemWorkingFeature"].ToString();
-            }
-        }
+            public string IssueFolderPath => WebConfigurationManager.AppSettings["MailIssueFolderPath"].ToString();
 
-        public string IssueCompletedFolderPath
-        {
-            get
-            {
-                return WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();                
-            }
+            public string DefaultSender => WebConfigurationManager.AppSettings["MailDefaultSender"].ToString();
+
+            public string CompletedFolderPath => WebConfigurationManager.AppSettings["MailIssueCompletedFolderPath"].ToString();
+
+            public string ServiceName => "Mail";
         }
 
     }
+
 }

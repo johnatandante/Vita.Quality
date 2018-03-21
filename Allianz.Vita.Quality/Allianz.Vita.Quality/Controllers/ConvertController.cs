@@ -1,6 +1,8 @@
 ﻿using Allianz.Vita.Quality.Attributes;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.DataModel;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using System;
@@ -20,7 +22,7 @@ namespace Allianz.Vita.Quality.Controllers
 
             try
             {
-                IConfigurationService conf = ServiceFactory.Get<IConfigurationService>();
+                IMailConfiguration conf = ServiceFactory.Get<IConfigurationService>().Mail;
 
                 if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
 
