@@ -55,6 +55,7 @@
     <Compile Include="DataModel\IFolderItem.cs" />
     <Compile Include="Service\IIssueConfiguration.cs" />
     <Compile Include="Service\IIssueService.cs" />
+    <Compile Include="Service\IItem.cs" />
     <Compile Include="Service\ILinkService.cs" />
     <Compile Include="DataModel\IMailItem.cs" />
     <Compile Include="DataModel\IMailItemKey.cs" />

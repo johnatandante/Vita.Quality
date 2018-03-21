@@ -29,7 +29,7 @@ namespace Allianz.Vita.Storage.Initializer
                     MaxPageItems =15,
                     NomeGruppoLifeFieldName = "",
                     ReopenedFieldName = "",
-                    ServiceName = "Issue",
+                    ServiceName = "Issue 1",
                     Url = "",
                     WorklogQuery = "created >= startOfYear()",
                     StartDate=DateTime.Now,
@@ -54,7 +54,7 @@ namespace Allianz.Vita.Storage.Initializer
                     Company = string.Empty,
                     UserAreaPath = string.Empty,
                     WorkingFeature = string.Empty,
-                    ServiceName = "Defect",
+                    ServiceName = "Defect 1",
                     Url = "",
                     StartDate = DateTime.Now,
                     Configuration = conf
@@ -68,15 +68,25 @@ namespace Allianz.Vita.Storage.Initializer
                     DefaultSender = "",
                     CompletedFolderPath = "",
                     IssueFolderPath = "",
-                    ServiceName = "Mail",
+                    ServiceName = "Mail 1",
                     Url = "https://outlook.live.com/EWS/Exchange.asmx",
                     StartDate = DateTime.Now,
                     Configuration = conf
                 },
             };
             mailConfiguration.ForEach(s => context.MailConfiguration.Add(s));
+            context.SaveChanges();
 
-            context.AppConfiguration.Add(conf);
+            conf.DefectId = defectConfiguration.First().Id;
+            conf.Defect = defectConfiguration.First();
+
+            conf.MailId = mailConfiguration.First().Id;
+            conf.Mail = mailConfiguration.First();
+
+            conf.IssueId = issueConfiguration.First().Id;
+            conf.Issue = issueConfiguration.First();
+
+            //context.AppConfiguration.Add(conf);
 
             context.SaveChanges();
         }

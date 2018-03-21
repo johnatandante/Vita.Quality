@@ -1,4 +1,6 @@
-﻿using Allianz.Vita.Quality.Business.Interfaces.Service;
+﻿using Allianz.Vita.Quality.Business.Factory;
+using Allianz.Vita.Quality.Business.Interfaces;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
 using System.Web.Configuration;
 
@@ -6,7 +8,7 @@ namespace Allianz.Vita.Quality.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        
+
         public IMailConfiguration Mail { get; set; }
 
         public IIssueConfiguration Issue { get; set; }
@@ -18,6 +20,7 @@ namespace Allianz.Vita.Quality.Services
             Mail = new WebConfigMailConfigurationItem();
             Defect = new WebConfigDefectConfigurationItem();
             Issue = new WebConfigIssueConfigurationItem();
+
         }
 
         class WebConfigDefectConfigurationItem : IDefectConfiguration

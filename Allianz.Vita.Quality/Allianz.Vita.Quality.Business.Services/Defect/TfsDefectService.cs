@@ -316,7 +316,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
-                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
                     defect.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + ".eml"));
@@ -328,7 +328,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (!defect.IsValid())
                     throw new ApplicationException("Errore in inserimento Defect " + defect.Title);
 
-                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 defect.Save();
                 
@@ -670,7 +670,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
-                    IAttachment att = Mail.GetAsAttachment(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                    IAttachment att = Mail.GetAsAttachment(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
                     workItem.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
                         fileName: model.Title.Replace('/', '-') + " - Comunicazione("+ (workItem.Attachments.Count + 1) + ").eml"));
@@ -682,7 +682,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (!workItem.IsValid())
                     throw new ApplicationException("Errore in aggiornamento Defect " + workItem.Title);
 
-                Mail.Complete(Factory.GetNewMailItem(model.IMailItemUniqueId));
+                Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 workItem.Save();
                 

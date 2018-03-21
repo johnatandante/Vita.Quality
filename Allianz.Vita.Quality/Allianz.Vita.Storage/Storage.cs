@@ -25,9 +25,11 @@ namespace Allianz.Vita.Storage
         {
             get
             {
-                return Configuration.AppConfiguration
+                var current = Configuration.AppConfiguration
                     .OrderByDescending(t => t.StartDate)
                     .FirstOrDefault();
+
+                return current;
             }
         }
 
@@ -36,18 +38,18 @@ namespace Allianz.Vita.Storage
             ConfigurationServiceData result = new ConfigurationServiceData();
             if (Current != null)
             {
-                if(Current.Mail != null)
+                if(Current.MailId.HasValue || Current.Mail != null)
                     result.Mail = new ConfigurationServiceData.MailConfigurationData(Current.Mail);
-                if (Current.Issue != null)
+                if (Current.IssueId.HasValue || Current.Issue != null)
                     result.Issue = new ConfigurationServiceData.IssueConfigurationData(Current.Issue);
-                if (Current.Defect != null)
+                if (Current.DefectId.HasValue || Current.Defect != null)
                     result.Defect = new ConfigurationServiceData.DefectConfigurationData(Current.Defect);
             }
 
             return result;
 
         }
-
+        
         public Storage(NetworkCredential credential=null, Uri uri=null)
         {
             Configuration = new ConfigurationDbContext();
@@ -63,50 +65,46 @@ namespace Allianz.Vita.Storage
         public bool SaveDefect(IDefectConfiguration item)
         {
             DefectConfigurationDbModel dbItem = new DefectConfigurationDbModel(item);
-
-            Configuration.DefectConfiguration.Add(dbItem);
-            int result = Configuration.SaveChanges();
-
+            
             if (Current.Defect == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Defect.StartDate))
             {
+                dbItem.ConfigurationId = Current.ID;
                 dbItem.Configuration = Current;
-                result += Configuration.SaveChanges();
             }
 
-            return result > 0;
+            Configuration.DefectConfiguration.Add(dbItem);
+
+            return Configuration.SaveChanges() > 0;
         }
 
         public bool SaveMail(IMailConfiguration item)
         {
             MailConfigurationDbModel dbItem = new MailConfigurationDbModel(item);
-            Current.Mail = new MailConfigurationDbModel(item);
-
-            Configuration.MailConfiguration.Add(dbItem);
-            int result = Configuration.SaveChanges();
-
+            
             if (Current.Mail == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Mail.StartDate))
             {
+                dbItem.ConfigurationId = Current.ID;
                 dbItem.Configuration = Current;
-                result += Configuration.SaveChanges();
             }
 
-            return result > 0;
+            Configuration.MailConfiguration.Add(dbItem);
+            
+            return Configuration.SaveChanges() > 0;
         }
-
+        
         public bool SaveIssue(IIssueConfiguration item)
         {
             IssueConfigurationDbModel dbItem = new IssueConfigurationDbModel(item);
-
-            Configuration.IssueConfiguration.Add(dbItem);
-            int result = Configuration.SaveChanges();
-            
+                        
             if (Current.Issue == null || (dbItem.StartDate <= DateTime.Now && dbItem.StartDate > Current.Issue.StartDate))
             {
+                dbItem.ConfigurationId = Current.ID;
                 dbItem.Configuration = Current;
-                result += Configuration.SaveChanges();
             }
 
-            return result > 0;
+            Configuration.IssueConfiguration.Add(dbItem);
+
+            return Configuration.SaveChanges() > 0;
         }
         
         ConfigurationDbModel[] GetConfigurations()
@@ -114,41 +112,50 @@ namespace Allianz.Vita.Storage
             return Configuration.AppConfiguration.ToArray();
         }
 
-        public void StoreConfiguration(IMailConfiguration mailConf = null, IDefectConfiguration defectConf = null, IIssueConfiguration issueConf = null)
+        public void StoreConfigurations(IMailConfiguration mailConf = null, IDefectConfiguration defectConf = null, IIssueConfiguration issueConf = null)
         {
- 
-            if(issueConf != null)
+
+            ConfigurationDbModel newConf = new ConfigurationDbModel();
+
+            UpdateConfiguration(newConf, mailConf, defectConf, issueConf);
+            Configuration.AppConfiguration.Add(newConf);
+
+            Configuration.SaveChanges();
+
+        }
+
+        private bool UpdateConfiguration(ConfigurationDbModel newConf, IMailConfiguration mailConf = null, IDefectConfiguration defectConf = null, IIssueConfiguration issueConf = null)
+        {
+            bool hasChanged = false;
+
+            if (issueConf != null)
             {
-                IssueConfigurationDbModel issueNewConf = new IssueConfigurationDbModel() {
-                    StartDate = DateTime.Now
-                };
+                IssueConfigurationDbModel issueNewConf = new IssueConfigurationDbModel(issueConf);
                 Configuration.IssueConfiguration.Add(issueNewConf);
-                Current.Issue = issueNewConf;
+                newConf.IssueId = issueNewConf.Id;
+                newConf.Issue = issueNewConf;
+                hasChanged = true;
             }
 
             if (defectConf != null)
             {
-                DefectConfigurationDbModel defectNewConf = new DefectConfigurationDbModel()
-                {
-                    StartDate = DateTime.Now
-                };
+                DefectConfigurationDbModel defectNewConf = new DefectConfigurationDbModel(defectConf);
                 Configuration.DefectConfiguration.Add(defectNewConf);
-                Current.Defect = defectNewConf;
+                newConf.IssueId = defectNewConf.Id;
+                newConf.Defect = defectNewConf;
+                hasChanged = true;
             }
 
             if (issueConf != null)
             {
-                MailConfigurationDbModel mailNewConf = new MailConfigurationDbModel()
-                {
-                    StartDate = DateTime.Now
-                };
+                MailConfigurationDbModel mailNewConf = new MailConfigurationDbModel(mailConf);
                 Configuration.MailConfiguration.Add(mailNewConf);
-                Current.Mail = mailNewConf;
+                newConf.IssueId = mailNewConf.Id;
+                newConf.Mail = mailNewConf;
+                hasChanged = true;
             }
 
-            Configuration.AppConfiguration.Add(Current);
-            Configuration.SaveChanges();
-
+            return hasChanged;
         }
 
         public void Dispose()

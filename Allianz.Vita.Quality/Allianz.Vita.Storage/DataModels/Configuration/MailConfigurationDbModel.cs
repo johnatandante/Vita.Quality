@@ -34,6 +34,8 @@ namespace Allianz.Vita.Storage.DataModels.Configuration
 
         public DateTime StartDate { get; set; }
 
+        public int? ConfigurationId { get; set; }
+
         public virtual ConfigurationDbModel Configuration { get; set; }
 
     }

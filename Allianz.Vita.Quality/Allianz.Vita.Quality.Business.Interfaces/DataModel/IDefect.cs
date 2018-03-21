@@ -1,8 +1,9 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces.Enums;
+using Allianz.Vita.Quality.Business.Interfaces.Service;
 
 namespace Allianz.Vita.Quality.Business.Interfaces.DataModel
 {
-    public interface IDefect : IMailItemKey
+    public interface IDefect : IMailItemKey, IItem
     {
 
         int? Id { get; }

@@ -54,6 +54,7 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
                 using (var service = Service)
                 {
                     result = service.SaveIssue(item);
+                    if (result) Conf.Issue = item;
                 }
             }catch(Exception e)
             {
@@ -72,6 +73,7 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
                 using (var service = Service)
                 {
                     result = service.SaveMail(item);
+                    if(result) Conf.Mail = item;
                 }
             }
             catch (Exception e)
@@ -90,6 +92,7 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
                 using (var service = Service)
                 {
                     result = service.SaveDefect(item);
+                    if (result) Conf.Defect = item;
                 }
             }
             catch (Exception e)

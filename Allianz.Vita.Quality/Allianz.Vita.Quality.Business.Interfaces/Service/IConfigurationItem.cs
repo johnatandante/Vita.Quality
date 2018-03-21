@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Allianz.Vita.Quality.Business.Interfaces.Service
+﻿namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
-    public interface IConfigurationItem
+    public interface IConfigurationItem : IItem
     {
         string ServiceName { get; }
         string Url { get; }

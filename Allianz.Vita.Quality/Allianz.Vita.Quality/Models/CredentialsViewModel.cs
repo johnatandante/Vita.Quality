@@ -140,8 +140,19 @@ namespace Allianz.Vita.Quality.Models
 
         public DefectCredentialsViewModel(IDefectConfiguration model) : base(model.ServiceName, model.Url)
         {
-            Url = model.Url;
-            ServiceName = model.ServiceName;
+            Iteration = model.Iteration;
+            AreaPath = model.AreaPath;
+            SurveySystem = model.SurveySystem;
+            WebAppId = model.WebAppId;
+            Environment = model.Environment;
+            Severity = model.Severity;
+            DefectState = model.DefectState;
+            DefectType = model.DefectType;
+            Company = model.Company;
+            ProjectPath = model.ProjectPath;
+            UserAreaPath = model.UserAreaPath;
+            WorkingFeature = model.WorkingFeature;
+            WorkItemType = model.WorkItemType;
         }
 
         [DisplayName("Iteration")]
@@ -182,7 +193,7 @@ namespace Allianz.Vita.Quality.Models
         [AllowHtml]
         public string UserAreaPath {get; set; }
 
-        [DisplayName("Mail Feature")]
+        [DisplayName("Main Feature Id")]
         public string WorkingFeature {get; set; }
 
         [DisplayName("Defect Work Item Type")]

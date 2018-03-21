@@ -106,7 +106,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult Create(string id, string mailId)
         {
 
-            IMailItem model = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(HttpUtility.UrlDecode(mailId)));
+            IMailItem model = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(HttpUtility.UrlDecode(mailId)));
             IDefect defect = Service.LookFor(model);
 
             if (defect == null)
@@ -129,7 +129,7 @@ namespace Allianz.Vita.Quality.Controllers
         {
             IDefect defect = Service.Get(id);
             
-            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(mailId));
+            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(mailId));
             Mail.Flag(itemRead);
             ServiceFactory.Get<IItemFactory>().MergeTo(itemRead, defect);
             
@@ -163,7 +163,7 @@ namespace Allianz.Vita.Quality.Controllers
                 return View(model);
             }
 
-            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNewMailItem(model.IMailItemUniqueId));
+            IMailItem itemRead = Mail.Get(ServiceFactory.Get<IItemFactory>().GetNew<IMailItem>(model.IMailItemUniqueId));
             Mail.Complete(itemRead);
 
             return RedirectToAction("Index", "Convert");

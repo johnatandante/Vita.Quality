@@ -5,13 +5,12 @@ using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Web;
 
 namespace Allianz.Vita.Quality.Business.Factory
 {
-    public class ItemFactory : IItemFactory
+    public partial class ItemFactory : IItemFactory
     {
 
         protected IConfigurationService Config;
@@ -21,14 +20,16 @@ namespace Allianz.Vita.Quality.Business.Factory
         public ItemFactory(IConfigurationService config)
         {
             Config = config ?? ServiceFactory.Get<IConfigurationService>();
+
+            Register<IMailItem, MailItem>();
+            Register<IFolderItem, FolderItem>();
+
+            Register<IDefect, DefectItem>();
+            Register<IIssueItem, IssueItem>();
+            
         }
 
         #region IItemFactory Members
-
-        public IFolderItem GetNewFolderItem()
-        {
-            return new FolderItem();
-        }
 
         public IList<IMailItem> GetNewMailItemList()
         {
@@ -37,25 +38,22 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         public IMailItem ToMailItem(string uniqueId, string from, string subject, string content, object[] attachments, string[] categories, string importance)
         {
-            return new MailItem()
-            {
-                UniqueId = uniqueId,
-                From = from,
-                Subject = subject,
-                Content = content,
-                Attachments = attachments,
-                Categories = categories,
-                Importance = importance
-            };
+            MailItem instance = GetNew<IMailItem>() as MailItem;
+
+            instance.UniqueId = uniqueId;
+            instance.From = from;
+            instance.Subject = subject;
+            instance.Content = content;
+            instance.Attachments = attachments;
+            instance.Categories = categories;
+            instance.Importance = importance;
+
+            return instance;
         }
 
         public IFolderItem ToFolderItem(string displayName)
         {
-            return new FolderItem()
-            {
-                DisplayName = displayName,
-                Messages = new List<IMailItem>()
-            };
+            return GetNew<IFolderItem>(displayName);
         }
 
         public IDefect GetNewDefect(IMailItem itemRead)
@@ -93,18 +91,10 @@ namespace Allianz.Vita.Quality.Business.Factory
                 Iteration = HttpUtility.UrlDecode(config.Iteration),
                 State = config.DefectState,
                 Severity = (SeverityLevel)Enum.Parse(typeof(SeverityLevel), config.Severity, true),
-
-                Attachment = new IAttachment[] { },
-                Comments = new string[] { }
-
+                
             };
 
             return defect;
-        }
-
-        public IMailItem GetNewMailItem(string uniqueId = "")
-        {
-            return new MailItem() { UniqueId = uniqueId };
         }
 
         public IAttachment ToAttachment(string subject, byte[] buffer)
@@ -130,11 +120,6 @@ namespace Allianz.Vita.Quality.Business.Factory
             return new UserCredential(identity.UserName, UserCredential.AuthenticationMode.Classic.ToString());
         }
 
-        public IIssueItem GetNewIssue()
-        {
-            return new IssueItem() { };
-        }
-
         public IIssueItem GetNewIssueItem(string id, string type, string assignee, string priority, string project, string summary, string status, DateTime created, DateTime? resolvedOn, DateTime? reopenedOn, string nomeGruppoLife, bool? digitalAgency)
         {
 
@@ -156,6 +141,10 @@ namespace Allianz.Vita.Quality.Business.Factory
 
         }
 
+        public TInstance GetNew<TInstance>(params object[] parameters) where TInstance : IItem
+        {
+            return Get<TInstance>(parameters);
+        }
 
         #endregion
     }
