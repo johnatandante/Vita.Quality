@@ -1,8 +1,5 @@
 ﻿using Allianz.Vita.Quality.Business.Interfaces.DataModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Interfaces.Service
@@ -16,6 +13,10 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
         bool Store(IIssueConfiguration item);
         bool Store(IMailConfiguration item);
         bool Store(IDefectConfiguration item);
-
+        byte[] GetDownloadableTextData(object data);
+        object GetDataToExport();
+        void ImportSettings(string fileName, string basePath);
+        Task ImportSettings(Stream inputStream);
+        void EnsurePath(string basePath);
     }
 }

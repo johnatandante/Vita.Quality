@@ -6,6 +6,8 @@ using Allianz.Vita.Quality.Models;
 using Allianz.Vita.Quality.Services;
 using System;
 using System.Net;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -16,6 +18,14 @@ namespace Allianz.Vita.Quality.Controllers
     {
 
         CookieAuthenticationService CookieService = new CookieAuthenticationService();
+
+        IConfigurationService Conf
+        {
+            get
+            {
+                return ServiceFactory.Get<IConfigurationService>();
+            }
+        }
 
         IIdentityService Service
         {
@@ -290,6 +300,48 @@ namespace Allianz.Vita.Quality.Controllers
             }
 
             return result;
+        }
+
+        public JsonResult GetConfigs()
+        {
+            JsonResult result = new JsonResult();            
+            result.Data = Store.GetDataToExport();
+            
+            return result;
+
+        }
+
+        static string configFileDownloadFileName = "settings.json";
+
+        public async Task<ActionResult> ImportSettings(HttpPostedFileBase file)
+        {
+            ActionResult result = View("Credentials");
+
+            if (file == null)
+            {
+                return result.Warning("Error on importing configs");
+            }
+                        
+            string basePath = Server.MapPath("~/Uploads/");
+            //string filePath = System.IO.Path.Combine(basePath, file.FileName);
+            //file.SaveAs(filePath);
+
+            // Store.ImportSettings(filePath, string.Empty);
+            await Store.ImportSettings(file.InputStream);
+            //if (!Directory.Exists(path))
+            //{
+            //    Directory.CreateDirectory(path);
+            //}
+
+
+            return result
+                .Success("Configs imported successfully");
+        }
+
+        public FileContentResult Export()
+        {
+            JsonResult jsonresult = GetConfigs();
+            return File(Store.GetDownloadableTextData(jsonresult.Data), System.Net.Mime.MediaTypeNames.Text.Plain, configFileDownloadFileName);
         }
 
 

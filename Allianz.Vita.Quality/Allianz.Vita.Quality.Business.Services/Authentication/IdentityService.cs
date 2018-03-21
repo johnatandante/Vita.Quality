@@ -45,6 +45,13 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
             
         }
 
+        public NetworkCredential GetCredentialsFor<T>() where T : IService
+        {
+            return IsAuthenticatedOn(typeof(T)) ?
+                Current.GetCredentialFor(typeof(T)) : new NetworkCredential();
+        }
+
+
         public bool IsAuthenticatedOn(Type service)
         {
             return Current.GetCredentialFor(service) != null;
@@ -83,5 +90,6 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
         {
             return !(!IsValidUser(userName) || string.IsNullOrEmpty(password));
         }
+
     }
 }

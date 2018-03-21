@@ -25,5 +25,6 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
 
         bool IsValidAccount(string userName, string password);
 
+        NetworkCredential GetCredentialsFor<T>() where T : IService;
     }
 }

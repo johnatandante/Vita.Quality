@@ -1,8 +1,12 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Allianz.Vita.Quality.Business.Services.Storage
 {
@@ -11,13 +15,14 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
         IConfigurationService Conf = null;
         IIdentityService Auth = null;
 
-        Vita.Storage.Storage Service {
+        Vita.Storage.Storage Service
+        {
             get
             {
                 return new Vita.Storage.Storage();
             }
         }
-        
+
         public StorageService() : this(conf: null, auth: null) { }
 
         public StorageService(IConfigurationService conf, IIdentityService auth)
@@ -25,14 +30,14 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
             Conf = conf ?? ServiceFactory.Get<IConfigurationService>();
 
             Auth = auth ?? ServiceFactory.Get<IIdentityService>();
-            
+
             InitConf();
         }
 
         private void InitConf()
         {
             IConfigurationService dbConf = GetConfiguration();
-            if(dbConf.Mail != null) Conf.Mail = dbConf.Mail;
+            if (dbConf.Mail != null) Conf.Mail = dbConf.Mail;
             if (dbConf.Defect != null) Conf.Defect = dbConf.Defect;
             if (dbConf.Issue != null) Conf.Issue = dbConf.Issue;
         }
@@ -56,15 +61,16 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
                     result = service.SaveIssue(item);
                     if (result) Conf.Issue = item;
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.Write("Error on save item {0}: {1}", item.ServiceName, e.Message);
             }
-            
+
             return result;
 
         }
-        
+
         public bool Store(IMailConfiguration item)
         {
             bool result = false;
@@ -73,7 +79,7 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
                 using (var service = Service)
                 {
                     result = service.SaveMail(item);
-                    if(result) Conf.Mail = item;
+                    if (result) Conf.Mail = item;
                 }
             }
             catch (Exception e)
@@ -110,6 +116,57 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
 
             return fullpath;
         }
+
+        public byte[] GetDownloadableTextData(object data)
+        {
+            string text = JsonConvert.SerializeObject(data);
+            return Encoding.UTF8.GetBytes(text);
+
+        }
+
+        public object GetDataToExport()
+        {
+
+            NetworkCredential mailCred = Auth.GetCredentialsFor<IMailService>();
+            NetworkCredential defectCred = Auth.GetCredentialsFor<IDefectService>();
+            NetworkCredential issueCred = Auth.GetCredentialsFor<IIssueService>();
+
+            return new
+            {
+                mail = Conf.Mail,
+                defect = Conf.Defect,
+                issue = Conf.Issue,
+                credentials = new
+                {
+                    mail = new { username = mailCred.UserName, domain = mailCred.Domain, password = mailCred.Password },
+                    defect = new { username = defectCred.UserName, domain = defectCred.Domain, password = defectCred.Password },
+                    issue = new { username = issueCred.UserName, password = issueCred.Password },
+                },
+            };
+        }
+
+        public void ImportSettings(string fileName, string basePath)
+        {
+            string filePath = Path.Combine(basePath, fileName);
+            string data = File.ReadAllText(filePath);
+            var obj = JsonConvert.DeserializeObject(data);
+            throw new NotImplementedException("Todo");
+        }
+
+        public async Task ImportSettings(Stream inputStream)
+        {
+            using (StreamReader reader = new StreamReader(inputStream))
+            {
+                string data = await reader.ReadToEndAsync();
+                var obj = JsonConvert.DeserializeObject(data);
+                throw new NotImplementedException("Todo");
+            }
                 
+        }
+
+        public void EnsurePath(string basePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
