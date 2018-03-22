@@ -131,7 +131,7 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult UpdateIssueSettings(IssueCredentialsViewModel model)
         {
 
-            ActionResult result = View("Issue", model);
+            ActionResult result = RedirectToAction("Issue", model);
 
             return HandleResult("Issue", model, () =>
                {
@@ -190,7 +190,7 @@ namespace Allianz.Vita.Quality.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateDefectSettings(DefectCredentialsViewModel model)
         {
-            ActionResult result = View("Defect", model);
+            ActionResult result = RedirectToAction("Defect", model);
 
             return HandleResult("Defect", model, () =>
             {
@@ -227,7 +227,7 @@ namespace Allianz.Vita.Quality.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateMailSettings(MailCredentialsViewModel model)
         {
-            ActionResult result = View("Mail", model);
+            ActionResult result = RedirectToAction("Mail", model);
 
             return HandleResult("Mail", model, () =>
             {
@@ -339,7 +339,7 @@ namespace Allianz.Vita.Quality.Controllers
 
         public async Task<ActionResult> ImportSettings(HttpPostedFileBase file)
         {
-            ActionResult result = View("Credentials");
+            ActionResult result = RedirectToAction("Index");
             try
             {
                 if (file == null)

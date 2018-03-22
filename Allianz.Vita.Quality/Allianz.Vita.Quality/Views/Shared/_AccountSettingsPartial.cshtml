@@ -1,11 +1,17 @@
-﻿<section id="menuSettings">
+﻿@{
+    var pageName = ViewContext.RouteData.Values["action"].ToString();
+    var activeClass = new { @class = "list-group-item active" };
+    var stdClass = new { @class = "list-group-item " };
+}
 
-    <ul class="list-group">
-        <li class="list-group-item">@Html.ActionLink("Credentials", "Credentials", "Account")</li>
-        <li class="list-group-item">@Html.ActionLink("Mail", "Mail", "Account")</li>
-        <li class="list-group-item">@Html.ActionLink("Defect", "Defect", "Account")</li>
-        <li class="list-group-item">@Html.ActionLink("Issue", "Issue", "Account")</li>
-    </ul>
+<section id="menuSettings">
+
+    <div class="list-group">
+        @Html.ActionLink("Credentials", "Credentials", "Account", pageName == "Credentials" ? activeClass : stdClass)
+        @Html.ActionLink("Mail", "Mail", "Account", pageName == "Mail" ? activeClass : stdClass)
+        @Html.ActionLink("Defect", "Defect", "Account", pageName == "Defect" ? activeClass : stdClass)
+        @Html.ActionLink("Issue", "Issue", "Account", pageName == "Issue" ? activeClass : stdClass)
+    </div>
     <h4>Export</h4>
     <div>
         @Html.ActionLink("Export Settings", "Export", "Account", null, new { target = "_blank" })
@@ -30,7 +36,7 @@
             </div>
         </div>
     }
-    
+
     @Scripts.Render("~/bundles/menuSettings")
 
 </section>

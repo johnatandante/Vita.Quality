@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.flash-message-container {
+    position: absolute;
+    width: 450px;
+    z-index: 999;
+    right: 0;
+}
