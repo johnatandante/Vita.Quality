@@ -87,7 +87,7 @@ namespace Allianz.Vita.Quality.Controllers
                 return RedirectToAction("SignIn")
                     .Warning("Please Sign In");
 
-            return View(model);
+            return RedirectToAction("Credentials", model);
 
         }
 
