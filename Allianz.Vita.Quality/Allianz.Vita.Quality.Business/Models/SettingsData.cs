@@ -11,19 +11,19 @@ namespace Allianz.Vita.Quality.Business.Models
 
         public void SetData(IMailConfiguration conf, NetworkCredential credential)
         {
-            mail = new MailConfiguration(conf, credential);
+            mail = new MailConfiguration(conf);
             mail.credential = new Credential(credential);
         }
 
         public void SetData(IDefectConfiguration conf, NetworkCredential credential)
         {
-            defect = new DefectConfiguration(conf, credential);
+            defect = new DefectConfiguration(conf);
             defect.credential = new Credential(credential);
         }
         public void SetData(IIssueConfiguration conf, NetworkCredential credential)
         {
-            issue = new IssueConfiguration(conf, credential);
-            defect.credential = new Credential(credential); 
+            issue = new IssueConfiguration(conf);
+            issue.credential = new Credential(credential); 
         }
 
         public class Credential
@@ -44,7 +44,7 @@ namespace Allianz.Vita.Quality.Business.Models
         public class MailConfiguration : BaseConfiguration, IMailConfiguration
         {
             public MailConfiguration() { }
-            public MailConfiguration(IMailConfiguration conf, NetworkCredential credential) 
+            public MailConfiguration(IMailConfiguration conf)
                 : base(conf.ServiceName, conf.Url) {
                 IssueFolderPath = conf.IssueFolderPath;
                 CompletedFolderPath = conf.CompletedFolderPath;
@@ -62,7 +62,7 @@ namespace Allianz.Vita.Quality.Business.Models
         public class DefectConfiguration : BaseConfiguration, IDefectConfiguration
         {
             public DefectConfiguration() { }
-            public DefectConfiguration(IDefectConfiguration conf, NetworkCredential credential) 
+            public DefectConfiguration(IDefectConfiguration conf)
                 : base(conf.ServiceName, conf.Url) {
 
                 Iteration = conf.Iteration;
@@ -111,7 +111,7 @@ namespace Allianz.Vita.Quality.Business.Models
         public class IssueConfiguration : BaseConfiguration, IIssueConfiguration
         {
             public IssueConfiguration() { }
-            public IssueConfiguration(IIssueConfiguration conf, NetworkCredential credential) 
+            public IssueConfiguration(IIssueConfiguration conf)
                 : base(conf.ServiceName, conf.Url) {
 
                 MaxPageItems = conf.MaxPageItems;
