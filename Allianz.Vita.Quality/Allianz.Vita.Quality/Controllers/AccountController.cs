@@ -103,10 +103,9 @@ namespace Allianz.Vita.Quality.Controllers
                 CredentialsViewModel cookieCredentials = CookieService.GetData(Request, User.Identity.Name);
                 model = cookieCredentials;
                 model.Initialized = true;
-            }
+            } 
 
-            return View(model)
-                .Success("Credential loaded");
+            return View(model);
 
         }
 
@@ -119,8 +118,8 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (model == null || model.ServiceName == null)
             {
-                IConfigurationService conf = Store.GetConfiguration();
-                model = new IssueCredentialsViewModel(conf.Issue);
+                // IConfigurationService conf = Store.GetConfiguration();
+                model = new IssueCredentialsViewModel(Conf.Issue);
             }
 
             return View(model);
@@ -150,8 +149,7 @@ namespace Allianz.Vita.Quality.Controllers
 
         private ActionResult HandleResult(string view, object model, Func<ActionResult> action)
         {
-            ActionResult result = View(view, model)
-                .Warning("Data model is not valid...");
+            ActionResult result = View(view, model);
 
             if (ModelState.IsValid)
             {
@@ -164,6 +162,10 @@ namespace Allianz.Vita.Quality.Controllers
                     result = result
                             .Error("Error on handling data: " + e.Message);
                 }
+            }
+            else
+            {
+                result = result.Warning("Data model is not valid...");
             }
 
             return result;
@@ -179,8 +181,8 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (model == null || model.ServiceName == null)
             {
-                IConfigurationService conf = Store.GetConfiguration();
-                model = new DefectCredentialsViewModel(conf.Defect);
+                //IConfigurationService conf = Store.GetConfiguration();
+                model = new DefectCredentialsViewModel(Conf.Defect);
             }
 
             return View(model);
@@ -216,8 +218,8 @@ namespace Allianz.Vita.Quality.Controllers
 
             if (model == null || model.ServiceName == null)
             {
-                IConfigurationService conf = Store.GetConfiguration();
-                model = new MailCredentialsViewModel(conf.Mail);
+                // IConfigurationService conf = Store.GetConfiguration();
+                model = new MailCredentialsViewModel(Conf.Mail);
             }
 
             return View(model);
@@ -250,72 +252,66 @@ namespace Allianz.Vita.Quality.Controllers
         public ActionResult UpdateCredentials(CredentialsViewModel model)
         {
             bool hasChanged = false;
-            ActionResult result = RedirectToAction("Credentials", model);
+            ActionResult result = View("Credentials", model);
 
-            if (ModelState.IsValid)
+            if (model.UpdateTfsAccount)
             {
-                if (model.UpdateTfsAccount)
+                if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
                 {
-                    if (Service.IsValidAccount(model.TFSUserName, model.TFSPassword))
-                    {
-                        hasChanged = true;
-                        Service.Logoff(typeof(IDefectService));
-                        Service.AuthenticateOn(typeof(IDefectService),
-                            new NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
+                    hasChanged = true;
+                    Service.Logoff(typeof(IDefectService));
+                    Service.AuthenticateOn(typeof(IDefectService),
+                        new NetworkCredential(model.TFSUserName, model.TFSPassword, model.TFSDomainName));
 
-                        result = result.Success("TFS Account Data Saved");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                    }
+                    result = result.Success("TFS Account Data Saved");
                 }
-
-                if (model.UpdateExchangeAccount)
+                else
                 {
-                    if (Service.IsValidAccount(model.ExchangeUserName, model.ExchangePassword))
-                    {
-                        hasChanged = true;
-                        Service.Logoff(typeof(IMailService));
-                        Service.AuthenticateOn(typeof(IMailService),
-                            new NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
-
-                        result = result.Success("Exchange Account Data Saved");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                    }
-                }
-
-                if (model.UpdateJiraAccount)
-                {
-                    if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
-                    {
-                        hasChanged = true;
-                        Service.Logoff(typeof(IIssueService));
-                        Service.AuthenticateOn(typeof(IIssueService),
-                            new NetworkCredential(model.JiraUserName, model.JiraPassword));
-
-                        result = result.Success("Exchange Account Data Saved");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                    }
-                }
-
-                if (hasChanged)
-                {
-                    // save to cookie
-                    CookieService.SetData(Request, Response, User.Identity.Name, model);
+                    result.Error("The user name or password provided is incorrect.");
                 }
             }
-            else
+
+            if (model.UpdateExchangeAccount)
             {
-                result = RedirectToAction("SigIn", model);
+                if (Service.IsValidAccount(model.ExchangeUserName, model.ExchangePassword))
+                {
+                    hasChanged = true;
+                    Service.Logoff(typeof(IMailService));
+                    Service.AuthenticateOn(typeof(IMailService),
+                        new NetworkCredential(model.ExchangeUserName, model.ExchangePassword, model.ExchangeDomainName));
+
+                    result = result.Success("Exchange Account Data Saved");
+                }
+                else
+                {
+                    result.Error("The user name or password provided is incorrect.");
+                }
             }
 
+            if (model.UpdateJiraAccount)
+            {
+                if (Service.IsValidAccount(model.JiraUserName, model.JiraPassword))
+                {
+                    hasChanged = true;
+                    Service.Logoff(typeof(IIssueService));
+                    Service.AuthenticateOn(typeof(IIssueService),
+                        new NetworkCredential(model.JiraUserName, model.JiraPassword));
+
+                    result = result.Success("Exchange Account Data Saved");
+                }
+                else
+                {
+                    result.Error("The user name or password provided is incorrect.");
+                }
+            }
+
+            if (hasChanged)
+            {
+                // save to cookie
+                CookieService.SetData(Request, Response, User.Identity.Name, model);
+                result = RedirectToAction("Credentials", model);
+            }
+            
             return result;
         }
 
@@ -348,6 +344,10 @@ namespace Allianz.Vita.Quality.Controllers
                 }
 
                 await Store.ImportSettings(file.InputStream);
+
+                Store.Store(Conf.Issue);
+                Store.Store(Conf.Defect);
+                Store.Store(Conf.Mail);
 
                 return result
                     .Success("Configs imported successfully");
