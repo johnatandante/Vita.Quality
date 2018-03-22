@@ -16,7 +16,11 @@ namespace Allianz.Vita.Quality
                         "~/Scripts/jQuery.flashMessage.js"
                         ));
 
-			bundles.Add(new ScriptBundle("~/bundles/react").Include(
+            bundles.Add(new ScriptBundle("~/bundles/menuSettings").Include(
+                        "~/Scripts/jquery.menuSettings.js"
+                        ));
+
+            bundles.Add(new ScriptBundle("~/bundles/react").Include(
 				// Add your JSX files here
 				"~/Scripts/HelloWorld.jsx" //,
 							//"~/Scripts/AnythingElse.jsx",

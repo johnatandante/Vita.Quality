@@ -1,4 +1,5 @@
 ﻿<section id="menuSettings">
+
     <ul class="list-group">
         <li class="list-group-item">@Html.ActionLink("Credentials", "Credentials", "Account")</li>
         <li class="list-group-item">@Html.ActionLink("Mail", "Mail", "Account")</li>
@@ -10,11 +11,28 @@
         @Html.ActionLink("Export Settings", "Export", "Account", null, new { target = "_blank" })
     </div>
     <h4>Import</h4>
-    <div>
-        @using (Html.BeginForm("ImportSettings", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <input type="file" name="file" />
-            <input type="submit" value="Import" />
-        }
-    </div>
+    @using (Html.BeginForm("ImportSettings", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse&hellip; <input type="file" style="display: none;" name="file" />
+                        </span>
+                    </label>
+                    <input type="text" class="form-control" name="file_name_txt" readonly />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="submit" value="Import" class="btn btn-default" />
+            </div>
+        </div>
+    }
+    
+    @Scripts.Render("~/bundles/menuSettings")
+
 </section>
+
+
