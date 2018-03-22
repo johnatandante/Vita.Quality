@@ -28,6 +28,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
+        public object GetErrorDataToExport(Exception e)
+        {
+            throw new NotImplementedException();
+        }
+
         public void ImportSettings(string fileName, string basePath)
         {
             throw new NotImplementedException();

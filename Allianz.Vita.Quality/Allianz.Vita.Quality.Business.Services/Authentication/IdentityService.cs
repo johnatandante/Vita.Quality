@@ -38,6 +38,12 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
 
         }
 
+        public IUserCredentials AuthenticateOn<T>(NetworkCredential networkCredential)
+            where T : IService
+        {
+            return AuthenticateOn(typeof(T), networkCredential);
+        }
+
         public NetworkCredential GetCredentialsFor(IService service)
         {
             return IsAuthenticatedOn(service.GetType()) ?

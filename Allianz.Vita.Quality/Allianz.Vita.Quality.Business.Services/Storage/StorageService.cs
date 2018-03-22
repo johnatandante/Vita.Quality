@@ -1,6 +1,7 @@
 ﻿using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Business.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -121,36 +122,56 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
         {
             string text = JsonConvert.SerializeObject(data);
             return Encoding.UTF8.GetBytes(text);
-
         }
 
         public object GetDataToExport()
         {
+            SettingsData data = new SettingsData();
 
-            NetworkCredential mailCred = Auth.GetCredentialsFor<IMailService>();
-            NetworkCredential defectCred = Auth.GetCredentialsFor<IDefectService>();
-            NetworkCredential issueCred = Auth.GetCredentialsFor<IIssueService>();
+            data.SetData(Conf.Mail, Auth.GetCredentialsFor<IMailService>());
+            data.SetData(Conf.Issue, Auth.GetCredentialsFor<IIssueService>());
+            data.SetData(Conf.Defect, Auth.GetCredentialsFor<IDefectService>());
 
-            return new
-            {
-                mail = Conf.Mail,
-                defect = Conf.Defect,
-                issue = Conf.Issue,
-                credentials = new
-                {
-                    mail = new { username = mailCred.UserName, domain = mailCred.Domain, password = mailCred.Password },
-                    defect = new { username = defectCred.UserName, domain = defectCred.Domain, password = defectCred.Password },
-                    issue = new { username = issueCred.UserName, password = issueCred.Password },
-                },
-            };
+            return data;
         }
 
         public void ImportSettings(string fileName, string basePath)
         {
             string filePath = Path.Combine(basePath, fileName);
             string data = File.ReadAllText(filePath);
-            var obj = JsonConvert.DeserializeObject(data);
-            throw new NotImplementedException("Todo");
+            LoadFromJsonSting(data);
+
+        }
+
+        private void LoadFromJsonSting(string data)
+        {
+            SettingsData obj = JsonConvert.DeserializeObject<SettingsData>(data);
+
+            if(obj.defect != null) LoadSettings(obj.defect);
+            if(obj.mail != null) LoadSettings(obj.mail);
+            if(obj.issue != null) LoadSettings(obj.issue);
+
+        }
+
+        private void LoadSettings(SettingsData.IssueConfiguration conf)
+        {
+            Conf.Issue = conf;
+            if(conf.credential != null && string.IsNullOrEmpty(conf.credential.username))
+                Auth.AuthenticateOn<IIssueService>(new NetworkCredential(conf.credential.username, conf.credential.password));
+        }
+
+        private void LoadSettings(SettingsData.MailConfiguration conf)
+        {
+            Conf.Mail = conf;
+            if (conf.credential != null && string.IsNullOrEmpty(conf.credential.username))
+                Auth.AuthenticateOn<IMailService>(new NetworkCredential(conf.credential.username, conf.credential.password, conf.credential.domain));
+        }
+
+        private void LoadSettings(SettingsData.DefectConfiguration conf)
+        {
+            Conf.Defect = conf;
+            if (conf.credential != null && string.IsNullOrEmpty(conf.credential.username))
+                Auth.AuthenticateOn<IDefectService>(new NetworkCredential(conf.credential.username,  conf.credential.password, conf.credential.domain));
         }
 
         public async Task ImportSettings(Stream inputStream)
@@ -158,15 +179,20 @@ namespace Allianz.Vita.Quality.Business.Services.Storage
             using (StreamReader reader = new StreamReader(inputStream))
             {
                 string data = await reader.ReadToEndAsync();
-                var obj = JsonConvert.DeserializeObject(data);
-                throw new NotImplementedException("Todo");
+                LoadFromJsonSting(data);
             }
-                
         }
 
         public void EnsurePath(string basePath)
         {
-            throw new NotImplementedException();
+            if (!Directory.Exists(basePath))
+                Directory.CreateDirectory(basePath);
+
+        }
+
+        public object GetErrorDataToExport(Exception e)
+        {
+            return "{ \"error\" : \"" + e.Message + "\" }";
         }
     }
 }

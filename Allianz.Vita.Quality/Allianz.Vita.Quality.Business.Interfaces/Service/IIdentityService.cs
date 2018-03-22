@@ -10,7 +10,9 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
         IUserCredentials LogOn(string credentials);
 
         IUserCredentials AuthenticateOn(Type service, NetworkCredential networkCredential);
-        
+
+        IUserCredentials AuthenticateOn<T>(NetworkCredential networkCredential) where T : IService;
+
         bool Logoff(Type service);
 
         bool Logoff();
