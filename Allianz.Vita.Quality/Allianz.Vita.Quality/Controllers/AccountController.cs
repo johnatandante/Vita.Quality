@@ -105,7 +105,8 @@ namespace Allianz.Vita.Quality.Controllers
                 model.Initialized = true;
             }
 
-            return View(model);
+            return View(model)
+                .Success("Credential loaded");
 
         }
 

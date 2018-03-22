@@ -6,6 +6,9 @@
     <title>@ViewBag.Title - Quality Management Tool</title>
     @Styles.Render("~/Content/css")
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -60,8 +63,6 @@
         @Scripts.Render("~/bundles/react")*@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
 
 </body>
