@@ -62,7 +62,7 @@ namespace Allianz.Vita.Quality.Controllers
             {
                 //if (User.Identity.IsAuthenticated)
                 if(Auth.IsAuthenticatedOn(Mail.GetType()))
-                    inbox.AddRange( Mail.OpenInbox(pageSize: 10, read: false)
+                    inbox.AddRange( Mail.OpenInbox(pageSize: 5, read: false)
                         .Select(mail => string.Join(" ", mail.Subject, "from", mail.From)));
                 
             }
@@ -75,7 +75,9 @@ namespace Allianz.Vita.Quality.Controllers
             {
                 if (Auth.IsAuthenticatedOn(Mail.GetType()))
                 {
-                    IFolderItem publicFolder = Mail.OpenFolder("Prisma Life.Quality Management.IssueVita", pageSize: 20, from: "SRM");
+                    IMailConfiguration conf = ServiceFactory.Get<IConfigurationService>().Mail;
+                    IFolderItem publicFolder = Mail.OpenFolder(conf.IssueFolderPath, pageSize: 10, from: conf.DefaultSender, subject: "Request");
+
                     model.PublicFolderDisplayName = publicFolder.DisplayName;
 
                     issues.AddRange( publicFolder.Messages.Select(item => item.Subject));

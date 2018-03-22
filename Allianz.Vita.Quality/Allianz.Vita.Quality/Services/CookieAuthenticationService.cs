@@ -81,14 +81,43 @@ namespace Allianz.Vita.Quality.Services
             if (!cookie.HasKeys || cookie.Values[key] == null)
                 cookie.Values.Add(key, null);
 
-            cookie.Values[key] = Json.Encode(model);
+            CredentialsViewModel stored = GetData(request, key);
+            CredentialsViewModel modelToStore = UpdateWith(stored, model);
+
+            cookie.Values[key] = Json.Encode(modelToStore);
+
             // renew
             cookie.Expires = DateTime.Now.AddDays(15);
 
             response.Cookies.Add(cookie);
 
         }
-        
+
+        private static CredentialsViewModel UpdateWith(CredentialsViewModel stored, CredentialsViewModel model)
+        {
+            if (!string.IsNullOrEmpty(model.ExchangeUserName))
+            {
+                stored.ExchangeUserName = model.ExchangeUserName;
+                stored.ExchangeDomainName = model.ExchangeDomainName;
+                stored.ExchangePassword = model.ExchangePassword;
+            }
+
+            if (!string.IsNullOrEmpty(model.TFSUserName))
+            {
+                stored.TFSUserName = model.TFSUserName;
+                stored.TFSDomainName = model.TFSDomainName;
+                stored.TFSPassword = model.TFSPassword;
+            }
+
+            if (!string.IsNullOrEmpty(model.JiraUserName))
+            {
+                stored.JiraUserName = model.JiraUserName;
+                stored.JiraPassword = model.JiraPassword;
+            }
+
+            return stored;
+        }
+
         private static HttpCookie EnsureMainCookie(HttpRequestBase request)
         {
             HttpCookie cookie = request.Cookies[CookieQuality];
