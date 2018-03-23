@@ -3,6 +3,7 @@ using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Enums;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Business.Services.Enums;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Allianz.Vita.Quality.Models
             }
         }
 
+        [JsonIgnore]
         public bool IsAutoAssigned
         {
             get
@@ -37,6 +39,7 @@ namespace Allianz.Vita.Quality.Models
         }
 
         [DisplayName("Prendi in carico")]
+        [JsonIgnore]
         public bool AutoAssign { get; set; }        
 
         public string Url
@@ -53,6 +56,7 @@ namespace Allianz.Vita.Quality.Models
 
         public string AssignedTo { get; set; }
 
+        [JsonIgnore]
         public string[] AreaPathAllowedValues
         {
             get
@@ -65,6 +69,7 @@ namespace Allianz.Vita.Quality.Models
         [DisplayName("Area Path")]
         public string AreaPath { get; set; }
 
+        [JsonIgnore]
         public string[] IterationAllowedValues
         {
             get
@@ -82,6 +87,7 @@ namespace Allianz.Vita.Quality.Models
         [DisplayName("Defect ID")]
         public string DefectID { get; set; }
 
+        [JsonIgnore]
         public string[] FoundInAllowedValues
         {
             get
@@ -97,6 +103,7 @@ namespace Allianz.Vita.Quality.Models
 
         public string Environment { get; set; }
 
+        [JsonIgnore]
         public string[] DefectTypeAllowedValues
         {
             get
@@ -110,6 +117,7 @@ namespace Allianz.Vita.Quality.Models
 
         public SeverityLevel Severity { get; set; }
 
+        [JsonIgnore]
         public string[] SeverityAllowedValues
         {
             get
@@ -121,11 +129,14 @@ namespace Allianz.Vita.Quality.Models
         public string State { get; set; }
         
         [UIHint("tinymce_jquery_full"), AllowHtml]
+        [JsonIgnore]
         public string Description { get; set; }
 
         [AllowHtml]
+        [JsonIgnore]
         public string[] Comments { get; set; }
 
+        [JsonIgnore]
         public IAttachment[] Attachment { get; set; }
 
         public string IMailItemUniqueId { get; set; }

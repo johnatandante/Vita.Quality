@@ -151,18 +151,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="api\AccountController.cs" />
+    <Compile Include="api\DefectController.cs" />
+    <Compile Include="api\Response\AccountResponse.cs" />
+    <Compile Include="api\Response\BaseResponse.cs" />
+    <Compile Include="api\Response\DefectResponse.cs" />
+    <Compile Include="api\Response\SimpleResponse.cs" />
+    <Compile Include="api\ValuesController1.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.InitOrDie.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\ApiAuthorizedOnlyAttribute.cs" />
     <Compile Include="Attributes\AuthorizedOnlyAttribute.cs" />
+    <Compile Include="Attributes\CustomAuthorizedAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ConvertController.cs" />
     <Compile Include="Controllers\DefectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
+    <Compile Include="Extensions\ApiControllerExtensionMethods.cs" />
     <Compile Include="Extensions\FlashMessageExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
