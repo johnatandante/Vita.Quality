@@ -20,13 +20,13 @@ namespace Allianz.Vita.Quality
                         "~/Scripts/jquery.menuSettings.js"
                         ));
 
-            bundles.Add(new ScriptBundle("~/bundles/react").Include(
-				// Add your JSX files here
-				"~/Scripts/HelloWorld.jsx" //,
-							//"~/Scripts/AnythingElse.jsx",
-							// You can include regular JavaScript files in the bundle too
-							//"~/Scripts/ajax.js",
-				));
+            //bundles.Add(new Bundle("~/bundles/react").Include(
+                // Add your JSX files here
+                //"~/Scripts/react.js",
+                //"~/Scripts/react-dom.js",
+                //"~/Scripts/remarkable.js",
+                //"~/Scripts/React/app.jsx"
+				//));
 
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
 			// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
@@ -42,8 +42,6 @@ namespace Allianz.Vita.Quality
 					  "~/Content/bootstrap.css",
                       "~/Content/bootstrap-grid.css",
                       "~/Content/site.css"));
-
-
 
 		}
 	}
