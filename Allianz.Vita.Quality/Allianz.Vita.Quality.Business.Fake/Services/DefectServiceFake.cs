@@ -27,6 +27,11 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
+        public string[] GetAllowedValues(string field)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetDisplayName()
         {
             throw new NotImplementedException();
@@ -57,7 +62,12 @@ namespace Allianz.Vita.Quality.Business.Fake.Services
             throw new NotImplementedException();
         }
 
-        public string SaveNotify(IDefect defect)
+        public string NotifyReopened(IDefect defect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDefect LookFor(string title)
         {
             throw new NotImplementedException();
         }

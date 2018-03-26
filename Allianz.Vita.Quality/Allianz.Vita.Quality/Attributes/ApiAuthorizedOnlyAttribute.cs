@@ -9,7 +9,8 @@ namespace Allianz.Vita.Quality.Attributes
     class ApiAuthorizedOnlyAttribute: CustomAuthorizedAttribute
     {
 
-        public ApiAuthorizedOnlyAttribute(params Type[] service) : base(service)
+        public ApiAuthorizedOnlyAttribute(params Type[] services) 
+            : base(services)
         {
         }
         

@@ -26,7 +26,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             get
             {
-                return  string.Join("/", Config.Url, Config.Company);
+                return string.Join("/", Config.Url, Config.Company);
 
             }
         }
@@ -47,7 +47,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 return Config.ProjectPath;
             }
         }
-        
+
         static string workItemQuery = "SELECT {0} FROM WorkItems WHERE {1}";
 
         static string myTaskQueryName = "Assigned to me";
@@ -101,11 +101,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 return new TfsTeamProjectCollection(new Uri(TfsUri))
                 {
                     Credentials = Credentials
-                };                    
+                };
             }
         }
-        
-        public TfsDefectService() : this(itemFactory:null, mail:null, storage:null, auth: null, config: null) { }
+
+        public TfsDefectService() : this(itemFactory: null, mail: null, storage: null, auth: null, config: null) { }
 
         /// <summary>
         /// Constructor. Manually set values to match your account.
@@ -123,7 +123,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             Auth = auth ?? ServiceFactory.Get<IIdentityService>();
 
         }
-        
+
         /// <summary>
         /// Execute a WIQL query to return a list of bugs using the .NET client library
         /// </summary>
@@ -131,7 +131,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         public List<IDefect> GetMyTasks()
         {
             List<IDefect> result = new List<IDefect>();
-            
+
             using (TfsTeamProjectCollection service = Service)
             {
 
@@ -189,7 +189,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         public List<IDefect> GetAllDefects()
         {
             List<IDefect> result = new List<IDefect>();
-            
+
             using (TfsTeamProjectCollection service = Service)
             {
                 // get the WorkItemStore service
@@ -247,14 +247,14 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 workItem.TryToGetField(DefectField.FoundIn.FieldName()),
                 workItem.TryToGetField(DefectField.environment.FieldName()));
 
-            defect.Title =  workItem.TryToGetField(DefectField.Title.FieldName());
+            defect.Title = workItem.TryToGetField(DefectField.Title.FieldName());
             defect.AreaPath = workItem.TryToGetField(DefectField.AreaPath.FieldName());
             defect.Iteration = workItem.TryToGetField(DefectField.IterationPath.FieldName());
             defect.State = workItem.TryToGetField(DefectField.State.FieldName());
             defect.Description = workItem.TryToGetField(DefectField.Description.FieldName());
-            defect.Severity = workItem.TryToGetEnumField<SeverityLevel>(DefectField.Severity.FieldName() );
+            defect.Severity = workItem.TryToGetEnumField<SeverityLevel>(DefectField.Severity.FieldName());
             defect.AssignedTo = workItem.TryToGetField(DefectField.AssignedTo.FieldName());
-            
+
             return defect;
 
         }
@@ -272,7 +272,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
             WorkItem defect;
 
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
@@ -289,11 +289,12 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 if (model.AutoAssign)
                 {
                     Autoassign(workItemStore, defect);
-                } else
+                }
+                else
                 {
                     defect.AreaPath = model.AreaPath;
                     //defect.IterationPath = model.Iteration;
-                    
+
                     // moved to current/<unique node>
                     defect.IterationPath = GetCurrentIterationPath(workItemStore);
 
@@ -331,7 +332,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 defect.Save();
-                
+
             }
 
             return defect != null ? defect.Id.ToString() : string.Empty;
@@ -342,7 +343,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             IDefect result = null;
 
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
@@ -377,7 +378,8 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                             ReadIdentityOptions.None);
 
                 return teamFoundationIdentity.GetAttribute("Mail", null);
-            } catch
+            }
+            catch
             {
                 return string.Empty;
             }
@@ -400,7 +402,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             WorkItem result = null;
             if (int.TryParse(id, out int int_id))
             {
-                result = workItemStore.GetWorkItem(int_id);                
+                result = workItemStore.GetWorkItem(int_id);
             }
 
             return result;
@@ -416,18 +418,18 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             lock (_FieldValueCacheLock)
             {
                 if (_FieldValueCache.ContainsKey(field))
-                   return _FieldValueCache[field];
+                    return _FieldValueCache[field];
 
-                _FieldValueCache.Add(field, GetAllowedValues(field.FieldName()));            
+                _FieldValueCache.Add(field, GetAllowedValues(field.FieldName()));
                 return _FieldValueCache[field];
             }
         }
 
-        string[] GetAllowedValues(string key)
+        public string[] GetAllowedValues(string key)
         {
             List<string> allowedValues = new List<string>();
 
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
@@ -445,7 +447,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 else if (workItemStore.FieldDefinitions.Contains(key))
                 {
 
-                    foreach (var field in workItemStore.FieldDefinitions[key].AllowedValues)
+                    foreach (object field in workItemStore.FieldDefinitions[key].AllowedValues)
                         allowedValues.Add(field.ToString());
                 }
 
@@ -454,7 +456,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             return allowedValues.ToArray();
 
         }
-        
+
         public string GetTrackingUrlDetail(int? id)
         {
             return string.Join("/",
@@ -465,7 +467,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void Autoassign(string id)
         {
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
@@ -477,10 +479,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     workItem.Open();
 
                     Autoassign(workItemStore, workItem);
-                    
+
                     if (!workItem.IsValid())
                         throw new ApplicationException("Errore salvataggio " + workItem.Title);
-                    
+
                     workItem.Save();
                 }
 
@@ -507,7 +509,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public void MoveStateOn(IDefect defect)
         {
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
@@ -528,7 +530,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         private string GetNextState(Field field)
         {
             string value = string.Empty;
-            switch(field.Value)
+            switch (field.Value)
             {
                 case "New":
                 case "Reopened":
@@ -539,7 +541,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     break;
 
             }
-            
+
             return value;
         }
 
@@ -547,7 +549,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
         {
 
             Node node = FindNodeFromPath(workItemStore.Projects[TeamProjectName].IterationRootNodes
-                , string.Join("\\", Config.Iteration.Split('\\').Skip(1)) );
+                , string.Join("\\", Config.Iteration.Split('\\').Skip(1)));
 
             if (node != null)
                 return node.ChildNodes.ToEnumerableStringValues().FirstOrDefault();
@@ -561,10 +563,10 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
             string[] splitted = path.Split('\\');
             string currentPath = splitted.FirstOrDefault();
-            string remaining = currentPath == null || splitted.Length < 2 ? 
+            string remaining = currentPath == null || splitted.Length < 2 ?
                 string.Empty : string.Join("\\", path.Split('\\').Skip(1));
-            
-            foreach(Node node in collection)
+
+            foreach (Node node in collection)
             {
                 if (string.IsNullOrEmpty(remaining) && node.Name == currentPath)
                 {
@@ -577,7 +579,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 else
                 {
                     continue;
-                }                
+                }
             }
 
             return defaultIterationNode;
@@ -585,22 +587,26 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public IDefect LookFor(IMailItem mailItem)
         {
-            IDefect result = null;
-
             IMailItem mail = Mail.Get(mailItem);
             string subject = Factory.GetSubject(mail);
+            return LookFor(subject);
 
-             using (TfsTeamProjectCollection service = Service)
+        }
+
+        public IDefect LookFor(string title)
+        {
+            IDefect result;
+
+            using (TfsTeamProjectCollection service = Service)
             {
 
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
 
-                WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, subject);
-                                result = ToDefectItemCollection(workItems).FirstOrDefault();
+                WorkItemCollection workItems = GetWorkItemByTitle(workItemStore, title);
+                result = ToDefectItemCollection(workItems).FirstOrDefault();
             }
 
             return result;
-
         }
 
         private WorkItemCollection GetWorkItemByTitle(WorkItemStore workItemStore, string title)
@@ -614,11 +620,11 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
             return workItemStore.Query(query.QueryText);
         }
 
-        public string SaveNotify(IDefect model)
+        public string NotifyReopened(IDefect model)
         {
             WorkItem workItem;
 
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
                 WorkItemStore workItemStore = service.GetService<WorkItemStore>();
                 Project project = workItemStore.Projects[TeamProjectName];
@@ -657,27 +663,27 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                     {
                         workItem.State = "Reopened";
                     }
-                    
+
                     workItem.History = string.Join(Environment.NewLine
                     , "Notified on " + DateTime.Now.Date.ToShortDateString() + " by " + workItemStore.UserIdentityName
                     , ""
                     , "<em>" + model.Description + "<em>");
 
                 }
-                
+
                 //workItem.Fields[DefectField.Severity.FieldName()].Value = model.Severity;
-                    //workItem.Fields[DefectField.Severity.FieldName()].AllowedValues[(short)model.Severity];             
+                //workItem.Fields[DefectField.Severity.FieldName()].AllowedValues[(short)model.Severity];             
 
                 if (!string.IsNullOrEmpty(model.IMailItemUniqueId))
                 {
                     IAttachment att = Mail.GetAsAttachment(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
                     workItem.Attachments.Add(ToAttachment(att,
                         comment: "Uploaded by " + workItemStore.UserIdentityName + " with Allianz.Vita.Quality Tool",
-                        fileName: model.Title.Replace('/', '-') + " - Comunicazione("+ (workItem.Attachments.Count + 1) + ").eml"));
+                        fileName: model.Title.Replace('/', '-') + " - Comunicazione(" + (workItem.Attachments.Count + 1) + ").eml"));
                 }
 
                 // Links is read only
-                
+
                 // Save the new
                 if (!workItem.IsValid())
                     throw new ApplicationException("Errore in aggiornamento Defect " + workItem.Title);
@@ -685,7 +691,7 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
                 Mail.Complete(Factory.GetNew<IMailItem>(model.IMailItemUniqueId));
 
                 workItem.Save();
-                
+
             }
 
             return workItem != null ? workItem.Id.ToString() : string.Empty;
@@ -694,21 +700,21 @@ namespace Allianz.Vita.Quality.Business.Services.Defect
 
         public string GetDisplayName()
         {
-             using (TfsTeamProjectCollection service = Service)
+            using (TfsTeamProjectCollection service = Service)
             {
-                
+
                 TeamFoundationIdentity identity = null;
                 service.GetAuthenticatedIdentity(out identity);
-                
+
                 return identity.DisplayName;
             }
         }
 
         private Attachment ToAttachment(IAttachment att, string comment = "", string fileName = "")
-        {            
+        {
             if (string.IsNullOrEmpty(fileName))
                 fileName = "Mail.eml";
-            
+
             return new Attachment(Storage.Store(att, fileName), comment);
 
         }

@@ -7,6 +7,8 @@ namespace Allianz.Vita.Quality.Business.Factory
     public class ServiceFactory
     {
 
+        static object lockObj = new object() { };
+
         static Dictionary<Type, IService> _Services = new Dictionary<Type, IService>();
 
         public static bool IsDefined<TService>() where TService : IService
@@ -29,14 +31,16 @@ namespace Allianz.Vita.Quality.Business.Factory
         public static TService Register<TService,TInstance>(params object[] parameters) 
             where TService : IService
             where TInstance : TService
-        {            
-
-            if (!_Services.ContainsKey(typeof(TService)))
+        {
+            lock (lockObj)
             {
-                _Services.Add(typeof(TService), null);
+                if (!_Services.ContainsKey(typeof(TService)))
+                {
+                    _Services.Add(typeof(TService), null);
+                }
+
+                _Services[typeof(TService)] = (TInstance)Activator.CreateInstance(typeof(TInstance), parameters);
             }
-                        
-            _Services[typeof(TService)] = (TInstance)Activator.CreateInstance(typeof(TInstance), parameters);
 
             return Get<TService>();
         }
@@ -44,10 +48,12 @@ namespace Allianz.Vita.Quality.Business.Factory
         public static void Register<TService>(TService instance)
            where TService : IService
         {
-
-            if (!_Services.ContainsKey(typeof(TService)))
+            lock (lockObj)
             {
-                _Services.Add(typeof(TService), null);
+                if (!_Services.ContainsKey(typeof(TService)))
+                {
+                    _Services.Add(typeof(TService), null);
+                }
             }
 
             _Services[typeof(TService)] = instance;
@@ -58,9 +64,12 @@ namespace Allianz.Vita.Quality.Business.Factory
             where TService : IService
             where TInstance : TService
         {
-            return IsDefined<TService>() ?
+            lock (lockObj)
+            {
+                return IsDefined<TService>() ?
                 Get<TService>()
                 : Register<TService, TInstance>();
+            }
         }
     }
 }

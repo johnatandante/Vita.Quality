@@ -13,7 +13,7 @@ namespace Allianz.Vita.Quality.Attributes
 
         List<Type> Service = new List<Type>();
 
-        CustomAuthorizedAttribute(Type[] service)
+        protected CustomAuthorizedAttribute(Type[] service)
         {
             Service.AddRange(service);
         }

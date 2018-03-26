@@ -6,8 +6,12 @@ namespace Allianz.Vita.Quality.Business.Interfaces.Service
 {
     public interface IIdentityService : IService
     {
-        
+
+        string[] GetSupportedServices();
+
         IUserCredentials LogOn(string credentials);
+        
+        IUserCredentials AuthenticateOn(string service, NetworkCredential networkCredential);
 
         IUserCredentials AuthenticateOn(Type service, NetworkCredential networkCredential);
 

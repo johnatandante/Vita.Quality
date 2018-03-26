@@ -3,37 +3,57 @@ using Allianz.Vita.Quality.Business.Interfaces;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 
 namespace Allianz.Vita.Quality.Business.Services.Authentication
 {
     public class IdentityService : IIdentityService
     {
 
+        static Dictionary<string, Type> serviceMap = new Dictionary<string, Type>()
+        {
+            { "Mail", typeof(IMailService)  },
+            { "Defect", typeof(IDefectService) },
+            { "Issue" , typeof(IIssueService) },
+        };
+
         IUserCredentials Current { get; set; }
 
         IItemFactory Factory;
 
-        public IdentityService() : this( factory: null, identity: null)
+        public IdentityService() : this(factory: null, identity: null)
         {
-            
+
         }
 
         public IdentityService(IItemFactory factory, IUserCredentials identity)
         {
             Factory = factory ?? ServiceFactory.Get<IItemFactory>();
 
-            Current = identity ?? Factory.GetNewUserCredential( new NetworkCredential());
+            Current = identity ?? Factory.GetNewUserCredential(new NetworkCredential());
 
+        }
+
+        public IUserCredentials AuthenticateOn(string service, NetworkCredential credential)
+        {
+            Type serviceTypeName;
+            if (serviceMap.ContainsKey(service))
+                serviceTypeName = serviceMap[service];
+            else
+                serviceTypeName = Type.GetType(service, true, true);
+            
+            return AuthenticateOn(serviceTypeName, credential);
         }
 
         public IUserCredentials AuthenticateOn(Type service, NetworkCredential networkCredential)
         {
             if (IsAuthenticatedOn(service))
                 return Current;
-            
+
             Current.AddIdentityFor(networkCredential, service);
-            
+
             return Current;
 
         }
@@ -48,7 +68,7 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
         {
             return IsAuthenticatedOn(service.GetType()) ?
                 Current.GetCredentialFor(service.GetType()) : new NetworkCredential();
-            
+
         }
 
         public NetworkCredential GetCredentialsFor<T>() where T : IService
@@ -81,7 +101,7 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
         }
 
         public IUserCredentials LogOn(string identity)
-        {            
+        {
             Current = Factory.GetNewUserCredential(new NetworkCredential() { UserName = identity });
             return Current;
 
@@ -97,5 +117,9 @@ namespace Allianz.Vita.Quality.Business.Services.Authentication
             return !(!IsValidUser(userName) || string.IsNullOrEmpty(password));
         }
 
+        public string[] GetSupportedServices()
+        {
+            return serviceMap.Keys.ToArray();
+        }
     }
 }

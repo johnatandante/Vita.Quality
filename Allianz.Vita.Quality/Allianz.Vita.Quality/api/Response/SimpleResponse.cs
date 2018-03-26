@@ -9,4 +9,10 @@ namespace Allianz.Vita.Quality.api.Response
     {
         public sealed override string Result { get; set; }
     }
+
+    public class ArryayResponse : BaseResponse<object[]>
+    {
+        public sealed override object[] Result { get; set; }
+    }
+
 }

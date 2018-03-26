@@ -3,11 +3,11 @@ using Allianz.Vita.Quality.Attributes;
 using Allianz.Vita.Quality.Business.Factory;
 using Allianz.Vita.Quality.Business.Interfaces.DataModel;
 using Allianz.Vita.Quality.Business.Interfaces.Service;
+using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using Allianz.Vita.Quality.Extensions;
 
 namespace Allianz.Vita.Quality.api
 {
@@ -19,13 +19,12 @@ namespace Allianz.Vita.Quality.api
             get { return ServiceFactory.Get<IDefectService>(); }
         }
 
-
-
         // GET api/<controller>
         public DefectResponse GetAll()
         {
 
-            return this.HandleGetRequest( () => {
+            return this.HandleGetRequest<DefectResponse, DefectViewModel[]>(() =>
+            {
                 List<IDefect> defects = Service.GetAllDefects();
                 return defects.ConvertAll(item => new DefectViewModel(item)).ToArray();
             });
@@ -35,10 +34,39 @@ namespace Allianz.Vita.Quality.api
         // GET api/<controller>/<value>
         public DefectResponse Get(string id)
         {
-            return this.HandleGetRequest(() => {
+            return this.HandleGetRequest<DefectResponse, DefectViewModel[]>(() =>
+            {
                 IDefect defect = Service.Get(id);
-                return new DefectViewModel[] { new DefectViewModel(defect)};
+                return new DefectViewModel[] { new DefectViewModel(defect) };
             });
+        }
+
+        [HttpGet]
+        public DefectResponse GetMyDefects()
+        {
+            return this.HandleGetRequest<DefectResponse, DefectViewModel[]>(() =>
+            {
+                List<IDefect> defects = Service.GetAllDefects();
+                return defects.ConvertAll(item => new DefectViewModel(item) ).ToArray();
+            });
+        }
+        
+        [HttpGet]
+        public DefectResponse GetByTitle(string title)
+        {
+            return this.HandleGetRequest<DefectResponse, DefectViewModel[]>(() =>
+            {
+                IDefect defect = Service.LookFor(title);
+                return new DefectViewModel[] { new DefectViewModel(defect) };
+            });
+        }
+
+        [HttpGet]
+        ArryayResponse GetAllowedValues(string key)
+        {
+            return this.HandleGetRequest<ArryayResponse, object[]>( () => {
+                return Service.GetAllowedValues(key);
+            }) ;
         }
 
         // PUT api/<controller>/<value>
@@ -52,7 +80,8 @@ namespace Allianz.Vita.Quality.api
         [HttpPut]
         public SimpleResponse Autoassign(string id, [FromBody]string value)
         {
-            return this.HandlePutRequest(() => {
+            return this.HandlePutRequest(() =>
+            {
                 Service.Autoassign(id);
                 return true;
             });
@@ -61,9 +90,20 @@ namespace Allianz.Vita.Quality.api
         [HttpPut]
         public SimpleResponse MoveStateOn(string id, [FromBody]string value)
         {
-            return this.HandlePutRequest(() => {
+            return this.HandlePutRequest(() =>
+            {
                 Service.MoveStateOn(Service.Get(id));
                 return true;
+            });
+        }
+
+        [HttpPut]
+        public SimpleResponse NotifyReopened(DefectViewModel model)
+        {
+            return this.HandlePutRequest(() =>
+            {
+                string result = Service.NotifyReopened(model);
+                return result.Equals(model.DefectID);
             });
         }
 

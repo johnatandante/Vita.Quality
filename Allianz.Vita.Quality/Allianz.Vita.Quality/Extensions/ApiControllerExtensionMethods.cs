@@ -8,9 +8,10 @@ namespace Allianz.Vita.Quality.Extensions
     public static class ApiControllerExtensionMethods
     {
 
-        public static DefectResponse HandleGetRequest(this ApiController controller, Func<DefectViewModel[]> action)
+        public static T HandleGetRequest<T, W>(this ApiController controller, Func<W> action) 
+            where T : BaseResponse<W>
         {
-            DefectResponse response = new DefectResponse();
+            T response = Activator.CreateInstance<T>();
             string errorMessage = string.Empty;
 
             try

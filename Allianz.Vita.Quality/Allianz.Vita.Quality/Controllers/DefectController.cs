@@ -97,7 +97,7 @@ namespace Allianz.Vita.Quality.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Detail", "Defect", new { Id = Service.SaveNotify(model) })
+            return RedirectToAction("Detail", "Defect", new { Id = Service.NotifyReopened(model) })
                 .Success("Notified Defect " + model.Id +( (string.IsNullOrEmpty(model.AssignedTo)) ? "" : " to " + model.AssignedTo));
 
         }

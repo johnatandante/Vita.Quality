@@ -7,6 +7,7 @@ namespace Allianz.Vita.Quality.Business.Models
 {
     public class UserCredential : IUserCredentials
     {
+
         Dictionary<Type, NetworkCredential> _Identities;
 
         string _AuthenticationType;
