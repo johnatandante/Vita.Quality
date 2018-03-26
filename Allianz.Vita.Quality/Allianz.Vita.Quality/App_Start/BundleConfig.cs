@@ -20,17 +20,17 @@ namespace Allianz.Vita.Quality
                         "~/Scripts/jquery.menuSettings.js"
                         ));
 
-            //bundles.Add(new Bundle("~/bundles/react").Include(
+            bundles.Add(new ScriptBundle("~/bundles/react").Include(
                 // Add your JSX files here
-                //"~/Scripts/react.js",
-                //"~/Scripts/react-dom.js",
+                "~/Scripts/react.min.js",
+                "~/Scripts/react-dom.min.js"
                 //"~/Scripts/remarkable.js",
-                //"~/Scripts/React/app.jsx"
-				//));
-
-			// Use the development version of Modernizr to develop with and learn from. Then, when you're
-			// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
+                //"~/Scripts/require.min.js"
+                ));
+            
+            // Use the development version of Modernizr to develop with and learn from. Then, when you're
+            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
+            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 						"~/Scripts/modernizr-*"));
 
 			bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(

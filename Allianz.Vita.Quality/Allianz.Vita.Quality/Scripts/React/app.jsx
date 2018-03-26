@@ -1,21 +1,12 @@
-﻿
-const rootElement = document.getElementById('jsxcontent')
+﻿// https://reactjs.net/
 
-class ShoppingList extends React.Component {
-    // Use the render function to return JSX component      
-    render() {
-        return (
-            <div className="shopping-list">
-                <h1>Shopping List for {this.props.name}</h1>
-                <ul>
-                    <li>Instagram</li>
-                    <li>WhatsApp</li>
-                    <li>Oculus</li>
-                </ul>
-            </div>
-        );
-    }
-}
+var i = 0;
+
+console.log(i++);
+
+import ShoppingList from "ShoppingList";
+
+console.log(i++);
 // Create a function to wrap up your component
 function App() {
     return (
@@ -25,8 +16,9 @@ function App() {
     )
 }
 
+console.log(i++);
 // Use the ReactDOM.render to show your component on the browser
 ReactDOM.render(
     <App />,
-    rootElement
+    document.getElementById('jsxcontent')
 )
