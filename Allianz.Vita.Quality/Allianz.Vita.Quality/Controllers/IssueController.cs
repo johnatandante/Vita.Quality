@@ -5,9 +5,9 @@ using Allianz.Vita.Quality.Business.Interfaces.Service;
 using Allianz.Vita.Quality.Extensions;
 using Allianz.Vita.Quality.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Linq;
 
 namespace Allianz.Vita.Quality.Controllers
 {

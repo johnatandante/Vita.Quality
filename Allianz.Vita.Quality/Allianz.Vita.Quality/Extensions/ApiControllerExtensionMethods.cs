@@ -1,6 +1,7 @@
 ﻿using Allianz.Vita.Quality.api.Response;
 using Allianz.Vita.Quality.Models;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Allianz.Vita.Quality.Extensions

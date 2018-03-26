@@ -153,9 +153,11 @@
   <ItemGroup>
     <Compile Include="api\AccountController.cs" />
     <Compile Include="api\DefectController.cs" />
+    <Compile Include="api\IssueController.cs" />
     <Compile Include="api\Response\AccountResponse.cs" />
     <Compile Include="api\Response\BaseResponse.cs" />
     <Compile Include="api\Response\DefectResponse.cs" />
+    <Compile Include="api\Response\IssueResponse.cs" />
     <Compile Include="api\Response\SimpleResponse.cs" />
     <Compile Include="api\ValuesController1.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
